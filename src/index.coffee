@@ -1,7 +1,5 @@
 TimeManager = require './time-manager'
 
-timeManager = new TimeManager
-
 Q = require 'q'
 
 class Dummy
@@ -14,8 +12,7 @@ class Dummy
 		.thenResolve 30
 
 class Player
-	constructor: (@name) ->
-		@speed = 12
+	constructor: (@name, @speed = 12) ->
 
 	tickRate: -> @speed
 
@@ -24,11 +21,20 @@ class Player
 
 		Q(30).delay 1000
 
-timeManager.targets.push new Dummy
-timeManager.targets.push new Player 'KayArr'
+class Game
+	constructor: ->
+		@timeManager = new TimeManager
 
-do mainLoop = ->
-	timeManager.tick (err) ->
-		return console.error err.stack if err?
+		@timeManager.targets.push new Dummy
+		@timeManager.targets.push new Player 'KayArr'
+		@timeManager.targets.push new Player 'Boat', 80
 
-		mainLoop()
+	main: ->
+		do mainLoop = =>
+			@timeManager.tick (err) =>
+				return console.error err.stack if err?
+
+				mainLoop()
+
+game = new Game
+game.main()
