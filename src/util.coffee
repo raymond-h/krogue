@@ -26,20 +26,8 @@ exports.bresenhamLine = (x0, y0, x1, y1, callback) ->
 		x: x0, y: y0
 
 exports.whilst = (test, fn, callback) ->
-	deferred = Q.defer()
+	Q.ninvoke async, 'whilst',
+		test,
+		((next) -> fn().nodeify next)
 
-	async.whilst test,
-		(next) ->
-			resolve = (a...) -> next? a...
-			promise = fn resolve
-
-			if Q.isPromiseAlike promise
-				promise.nodeify next
-				next = null
-			
-			# if fn didn't return a promise
-			# then fn is presumed to call its callback sometime in the future
-
-		deferred.makeNodeResolver()
-
-	deferred.promise
+	.nodeify callback
