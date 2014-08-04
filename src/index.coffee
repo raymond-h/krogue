@@ -1,4 +1,4 @@
-TimeManager = require 'time-manager'
+TimeManager = require './time-manager'
 
 timeManager = new TimeManager
 
