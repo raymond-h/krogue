@@ -1,4 +1,5 @@
 TimeManager = require './time-manager'
+{Renderer} = require './render'
 
 Q = require 'q'
 
@@ -24,6 +25,7 @@ class Player
 class Game
 	constructor: ->
 		@timeManager = new TimeManager
+		@renderer = new Renderer @
 
 		@timeManager.targets.push new Dummy
 		@timeManager.targets.push new Player 'KayArr'
