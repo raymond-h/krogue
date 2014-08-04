@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "q": "*",
-    "blessed": "0.0.37"
+    "blessed": "0.0.37",
+    "async": "^0.9.0"
   }
 }
