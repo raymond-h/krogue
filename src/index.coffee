@@ -9,8 +9,15 @@ TimeManager = require './time-manager'
 
 class Game
 	constructor: ->
+		# console.error 'Starting game...'
+
 		@timeManager = new TimeManager
-		@events = new EventEmitter wildcard: yes
+		@events = new EventEmitter
+			wildcard: yes
+			# newListener: yes
+
+		# @events.onAny (a...) ->
+		# 	console.error "Event: '#{@event}'; ", a
 
 		initialize @
 		@renderer = new Renderer @

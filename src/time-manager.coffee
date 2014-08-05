@@ -26,8 +26,10 @@ module.exports = class TimeManager
 
 			whilst (-> target.actionPoints > 0),
 				->
+					# console.error "begin tick '#{target.name} #{target.constructor.name}'"
 					target.tick()
 					.then (cost) -> target.actionPoints -= cost
+					# .then -> console.error "end tick '#{target.name} #{target.constructor.name}'"
 
 			.nodeify callback
 
