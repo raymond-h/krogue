@@ -8,7 +8,7 @@ class exports.Entity
 		@game.renderer.invalidate()
 
 	move: (x, y) ->
-		setPos @x+x, @y+y
+		@setPos @x+x, @y+y
 
 	tickRate: 0
 

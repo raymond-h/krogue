@@ -1,3 +1,5 @@
+{EventEmitter2: EventEmitter} = require 'eventemitter2'
+
 TimeManager = require './time-manager'
 {Map} = require './map'
 
@@ -8,6 +10,7 @@ TimeManager = require './time-manager'
 class Game
 	constructor: ->
 		@timeManager = new TimeManager
+		@events = new EventEmitter wildcard: yes
 
 		initialize @
 		@renderer = new Renderer @
@@ -16,11 +19,14 @@ class Game
 
 		@entities = [
 			new Player @, @currentMap, 2, 2, 'KayArr'
+			new Dummy @, @currentMap, 6, 6
 		]
 
 		# @timeManager.targets.push new Dummy @, @currentMap, 1, 1
 		@timeManager.targets.push @entities...
 		# @timeManager.targets.push new Player @, @currentMap, 3, 1, 'Boat', 12
+
+		@events.on 'key.q', -> process.exit 0
 
 	main: ->
 		do mainLoop = =>

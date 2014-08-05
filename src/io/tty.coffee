@@ -2,6 +2,8 @@ blessed = require 'blessed'
 program = blessed.program()
 
 initialize = (game) ->
+	program.on 'keypress', (ch, key) ->
+		game.events.emit "key.#{key.name}", ch, key
 
 class TtyRenderer
 	constructor: (@game) ->

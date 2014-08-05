@@ -8,11 +8,7 @@ class exports.Dummy extends exports.Creature
 	tickRate: 10
 
 	tick: ->
-		# console.log 'Rock on, you dick'
-
-		Q.delay 1000
-		# .then -> console.log 'Depleted resources, must wait...'
-		.thenResolve 30
+		Q 30
 
 class exports.Player extends exports.Creature
 	constructor: (g, m, x, y, @name, @speed = 12) ->
@@ -23,6 +19,18 @@ class exports.Player extends exports.Creature
 	tickRate: -> @speed
 
 	tick: ->
-		# console.log "#{@name}: I AM SO FAST"
+		d = Q.defer()
 
-		Q(30).delay 1000
+		@game.events.once 'key.*', (ch, key) =>
+			moveOffset = switch key.name
+				when 'up' then [0, -1]
+				when 'down' then [0, 1]
+				when 'left' then [-1, 0]
+				when 'right' then [1, 0]
+				else [0, 0]
+
+			@move moveOffset...
+
+			d.resolve @tickRate()
+
+		d.promise
