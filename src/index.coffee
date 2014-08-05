@@ -3,7 +3,7 @@
 TimeManager = require './time-manager'
 {Map} = require './map'
 
-{initialize, Renderer} = require './io/tty'
+{initialize, deinitialize, Renderer} = require './io/tty'
 
 {Dummy, FastDummy, Player} = require './creatures'
 
@@ -34,7 +34,11 @@ class Game
 		@timeManager.targets.push @entities...
 		# @timeManager.targets.push new Player @, @currentMap, 3, 1, 'Boat', 12
 
-		@events.on 'key.q', -> process.exit 0
+		@events.on 'key.q', => @quit()
+
+	quit: ->
+		deinitialize @
+		process.exit 0
 
 	main: ->
 		do mainLoop = =>

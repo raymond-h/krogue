@@ -1,9 +1,19 @@
 blessed = require 'blessed'
 program = blessed.program()
 
+program.reset = ->
+	program._write '\x1bc'
+
 initialize = (game) ->
+	program.reset()
+	program.alternateBuffer()
+
 	program.on 'keypress', (ch, key) ->
 		game.events.emit "key.#{key.name}", ch, key
+
+deinitialize = (game) ->
+	program.clear()
+	program.normalBuffer()
 
 class TtyRenderer
 	constructor: (@game) ->
@@ -33,5 +43,6 @@ class TtyRenderer
 
 module.exports =
 	initialize: initialize
+	deinitialize: deinitialize
 
 	Renderer: TtyRenderer
