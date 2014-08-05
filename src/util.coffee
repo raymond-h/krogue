@@ -8,8 +8,12 @@ exports.bresenhamLine = (x0, y0, x1, y1, callback) ->
 	sy = if y0 < y1 then 1 else -1
 	err = dx - dy
 
+	if not callback?
+		result = []
+		callback = (x, y) -> result.push {x, y}
+
 	loop
-		break if (callback? x0, y0) is no
+		break if (callback x0, y0) is no
 
 		break if x0 is x1 and y0 is y1
 
@@ -23,7 +27,7 @@ exports.bresenhamLine = (x0, y0, x1, y1, callback) ->
 			err += dx
 			y0 += sy
 
-		x: x0, y: y0
+	result
 
 exports.whilst = (test, fn, callback) ->
 	Q.ninvoke async, 'whilst',
