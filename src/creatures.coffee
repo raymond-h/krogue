@@ -1,6 +1,10 @@
 Q = require 'q'
 
-class exports.Dummy
+{Entity} = require './entities'
+
+class exports.Creature extends Entity
+
+class exports.Dummy extends exports.Creature
 	tickRate: 10
 
 	tick: ->
@@ -9,8 +13,9 @@ class exports.Dummy
 		# .then -> console.log 'Depleted resources, must wait...'
 		.thenResolve 30
 
-class exports.Player
-	constructor: (@name, @speed = 12) ->
+class exports.Player extends exports.Creature
+	constructor: (game, x, y, @name, @speed = 12) ->
+		super
 
 	tickRate: -> @speed
 

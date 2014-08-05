@@ -7,9 +7,9 @@ class Game
 		@timeManager = new TimeManager
 		@renderer = new Renderer @
 
-		@timeManager.targets.push new Dummy
-		@timeManager.targets.push new Player 'KayArr'
-		@timeManager.targets.push new Player 'Boat', 80
+		@timeManager.targets.push new Dummy @, 0, 0
+		@timeManager.targets.push new Player @, 0, 0, 'KayArr'
+		@timeManager.targets.push new Player @, 0, 0, 'Boat', 80
 
 	main: ->
 		do mainLoop = =>
