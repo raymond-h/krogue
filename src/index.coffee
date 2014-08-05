@@ -5,7 +5,7 @@ TimeManager = require './time-manager'
 
 {initialize, Renderer} = require './io/tty'
 
-{Dummy, Player} = require './creatures'
+{Dummy, FastDummy, Player} = require './creatures'
 
 class Game
 	constructor: ->
@@ -27,6 +27,7 @@ class Game
 		@entities = [
 			new Player @, @currentMap, 2, 2, 'KayArr'
 			new Dummy @, @currentMap, 6, 6
+			new FastDummy @, @currentMap, 12, 6
 		]
 
 		# @timeManager.targets.push new Dummy @, @currentMap, 1, 1

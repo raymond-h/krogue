@@ -22,6 +22,11 @@ class exports.Dummy extends exports.Creature
 
 		Q 12
 
+class exports.FastDummy extends exports.Dummy
+	tickRate: 30
+
+	symbol: 'F'
+
 class exports.Player extends exports.Creature
 	symbol: '@'
 
