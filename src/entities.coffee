@@ -1,6 +1,7 @@
 class exports.Entity
+	symbol: '-'
+
 	constructor: (@game, @map, @x, @y) ->
-		@symbol = '?'
 
 	setPos: (x, y) ->
 		@x = x
@@ -8,7 +9,14 @@ class exports.Entity
 		@game.renderer.invalidate()
 
 	move: (x, y) ->
-		@setPos @x+x, @y+y
+		canMoveThere = not @collidable @x+x, @y+y
+		
+		@setPos @x+x, @y+y if canMoveThere
+
+		canMoveThere
+
+	collidable: (x, y) ->
+		(@map.collidable x, y) or (@map.objectPresent x, y)?
 
 	tickRate: 0
 

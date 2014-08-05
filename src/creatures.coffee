@@ -13,6 +13,8 @@ directions =
 	right: [1, 0]
 
 class exports.Dummy extends exports.Creature
+	symbol: 'D'
+
 	tickRate: 3
 
 	tick: ->
@@ -34,8 +36,9 @@ class exports.Player extends exports.Creature
 		@game.events.once 'key.*', (ch, key) =>
 			moveOffset = directions[key.name] ? [0, 0]
 
-			@move moveOffset...
+			if @move moveOffset...
+				d.resolve @tickRate()
 
-			d.resolve @tickRate()
+			else d.resolve 0
 
 		d.promise
