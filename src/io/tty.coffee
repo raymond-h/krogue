@@ -1,7 +1,9 @@
 blessed = require 'blessed'
 program = blessed.program()
 
-class exports.Renderer
+initialize = (game) ->
+
+class TtyRenderer
 	constructor: (@game) ->
 		@invalidated = no
 
@@ -26,3 +28,8 @@ class exports.Renderer
 		for e in @game.entities
 			program.pos e.y, e.x
 			program.write e.symbol
+
+module.exports =
+	initialize: initialize
+
+	Renderer: TtyRenderer

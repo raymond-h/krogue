@@ -1,12 +1,15 @@
 TimeManager = require './time-manager'
-{Renderer} = require './render'
 {Map} = require './map'
+
+{initialize, Renderer} = require './io/tty'
 
 {Dummy, Player} = require './creatures'
 
 class Game
 	constructor: ->
 		@timeManager = new TimeManager
+
+		initialize @
 		@renderer = new Renderer @
 
 		@currentMap = new Map @, 50, 15
