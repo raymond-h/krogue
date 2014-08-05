@@ -23,10 +23,10 @@ class exports.Dummy extends exports.Creature
 		Q 12
 
 class exports.Player extends exports.Creature
+	symbol: '@'
+
 	constructor: (g, m, x, y, @name, @speed = 12) ->
 		super
-
-		@symbol = '@'
 
 	tickRate: -> @speed
 
