@@ -1,16 +1,15 @@
 Q = require 'q'
+_ = require 'lodash'
 
 {Entity} = require './entities'
-
-class exports.Creature extends Entity
-
-_ = require 'lodash'
 
 directions =
 	up: [0, -1]
 	down: [0, 1]
 	left: [-1, 0]
 	right: [1, 0]
+
+class exports.Creature extends Entity
 
 class exports.Dummy extends exports.Creature
 	symbol: 'D'
