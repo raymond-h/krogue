@@ -19,10 +19,9 @@ class exports.Renderer
 	render: ->
 		program.clear()
 
-		for column, x in @game.currentMap.data
-			for tile, y in column
-				program.pos y, x
-				program.write tile
+		for row, y in @game.currentMap.data
+			program.write row.join ''
+			program.feed()
 
 		for e in @game.entities
 			program.pos e.y, e.x
