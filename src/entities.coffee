@@ -1,5 +1,6 @@
 class exports.Entity
-	constructor: (@game, @x, @y) ->
+	constructor: (@game, @map, @x, @y) ->
+		@symbol = '?'
 
 	setPos: (x, y) ->
 		@x = x

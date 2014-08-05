@@ -1,5 +1,7 @@
 TimeManager = require './time-manager'
 {Renderer} = require './render'
+{Map} = require './map'
+
 {Dummy, Player} = require './creatures'
 
 class Game
@@ -7,9 +9,15 @@ class Game
 		@timeManager = new TimeManager
 		@renderer = new Renderer @
 
-		@timeManager.targets.push new Dummy @, 0, 0
-		@timeManager.targets.push new Player @, 0, 0, 'KayArr'
-		@timeManager.targets.push new Player @, 0, 0, 'Boat', 80
+		@currentMap = new Map @, 50, 15
+
+		@entities = [
+			new Player @, @currentMap, 2, 2, 'KayArr'
+		]
+
+		# @timeManager.targets.push new Dummy @, @currentMap, 1, 1
+		@timeManager.targets.push @entities...
+		# @timeManager.targets.push new Player @, @currentMap, 3, 1, 'Boat', 12
 
 	main: ->
 		do mainLoop = =>

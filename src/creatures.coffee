@@ -8,18 +8,21 @@ class exports.Dummy extends exports.Creature
 	tickRate: 10
 
 	tick: ->
-		Q.fcall -> console.log 'Rock on, you dick'
-		.delay 1000
+		# console.log 'Rock on, you dick'
+
+		Q.delay 1000
 		# .then -> console.log 'Depleted resources, must wait...'
 		.thenResolve 30
 
 class exports.Player extends exports.Creature
-	constructor: (game, x, y, @name, @speed = 12) ->
+	constructor: (g, m, x, y, @name, @speed = 12) ->
 		super
+
+		@symbol = '@'
 
 	tickRate: -> @speed
 
 	tick: ->
-		console.log "#{@name}: I AM SO FAST"
+		# console.log "#{@name}: I AM SO FAST"
 
 		Q(30).delay 1000
