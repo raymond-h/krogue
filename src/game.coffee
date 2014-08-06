@@ -16,7 +16,7 @@ module.exports = class Game
 
 		@events = new EventEmitter2
 			wildcard: yes
-			newListener: yes
+			newListener: no
 
 		@events.onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
