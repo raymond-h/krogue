@@ -1,5 +1,6 @@
 async = require 'async'
 Q = require 'q'
+_ = require 'lodash'
 
 exports.bresenhamLine = (x0, y0, x1, y1, callback) ->
 	dx = Math.abs x1 - x0
@@ -35,3 +36,13 @@ exports.whilst = (test, fn, callback) ->
 		((next) -> fn().nodeify next)
 
 	.nodeify callback
+
+exports.edge = (r, edge) ->
+	switch edge
+		when 'left' then r.x
+		when 'right' then r.x+r.w
+		when 'top', 'up' then r.y
+		when 'bottom', 'down' then r.y+r.h
+
+exports.snapToRange = (min, curr, max) ->
+	Math.max min, Math.min curr, max

@@ -4,6 +4,7 @@ MersenneTwister = require 'mersennetwister'
 winston = require 'winston'
 
 TimeManager = require './time-manager'
+Camera = require './camera'
 Random = require './random'
 {Map} = require './map'
 {Dummy, FastDummy, Player} = require './creatures'
@@ -33,15 +34,23 @@ module.exports = class Game
 	initGame: ->
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
-		@currentMap = new Map @, 50, 15
+		@camera = new Camera { w: 40, h: 15 }, 6
+
+		@currentMap = new Map @, 50, 25
+		@camera.bounds @currentMap
+
+		player = new Player @, @currentMap, 2, 2, 'KayArr'
+		@camera.target = player
 
 		@entities = [
-			new Player @, @currentMap, 2, 2, 'KayArr'
+			player
 			new Dummy @, @currentMap, 6, 6
 			new FastDummy @, @currentMap, 12, 6
 		]
 
 		@timeManager.targets.push @entities...
+
+		@camera.update()
 
 	quit: ->
 		@io.deinitialize @

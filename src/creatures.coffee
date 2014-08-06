@@ -32,6 +32,10 @@ class exports.Player extends exports.Creature
 	constructor: (g, m, x, y, @name, @speed = 12) ->
 		super
 
+	setPos: ->
+		super
+		@game.camera.update()
+
 	tickRate: -> @speed
 
 	tick: ->
