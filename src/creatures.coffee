@@ -19,7 +19,7 @@ class exports.Dummy extends exports.Creature
 	tick: ->
 		@move (_.sample _.values directions)...
 
-		Q 12
+		12
 
 class exports.FastDummy extends exports.Dummy
 	tickRate: 30
