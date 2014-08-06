@@ -17,7 +17,7 @@ class exports.Dummy extends exports.Creature
 	tickRate: 3
 
 	tick: ->
-		@move (_.sample _.values directions)...
+		@move (@game.random.sample _.values directions)...
 
 		12
 

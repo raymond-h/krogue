@@ -8,9 +8,9 @@ module.exports = class Random
 		@mersenneTwister.random() * (max - min) // 1 + min
 
 	sample: (a, n) ->
-		if n? then a[int 0, a.length]
+		if not n? then a[@int 0, a.length]
 
-		else shuffle(a[..])[...n]
+		else @shuffle(a[..])[...n]
 
 	shuffle: (a) ->
 		for i in [0...a.length]
