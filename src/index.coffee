@@ -34,7 +34,8 @@ class Game
 
 		@timeManager.targets.push @entities...
 
-		@events.on 'key.q', => @quit()
+		@events.on 'key.c', (ch, key) =>
+			@quit() if key.ctrl
 
 	quit: ->
 		deinitialize @
