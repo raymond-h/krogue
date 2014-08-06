@@ -1,3 +1,4 @@
+async = require 'async'
 {EventEmitter2: EventEmitter} = require 'eventemitter2'
 
 TimeManager = require './time-manager'
@@ -10,6 +11,7 @@ TimeManager = require './time-manager'
 class Game
 	constructor: ->
 		# console.error 'Starting game...'
+		@state = 'main menu'
 
 		@timeManager = new TimeManager
 		@events = new EventEmitter
@@ -38,12 +40,25 @@ class Game
 		deinitialize @
 		process.exit 0
 
-	main: ->
-		do mainLoop = =>
-			@timeManager.tick (err) =>
-				return console.error err.stack if err?
+	goState: (state) ->
+		@state = state
+		@renderer.invalidate()
 
-				mainLoop()
+	main: ->
+		async.whilst (-> true),
+			(next) =>
+				switch @state
+					when 'main menu'
+						@events.once 'key.s', =>
+							@goState 'game'
+							next()
+
+					when 'game'
+						@timeManager.tick next
+
+			(err) =>
+				console.error err.stack if err?
+				@quit()
 
 game = new Game
 game.main()

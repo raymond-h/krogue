@@ -33,13 +33,17 @@ class TtyRenderer
 	render: ->
 		program.clear()
 
-		for row, y in @game.currentMap.data
-			program.write row.join ''
-			program.feed()
+		switch @game.state
+			when 'game'
+				for row, y in @game.currentMap.data
+					program.write row.join ''
+					program.feed()
 
-		for e in @game.entities
-			program.pos e.y, e.x
-			program.write e.symbol
+				for e in @game.entities
+					program.pos e.y, e.x
+					program.write e.symbol
+
+			else null
 
 module.exports =
 	initialize: initialize
