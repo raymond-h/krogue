@@ -1,19 +1,20 @@
 async = require 'async'
 {EventEmitter2: EventEmitter} = require 'eventemitter2'
+MersenneTwister = require 'mersennetwister'
 
 TimeManager = require './time-manager'
+Random = require './random'
 {Map} = require './map'
 
-{initialize, deinitialize, Renderer} = require './io/tty'
-
 {Dummy, FastDummy, Player} = require './creatures'
+
+{initialize, deinitialize, Renderer} = require './io/tty'
 
 class Game
 	constructor: ->
 		# console.error 'Starting game...'
-		@state = 'main menu'
+		@state = 'main-menu'
 
-		@timeManager = new TimeManager
 		@events = new EventEmitter
 			wildcard: yes
 			# newListener: yes
@@ -24,6 +25,15 @@ class Game
 		initialize @
 		@renderer = new Renderer @
 
+		@events.on 'key.c', (ch, key) =>
+			@quit() if key.ctrl
+
+		@events.on 'state.enter.game', =>
+			@initGame()
+
+	initGame: ->
+		@random = new Random(new MersenneTwister)
+		@timeManager = new TimeManager
 		@currentMap = new Map @, 50, 15
 
 		@entities = [
@@ -34,22 +44,22 @@ class Game
 
 		@timeManager.targets.push @entities...
 
-		@events.on 'key.c', (ch, key) =>
-			@quit() if key.ctrl
-
 	quit: ->
 		deinitialize @
 		process.exit 0
 
 	goState: (state) ->
+		@events.emit "state.exit.#{@state}", 'exit', @state
 		@state = state
+		@events.emit "state.enter.#{@state}", 'enter', @state
+
 		@renderer.invalidate()
 
 	main: ->
 		async.whilst (-> true),
 			(next) =>
 				switch @state
-					when 'main menu'
+					when 'main-menu'
 						@events.once 'key.s', =>
 							@goState 'game'
 							next()
