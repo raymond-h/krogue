@@ -1,6 +1,14 @@
 async = require 'async'
 {EventEmitter2: EventEmitter} = require 'eventemitter2'
 MersenneTwister = require 'mersennetwister'
+winston = require 'winston'
+
+winston
+.remove winston.transports.Console
+.add winston.transports.File,
+	level: 'silly'
+	filename: 'output.log'
+	json: no
 
 TimeManager = require './time-manager'
 Random = require './random'
@@ -12,15 +20,16 @@ Random = require './random'
 
 class Game
 	constructor: ->
-		# console.error 'Starting game...'
+		winston.info '*** Starting game...'
+
 		@state = 'main-menu'
 
 		@events = new EventEmitter
 			wildcard: yes
-			# newListener: yes
+			newListener: yes
 
-		# @events.onAny (a...) ->
-		# 	console.error "Event: '#{@event}'; ", a
+		@events.onAny (a...) ->
+			winston.silly "Event: '#{@event}'; ", a
 
 		initialize @
 		@renderer = new Renderer @
@@ -68,7 +77,7 @@ class Game
 						@timeManager.tick next
 
 			(err) =>
-				console.error err.stack if err?
+				winston.error err.stack if err?
 				@quit()
 
 game = new Game

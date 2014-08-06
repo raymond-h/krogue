@@ -1,3 +1,4 @@
+winston = require 'winston'
 async = require 'async'
 _ = require 'lodash'
 Q = require 'q'
@@ -26,10 +27,10 @@ module.exports = class TimeManager
 
 			whilst (-> target.actionPoints > 0),
 				->
-					# console.error "begin tick '#{target.name} #{target.constructor.name}'"
+					winston.silly "begin tick '#{target.name} #{target.constructor.name}'"
 					Q target.tick()
 					.then (cost) -> target.actionPoints -= cost
-					# .then -> console.error "end tick '#{target.name} #{target.constructor.name}'"
+					.then -> winston.silly "end tick '#{target.name} #{target.constructor.name}'"
 
 			.nodeify callback
 
