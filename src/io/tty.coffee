@@ -47,7 +47,7 @@ class TtyRenderer
 					program.write row.join ''
 					program.feed()
 
-				for e in @game.entities
+				for e in @game.currentMap.entities
 					if c.x <= e.x < c.x+c.viewport.w and
 							c.y <= e.y < c.y+c.viewport.h
 

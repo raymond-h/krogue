@@ -1,13 +1,11 @@
 _ = require 'lodash'
 
 class exports.Map
-	constructor: (@game, @w, @h) ->
-		tile = (x,y) => if (0 < x < @w-1 and 0 < y < @h-1) then '.' else '#'
-
-		@data = ((tile x,y for x in [0...@w]) for y in [0...@h])
+	constructor: (@game, @w, @h, @data = []) ->
+		@entities = []
 
 	objectPresent: (x, y) ->
-		for e in @game.entities when e.map is @
+		for e in @entities
 			return e if (e.x is x and e.y is y)
 
 		null
