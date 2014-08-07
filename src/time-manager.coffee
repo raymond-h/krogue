@@ -30,7 +30,8 @@ module.exports = class TimeManager
 					winston.silly "begin tick '#{target.name} #{target.constructor.name}'"
 					Q target.tick()
 					.then (cost) -> target.actionPoints -= cost
-					.then -> winston.silly "end tick '#{target.name} #{target.constructor.name}'"
+					.then ->
+						winston.silly "end tick '#{target.name} #{target.constructor.name}'"
 
 			.nodeify callback
 
