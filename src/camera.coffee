@@ -33,4 +33,4 @@ module.exports = class Camera
 		@x = snapToRange (edge wb, 'left'), @x, (edge wb, 'right')-@viewport.w
 		@y = snapToRange (edge wb, 'up'), @y, (edge wb, 'down')-@viewport.h
 
-		winston.info "Updating camera pos to #{@x},#{@y}"
+		winston.silly "Updating camera pos to #{@x},#{@y}"
