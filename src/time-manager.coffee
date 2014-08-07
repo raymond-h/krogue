@@ -14,6 +14,9 @@ module.exports = class TimeManager
 			@[i..i] = []
 			i
 
+		@targets.removeAll = (items...) ->
+			@remove item for item in items
+
 		@targets.rotate = ->
 			@push @shift()
 
