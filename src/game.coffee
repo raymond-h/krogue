@@ -34,7 +34,7 @@ module.exports = class Game
 	initGame: ->
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
-		@camera = new Camera { w: 40, h: 15 }, 6
+		@camera = new Camera { w: 40, h: 15 }, { x: 10, y: 6 }
 
 		@currentMap = new Map @, 50, 25
 		@camera.bounds @currentMap

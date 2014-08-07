@@ -14,7 +14,7 @@ module.exports = class Camera
 			_.defaults (_.pick rect, 'x', 'y', 'w', 'h'),
 				{ x: @x, y: @y, w: @viewport.w, h: @viewport.h }
 
-	calculateOffset: (relPos, camSize, minBoundDist = @minBoundDist) ->
+	calculateOffset: (relPos, camSize, minBoundDist) ->
 		if minBoundDist > relPos then (relPos - minBoundDist)
 
 		else if (camSize - minBoundDist) <= relPos
@@ -26,8 +26,8 @@ module.exports = class Camera
 		wb = @worldBounds
 
 		if @target?
-			@x += @calculateOffset (@target.x - @x), @viewport.w
-			@y += @calculateOffset (@target.y - @y), @viewport.h
+			@x += @calculateOffset (@target.x - @x), @viewport.w, @minBoundDist.x
+			@y += @calculateOffset (@target.y - @y), @viewport.h, @minBoundDist.y
 
 		# keep camera within bounds
 		@x = snapToRange (edge wb, 'left'), @x, (edge wb, 'right')-@viewport.w
