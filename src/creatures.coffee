@@ -47,6 +47,11 @@ class exports.Player extends exports.Creature
 			if @move moveOffset...
 				d.resolve @tickRate()
 
-			else d.resolve 0
+			else
+				switch key.full
+					when 's' then @game.save 'test-save.json'
+					when 'S-s' then @game.load 'test-save.json'
+
+				d.resolve 0
 
 		d.promise

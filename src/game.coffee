@@ -8,6 +8,7 @@ Camera = require './camera'
 Random = require './random'
 {Map} = require './map'
 {Dummy, FastDummy, Player} = require './creatures'
+saveData = require './save-data'
 
 module.exports = class Game
 	constructor: (@io) ->
@@ -52,6 +53,12 @@ module.exports = class Game
 
 		@camera.update()
 
+	save: (filename) ->
+		saveData.save @, filename
+
+	load: (filename) ->
+		saveData.load @, filename
+
 	quit: ->
 		@io.deinitialize @
 		process.exit 0
@@ -78,3 +85,13 @@ module.exports = class Game
 			(err) =>
 				winston.error err.stack if err?
 				@quit()
+
+	loadFromJSON: (json) ->
+		@currentMap = Map.fromJSON @, json.map
+		
+		@renderer.invalidate()
+
+	saveToJSON: ->
+		{
+			map: @currentMap.toJSON()
+		}

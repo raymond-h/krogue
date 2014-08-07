@@ -16,3 +16,11 @@ class exports.Map
 		return true unless 0 <= x < @w and 0 <= y < @h
 
 		@data[y][x] is '#'
+
+	@fromJSON = (game, json) ->
+		map = new exports.Map game, json.w, json.h
+		map.data = json.data
+		map
+
+	toJSON: ->
+		{ @w, @h, @data }
