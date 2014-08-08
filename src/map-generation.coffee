@@ -60,7 +60,8 @@ exports.generateCellularAutomata = (game, w, h) ->
 	initProb = 0
 	rules = []
 
-	mapData = exports.createMapData w, h, (a...) -> (border a...) ? (_randomTile a...)
+	mapData = exports.createMapData w, h,
+		(a...) -> (border a...) ? (_randomTile a...)
 
 	for rule in rules
 		mapData = generation mapData, w, h, rule
