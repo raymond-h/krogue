@@ -46,3 +46,6 @@ exports.edge = (r, edge) ->
 
 exports.snapToRange = (min, curr, max) ->
 	Math.max min, Math.min curr, max
+
+exports.repeat = (n, item) ->
+	item for i in [1..n]
