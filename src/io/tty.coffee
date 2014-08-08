@@ -37,6 +37,8 @@ class TtyRenderer
 			when 'game'
 				c = @game.camera
 
+				program.move 0, 1
+
 				for cy in [0...c.viewport.h]
 					y = c.y + cy
 					row = @game.currentMap.data[y]
@@ -52,6 +54,7 @@ class TtyRenderer
 							c.y <= e.y < c.y+c.viewport.h
 
 						program.pos e.y-c.y, e.x-c.x
+						program.down 1
 						program.write e.symbol
 
 			else null
