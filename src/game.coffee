@@ -8,7 +8,7 @@ Camera = require './camera'
 Random = require './random'
 {Map} = require './map'
 MapGenerator = require './map-generation'
-{Dummy, FastDummy, Player} = require './creatures'
+{Player} = require './creatures'
 saveData = require './save-data'
 
 module.exports = class Game
@@ -38,23 +38,22 @@ module.exports = class Game
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 40, h: 15 }, { x: 10, y: 6 }
 
-		@currentMap = MapGenerator.generateBigRoom @, 50, 25
-		@camera.bounds @currentMap
-
-		@currentMap.entities = [
-			new Dummy @, @currentMap, 6, 6
-			new FastDummy @, @currentMap, 12, 6
-		]
-
-		@timeManager.targets.push @currentMap.entities...
-
-		# create player and add to the lists where it belongs
-		@player = new Player @, @currentMap, 2, 2, 'KayArr'
+		@player = new Player @, null, 0, 0, 'KayArr'
 		@camera.target = @player
-		@currentMap.entities.unshift @player
 		@timeManager.targets.unshift @player
 
-		@camera.update()
+		@transitionToMap (MapGenerator.generateBigRoom @, 50, 25), 2, 2
+
+	transitionToMap: (map, x, y) ->
+		@currentMap = map
+		@camera.bounds map
+
+		@timeManager.targets.push map.entities...
+
+		map.entities.unshift @player
+		@player.map = map
+
+		@player.setPos x, y if x? and y?
 
 	save: (filename) ->
 		saveData.save @, filename
