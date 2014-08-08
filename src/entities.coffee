@@ -1,3 +1,6 @@
+_ = require 'lodash'
+winston = require 'winston'
+
 class exports.Entity
 	symbol: '-'
 
@@ -21,3 +24,24 @@ class exports.Entity
 	tickRate: 0
 
 	tick: ->
+
+	@fromJSON: (game, json) ->
+		Clazz = (require './entity-registry').type[json.type]
+
+		if Clazz?
+			e = new Clazz game
+			e.loadFromJSON json
+			e
+
+		else null
+
+	loadFromJSON: (json) ->
+		_.assign @, _.omit json, 'type'
+		@
+
+	toJSON: ->
+		o = _.pick @, (v, k, o) ->
+			(_.has o, k) and not (k in ['game', 'map', 'symbol'])
+
+		o.type = @type
+		o

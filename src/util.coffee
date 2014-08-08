@@ -49,3 +49,8 @@ exports.snapToRange = (min, curr, max) ->
 
 exports.repeat = (n, item) ->
 	item for i in [1..n]
+
+exports.arrayRemove = (a, item) ->
+	i = a.indexOf item
+	a[i..i] = []
+	i

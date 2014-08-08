@@ -16,9 +16,18 @@ class exports.Map
 		@data[y][x] is '#'
 
 	@fromJSON = (game, json) ->
-		map = new exports.Map game, json.w, json.h
-		map.data = json.data
+		map = new exports.Map game, json.w, json.h, json.data
+
+		map.entities =
+			for e in json.entities
+				ent = (require './entities').Entity.fromJSON game, e
+				ent.map = map
+				ent
+
 		map
 
 	toJSON: ->
-		{ @w, @h, @data }
+		{
+			@w, @h, @data
+			entities: e for e in @entities when e isnt @game.player
+		}

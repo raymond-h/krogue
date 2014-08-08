@@ -3,16 +3,13 @@ async = require 'async'
 _ = require 'lodash'
 Q = require 'q'
 
-{whilst} = require './util'
+{whilst, arrayRemove} = require './util'
 
 module.exports = class TimeManager
 	constructor: ->
 		@targets = []
 
-		@targets.remove = (item) ->
-			i = @indexOf item
-			@[i..i] = []
-			i
+		@targets.remove = (i) -> arrayRemove @, i
 
 		@targets.removeAll = (items...) ->
 			@remove item for item in items

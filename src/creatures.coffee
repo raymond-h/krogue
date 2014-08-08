@@ -12,6 +12,7 @@ directions =
 class exports.Creature extends Entity
 
 class exports.Dummy extends exports.Creature
+	type: 'dummy'
 	symbol: 'D'
 
 	tickRate: 3
@@ -22,11 +23,13 @@ class exports.Dummy extends exports.Creature
 		12
 
 class exports.FastDummy extends exports.Dummy
+	type: 'fast-dummy'
 	tickRate: 30
 
 	symbol: 'F'
 
 class exports.Player extends exports.Creature
+	type: 'player'
 	symbol: '@'
 
 	constructor: (g, m, x, y, @name, @speed = 12) ->
@@ -51,6 +54,12 @@ class exports.Player extends exports.Creature
 				switch key.full
 					when 's' then @game.save 'test-save.json'
 					when 'S-s' then @game.load 'test-save.json'
+
+					when 'd'
+						winston = require 'winston'
+
+						for e in @map.entities
+							winston.info e.toJSON()
 
 				d.resolve 0
 

@@ -10,6 +10,9 @@ Random = require './random'
 MapGenerator = require './map-generation'
 {Player} = require './creatures'
 saveData = require './save-data'
+{arrayRemove} = require './util'
+
+require './entity-registry'
 
 module.exports = class Game
 	constructor: (@io) ->
@@ -45,6 +48,12 @@ module.exports = class Game
 		@transitionToMap (MapGenerator.generateBigRoom @, 50, 25), 2, 2
 
 	transitionToMap: (map, x, y) ->
+		if @currentMap?
+			for e in @currentMap.entities when e isnt @player
+				@timeManager.targets.remove e
+
+			arrayRemove @currentMap.entities, @player
+
 		@currentMap = map
 		@camera.bounds map
 
@@ -58,6 +67,8 @@ module.exports = class Game
 			
 		else
 			@camera.update()
+
+		@renderer.invalidate()
 
 	save: (filename) ->
 		saveData.save @, filename
@@ -93,11 +104,14 @@ module.exports = class Game
 				@quit()
 
 	loadFromJSON: (json) ->
-		@currentMap = Map.fromJSON @, json.map
-		
-		@renderer.invalidate()
+		@player.loadFromJSON json.player
+		@transitionToMap Map.fromJSON @, json.map
+
+		# puts player last in targets list
+		@timeManager.targets.rotate()
 
 	saveToJSON: ->
 		{
-			map: @currentMap.toJSON()
+			player: @player
+			map: @currentMap
 		}
