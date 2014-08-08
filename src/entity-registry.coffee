@@ -9,6 +9,16 @@ exports.add = add = (clazz) ->
 
 	entityTypes[name] = clazz
 
+exports.fromJSON = (game, json) ->
+	Clazz = entityTypes[json.type]
+
+	if Clazz?
+		e = new Clazz game
+		e.loadFromJSON json
+		e
+
+	else null
+
 add Player
 add Dummy
 add FastDummy
