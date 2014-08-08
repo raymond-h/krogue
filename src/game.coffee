@@ -40,7 +40,7 @@ module.exports = class Game
 
 		@player = new Player @, null, 0, 0, 'KayArr'
 		@camera.target = @player
-		@timeManager.targets.unshift @player
+		@timeManager.targets.push @player
 
 		@transitionToMap (MapGenerator.generateBigRoom @, 50, 25), 2, 2
 
