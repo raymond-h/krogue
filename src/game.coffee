@@ -105,6 +105,8 @@ module.exports = class Game
 
 	loadFromJSON: (json) ->
 		@player.loadFromJSON json.player
+		@camera.x = json.camera.x
+		@camera.y = json.camera.y
 		@transitionToMap Map.fromJSON @, json.map
 
 		# puts player last in targets list
@@ -113,5 +115,8 @@ module.exports = class Game
 	saveToJSON: ->
 		{
 			player: @player
+			camera:
+				x: @camera.x
+				y: @camera.y
 			map: @currentMap
 		}
