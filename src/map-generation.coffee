@@ -5,10 +5,12 @@ _ = require 'lodash'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
-exports.randomTiles = (random, prob) -> (x,y, w,h) ->
-	return '#' if not (0 < x < w-1 and 0 < y < h-1)
+exports.mapGen =
+	border: (x,y, w,h) -> return '#' if not (0 < x < w-1 and 0 < y < h-1)
 
-	if random() <= prob then '#' else '.'
+	randomTiles: (random, prob) ->
+		(x,y, w,h) ->
+			if random() <= prob then '#' else '.'
 
 exports.neighbourCount = (map, x, y) ->
 	tiles =
@@ -19,7 +21,7 @@ exports.neighbourCount = (map, x, y) ->
 	(t for t in (_.flatten tiles) when t is '#').length
 
 exports.cellularAutomataGeneration = (map, w, h, ruleFunc) ->
-	tileCb = (x, y) ->
+	tileCb = (x, y, w, h) ->
 		if ruleFunc (exports.neighbourCount map, x, y) then '#' else '.'
 
 	exports.createMapData w, h, tileCb
@@ -31,10 +33,12 @@ exports.createMapData = (w, h, tileCb) ->
 Generation functions
 ###
 exports.generateBigRoom = (game, w, h) ->
+	{border} = exports.mapGen
+
 	map = new Map game, w, h
 
 	# generate map itself ('.' everywhere, '#' surrounding entire room)
-	tileCb = (x,y) -> if (0 < x < w-1 and 0 < y < h-1) then '.' else '#'
+	tileCb = (a...) -> (border a...) ? '.'
 	
 	map.data = exports.createMapData map.w, map.h, tileCb
 
@@ -47,12 +51,13 @@ exports.generateBigRoom = (game, w, h) ->
 	map
 
 exports.generateCellularAutomata = (game, w, h, initProb, rules) ->
+	{border, randomTiles} = exports.mapGen
+
 	map = new Map game, w, h
 
-	randomFunc = -> game.random.mersenneTwister.rnd()
+	_randomTile = randomTiles (-> game.random.mersenneTwister.rnd()), initProb
 
-	mapData = exports.createMapData w, h,
-		(exports.randomTiles randomFunc, initProb)
+	mapData = exports.createMapData w, h, (a...) -> (border a...) ? (_randomTile a...)
 
 	for rule in rules
 		mapData = exports.cellularAutomataGeneration mapData, w, h, rule
