@@ -50,10 +50,13 @@ exports.generateBigRoom = (game, w, h) ->
 
 	map
 
-exports.generateCellularAutomata = (game, w, h, initProb, rules) ->
+exports.generateCellularAutomata = (game, w, h) ->
 	{border, randomTiles} = exports.mapGen
 
 	map = new Map game, w, h
+
+	initProb = 0
+	rules = []
 
 	_randomTile = randomTiles (-> game.random.mersenneTwister.rnd()), initProb
 
