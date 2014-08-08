@@ -12,7 +12,7 @@ module.exports = class Camera
 	bounds: (rect) ->
 		@worldBounds =
 			_.defaults (_.pick rect, 'x', 'y', 'w', 'h'),
-				{ x: @x, y: @y, w: @viewport.w, h: @viewport.h }
+				{ x: 0, y: 0, w: @viewport.w, h: @viewport.h }
 
 	calculateOffset: (relPos, camSize, minBoundDist) ->
 		if minBoundDist > relPos then (relPos - minBoundDist)
