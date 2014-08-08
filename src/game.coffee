@@ -53,7 +53,11 @@ module.exports = class Game
 		map.entities.unshift @player
 		@player.map = map
 
-		@player.setPos x, y if x? and y?
+		if x? and y?
+			@player.setPos x, y
+			
+		else
+			@camera.update()
 
 	save: (filename) ->
 		saveData.save @, filename
