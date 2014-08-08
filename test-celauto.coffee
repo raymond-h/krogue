@@ -46,9 +46,9 @@ printMap = (map) ->
 
 initProb = 0.40
 rules = _.flatten [
-	repeat 3, (neighbours) -> neighbours >= 5 or neighbours < 1
-	repeat 2, (neighbours) -> neighbours >= 4
-	repeat 2, (neighbours) -> neighbours >= 7
+	repeat 3, (..., neighbours) -> neighbours >= 5 or neighbours < 1
+	repeat 2, (..., neighbours) -> neighbours >= 4
+	repeat 2, (..., neighbours) -> neighbours >= 7
 ]
 
 w = 150

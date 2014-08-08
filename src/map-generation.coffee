@@ -22,7 +22,7 @@ exports.neighbourCount = (map, x, y) ->
 
 exports.cellularAutomataGeneration = (map, w, h, ruleFunc) ->
 	tileCb = (x, y, w, h) ->
-		if ruleFunc (exports.neighbourCount map, x, y) then '#' else '.'
+		if (ruleFunc map, x, y, (exports.neighbourCount map, x, y)) then '#' else '.'
 
 	exports.createMapData w, h, tileCb
 
