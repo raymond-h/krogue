@@ -30,7 +30,7 @@ class exports.FastDummy extends exports.Dummy
 
 	symbol: 'F'
 
-class exports.Player extends exports.Creature
+class exports.PlayerC extends exports.Creature
 	type: 'player'
 	symbol: '@'
 
@@ -44,27 +44,4 @@ class exports.Player extends exports.Creature
 	tickRate: -> @speed
 
 	tick: ->
-		game = require './game'
-
-		d = Q.defer()
-
-		game.events.once 'key.*', (ch, key) =>
-			moveOffset = directions[key.name] ? [0, 0]
-
-			if @move moveOffset...
-				d.resolve @tickRate()
-
-			else
-				switch key.full
-					when 's' then game.save 'test-save.json'
-					when 'S-s' then game.load 'test-save.json'
-
-					when 'd'
-						winston = require 'winston'
-
-						for e in @map.entities
-							winston.info e.toJSON()
-
-				d.resolve 0
-
-		d.promise
+		(require './game').player.tick()

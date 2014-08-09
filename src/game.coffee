@@ -2,17 +2,21 @@ async = require 'async'
 {EventEmitter2} = require 'eventemitter2'
 MersenneTwister = require 'mersennetwister'
 winston = require 'winston'
+Q = require 'q'
 
 TimeManager = require './time-manager'
 Camera = require './camera'
 Random = require './random'
-{Map} = require './map'
-MapGenerator = require './map-generation'
-{Player} = require './creatures'
+Player = require './player'
 saveData = require './save-data'
 {arrayRemove} = require './util'
 
-require './entity-registry'
+{Map} = require './map'
+MapGenerator = require './map-generation'
+
+{PlayerC} = require './creatures'
+
+EntityRegistry = require './entity-registry'
 
 class Game
 	constructor: ->
@@ -43,9 +47,9 @@ class Game
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		@player = new Player null, 0, 0, 'KayArr'
-		@camera.target = @player
-		@timeManager.targets.push @player
+		creature = new PlayerC null, 0, 0, 'KayArr'
+		@player = new Player creature
+		@timeManager.targets.push creature
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
@@ -64,25 +68,25 @@ class Game
 	quit: ->
 		@io.deinitialize @ if @io.initialized
 
-		process.exit 0
+		Q.delay(100).then -> process.exit 0
 
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
-			for e in @currentMap.entities when e isnt @player
+			for e in @currentMap.entities when e isnt @player.creature
 				@timeManager.targets.remove e
 
-			arrayRemove @currentMap.entities, @player
+			arrayRemove @currentMap.entities, @player.creature
 
 		@currentMap = map
 		@camera.bounds map
 
 		@timeManager.targets.push map.entities...
 
-		map.entities.unshift @player
-		@player.map = map
+		map.entities.unshift @player.creature
+		@player.creature.map = map
 
 		if x? and y?
-			@player.setPos x, y
+			@player.creature.setPos x, y
 			
 		else
 			@camera.update()
@@ -119,7 +123,10 @@ class Game
 				@quit()
 
 	loadFromJSON: (json) ->
+		@timeManager.targets.remove @player.creature
 		@player.loadFromJSON json.player
+		@timeManager.targets.push @player.creature
+
 		@camera.x = json.camera.x
 		@camera.y = json.camera.y
 		@transitionToMap Map.fromJSON json.map

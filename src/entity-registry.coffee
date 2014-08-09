@@ -1,6 +1,6 @@
 _ = require 'lodash'
 
-{Player, Dummy, FastDummy} = require './creatures'
+{PlayerC, Dummy, FastDummy} = require './creatures'
 
 exports.type = entityTypes = {}
 
@@ -19,6 +19,6 @@ exports.fromJSON = (json) ->
 
 	else null
 
-add Player
+add PlayerC
 add Dummy
 add FastDummy

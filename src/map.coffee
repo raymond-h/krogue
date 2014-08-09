@@ -29,5 +29,6 @@ class exports.Map
 	toJSON: ->
 		{
 			@w, @h, @data
-			entities: @entities.filter (e) -> e isnt (require './game').player
+			entities: @entities.filter (e) ->
+				e isnt (require './game').player.creature
 		}
