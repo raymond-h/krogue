@@ -52,5 +52,5 @@ exports.repeat = (n, item) ->
 
 exports.arrayRemove = (a, item) ->
 	i = a.indexOf item
-	a[i..i] = []
+	a[i..i] = [] if ~i
 	i
