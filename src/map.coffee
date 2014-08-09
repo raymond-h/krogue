@@ -1,7 +1,7 @@
 _ = require 'lodash'
 
 class exports.Map
-	constructor: (@game, @w, @h, @data = []) ->
+	constructor: (@w, @h, @data = []) ->
 		@entities = []
 
 	objectPresent: (x, y) ->
@@ -16,7 +16,7 @@ class exports.Map
 		@data[y][x] is '#'
 
 	@fromJSON = (game, json) ->
-		map = new exports.Map game, json.w, json.h, json.data
+		map = new exports.Map json.w, json.h, json.data
 
 		map.entities =
 			for e in json.entities

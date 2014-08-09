@@ -37,7 +37,7 @@ Generation functions
 exports.generateBigRoom = (game, w, h) ->
 	{border} = exports.mapGen
 
-	map = new Map game, w, h
+	map = new Map w, h
 
 	# generate map itself ('.' everywhere, '#' surrounding entire room)
 	tileCb = (a...) -> (border a...) ? '.'
@@ -56,7 +56,7 @@ exports.generateCellularAutomata = (game, w, h) ->
 	{border, randomTiles} = exports.mapGen
 	generation = exports.cellularAutomataGeneration
 
-	map = new Map game, w, h
+	map = new Map w, h
 
 	initProb = 0.40
 	rules = _.flatten [
