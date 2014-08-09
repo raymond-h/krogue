@@ -7,7 +7,7 @@ winston
 		filename: 'output.log'
 		json: no
 
-Game = require './game'
+game = require './game'
 
-game = new Game(require './io/tty')
+game.initialize require './io/tty'
 game.main()

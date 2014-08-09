@@ -14,10 +14,8 @@ saveData = require './save-data'
 
 require './entity-registry'
 
-module.exports = class Game
-	constructor: (@io) ->
-		winston.info '*** Starting game...'
-
+class Game
+	constructor: ->
 		@state = 'main-menu'
 
 		@events = new EventEmitter2
@@ -27,7 +25,11 @@ module.exports = class Game
 		@events.onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
 
+	initialize: (@io) ->
+		winston.info '*** Starting game...'
+
 		@io.initialize @
+		@io.initialized = yes
 		@renderer = new @io.Renderer @
 
 		@events.on 'key.c', (ch, key) =>
@@ -59,6 +61,11 @@ module.exports = class Game
 
 			@transitionToMap newMap, startX, startY
 
+	quit: ->
+		@io.deinitialize @ if @io.initialized
+		
+		process.exit 0
+
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
 			for e in @currentMap.entities when e isnt @player
@@ -87,10 +94,6 @@ module.exports = class Game
 
 	load: (filename) ->
 		saveData.load @, filename
-
-	quit: ->
-		@io.deinitialize @
-		process.exit 0
 
 	goState: (state) ->
 		@events.emit "state.exit.#{@state}", 'exit', @state
@@ -132,3 +135,7 @@ module.exports = class Game
 				y: @camera.y
 			map: @currentMap
 		}
+
+module.exports = new Game
+
+module.exports.Game = Game
