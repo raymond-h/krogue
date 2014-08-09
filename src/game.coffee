@@ -47,10 +47,10 @@ class Game
 		@camera.target = @player
 		@timeManager.targets.push @player
 
-		@transitionToMap (MapGenerator.generateBigRoom @, 80, 25), 2, 2
+		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
 		@events.on 'key.n', =>
-			newMap = (MapGenerator.generateCellularAutomata @, 80, 21)
+			newMap = (MapGenerator.generateCellularAutomata 80, 21)
 			[startX, startY] = []
 
 			for row, y in newMap.data
