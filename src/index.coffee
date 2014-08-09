@@ -1,9 +1,11 @@
+argv = (require 'yargs').argv
+
 winston = require 'winston'
 
 winston
 	.remove winston.transports.Console
 	.add winston.transports.File,
-		level: 'silly'
+		level: argv.log ? 'info'
 		filename: 'output.log'
 		json: no
 
