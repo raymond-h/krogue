@@ -1,11 +1,7 @@
 Q = require 'q'
 _ = require 'lodash'
 
-directions =
-	up: [0, -1]
-	down: [0, 1]
-	left: [-1, 0]
-	right: [1, 0]
+direction = require './direction'
 
 module.exports = class Player
 	constructor: (@creature) ->
@@ -16,7 +12,7 @@ module.exports = class Player
 		d = Q.defer()
 
 		game.events.once 'key.*', (ch, key) =>
-			moveOffset = directions[key.name] ? [0, 0]
+			moveOffset = direction.directions[key.name] ? [0, 0]
 
 			if @creature.move moveOffset...
 				(require './game').camera.update()

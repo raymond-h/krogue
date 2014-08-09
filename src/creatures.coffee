@@ -2,12 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 
 {Entity} = require './entities'
-
-directions =
-	up: [0, -1]
-	down: [0, 1]
-	left: [-1, 0]
-	right: [1, 0]
+direction = require './direction'
 
 class exports.Creature extends Entity
 	tick: (a...) ->
@@ -26,7 +21,7 @@ class exports.Dummy extends exports.Creature
 	aiTick: ->
 		game = require './game'
 
-		@move (game.random.sample _.values directions)...
+		@move (game.random.sample _.values direction.directions)...
 
 		12
 
