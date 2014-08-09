@@ -65,7 +65,7 @@ exports.generateCellularAutomata = (w, h) ->
 		repeat 2, (..., neighbours) -> neighbours >= 7
 	]
 
-	_randomTile = randomTiles (-> (require './game').random.mersenneTwister.rnd()), initProb
+	_randomTile = randomTiles (-> (require './game').random.rnd()), initProb
 
 	mapData = exports.createMapData w, h,
 		(a...) -> (border a...) ? (_randomTile a...)

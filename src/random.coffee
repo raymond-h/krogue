@@ -1,11 +1,14 @@
 module.exports = class Random
 	constructor: (@mersenneTwister) ->
+		@mt = @mersenneTwister
 
 	bool: ->
 		(@mersenneTwister.int31() % 2) is 0
 
+	rnd: -> @mersenneTwister.rnd()
+
 	int: (min, max) ->
-		@mersenneTwister.random() * (max - min) // 1 + min
+		@rnd() * (max - min) // 1 + min
 
 	sample: (a, n) ->
 		if not n? then a[@int 0, a.length]
