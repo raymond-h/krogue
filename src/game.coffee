@@ -14,7 +14,7 @@ saveData = require './save-data'
 {Map} = require './map'
 MapGenerator = require './map-generation'
 
-{PlayerC} = require './creatures'
+{Human} = require './creatures'
 
 EntityRegistry = require './entity-registry'
 
@@ -47,7 +47,7 @@ class Game
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		creature = new PlayerC null, 0, 0, 'KayArr'
+		creature = new Human null, 0, 0, 'KayArr'
 		@player = new Player creature
 		@timeManager.targets.push creature
 

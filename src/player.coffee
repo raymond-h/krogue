@@ -19,12 +19,19 @@ module.exports = class Player
 			moveOffset = directions[key.name] ? [0, 0]
 
 			if @creature.move moveOffset...
-				d.resolve @creature.tickRate()
+				(require './game').camera.update()
+				d.resolve 12
 
 			else
 				switch key.full
 					when 's' then game.save 'test-save.json'
 					when 'S-s' then game.load 'test-save.json'
+
+					when 'p'
+						entities = @creature.map.entities
+						entities.push entities.shift()
+						@creature = entities[0]
+						(require './game').camera.update()
 
 					when 'd'
 						winston = require 'winston'

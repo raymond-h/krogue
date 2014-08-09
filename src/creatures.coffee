@@ -10,6 +10,12 @@ directions =
 	right: [1, 0]
 
 class exports.Creature extends Entity
+	tick: (a...) ->
+		# check if this creature is controlled by player
+		if @ is (require './game').player.creature
+			(require './game').player.tick a...
+
+		else @aiTick a...
 
 class exports.Dummy extends exports.Creature
 	type: 'dummy'
@@ -17,7 +23,7 @@ class exports.Dummy extends exports.Creature
 
 	tickRate: 3
 
-	tick: ->
+	aiTick: ->
 		game = require './game'
 
 		@move (game.random.sample _.values directions)...
@@ -30,18 +36,14 @@ class exports.FastDummy extends exports.Dummy
 
 	symbol: 'F'
 
-class exports.PlayerC extends exports.Creature
-	type: 'player'
+class exports.Human extends exports.Creature
+	type: 'human'
 	symbol: '@'
 
 	constructor: (m, x, y, @name, @speed = 12) ->
 		super
 
-	setPos: ->
-		super
-		(require './game').camera.update()
-
 	tickRate: -> @speed
 
-	tick: ->
-		(require './game').player.tick()
+	aiTick: ->
+		@tickRate()
