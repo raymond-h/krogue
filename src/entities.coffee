@@ -4,12 +4,12 @@ winston = require 'winston'
 class exports.Entity
 	symbol: '-'
 
-	constructor: (@game, @map, @x, @y) ->
+	constructor: (@map, @x, @y) ->
 
 	setPos: (x, y) ->
 		@x = x
 		@y = y
-		@game.renderer.invalidate()
+		(require './game').renderer.invalidate()
 
 	move: (x, y) ->
 		canMoveThere = not @collidable @x+x, @y+y
@@ -31,7 +31,7 @@ class exports.Entity
 
 	toJSON: ->
 		o = _.pick @, (v, k, o) ->
-			(_.has o, k) and not (k in ['game', 'map', 'symbol'])
+			(_.has o, k) and not (k in ['map'])
 
 		o.type = @type
 		o

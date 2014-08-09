@@ -18,7 +18,9 @@ class exports.Dummy extends exports.Creature
 	tickRate: 3
 
 	tick: ->
-		@move (@game.random.sample _.values directions)...
+		game = require './game'
+
+		@move (game.random.sample _.values directions)...
 
 		12
 
@@ -32,19 +34,21 @@ class exports.Player extends exports.Creature
 	type: 'player'
 	symbol: '@'
 
-	constructor: (g, m, x, y, @name, @speed = 12) ->
+	constructor: (m, x, y, @name, @speed = 12) ->
 		super
 
 	setPos: ->
 		super
-		@game.camera.update()
+		(require './game').camera.update()
 
 	tickRate: -> @speed
 
 	tick: ->
+		game = require './game'
+
 		d = Q.defer()
 
-		@game.events.once 'key.*', (ch, key) =>
+		game.events.once 'key.*', (ch, key) =>
 			moveOffset = directions[key.name] ? [0, 0]
 
 			if @move moveOffset...
@@ -52,8 +56,8 @@ class exports.Player extends exports.Creature
 
 			else
 				switch key.full
-					when 's' then @game.save 'test-save.json'
-					when 'S-s' then @game.load 'test-save.json'
+					when 's' then game.save 'test-save.json'
+					when 'S-s' then game.load 'test-save.json'
 
 					when 'd'
 						winston = require 'winston'

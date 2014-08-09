@@ -43,7 +43,7 @@ class Game
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		@player = new Player @, null, 0, 0, 'KayArr'
+		@player = new Player null, 0, 0, 'KayArr'
 		@camera.target = @player
 		@timeManager.targets.push @player
 
@@ -63,7 +63,7 @@ class Game
 
 	quit: ->
 		@io.deinitialize @ if @io.initialized
-		
+
 		process.exit 0
 
 	transitionToMap: (map, x, y) ->
@@ -122,7 +122,7 @@ class Game
 		@player.loadFromJSON json.player
 		@camera.x = json.camera.x
 		@camera.y = json.camera.y
-		@transitionToMap Map.fromJSON @, json.map
+		@transitionToMap Map.fromJSON json.map
 
 		# puts player last in targets list
 		@timeManager.targets.rotate()

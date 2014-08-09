@@ -34,7 +34,7 @@ exports.createMapData = (w, h, tileCb) ->
 ###
 Generation functions
 ###
-exports.generateBigRoom = (game, w, h) ->
+exports.generateBigRoom = (w, h) ->
 	{border} = exports.mapGen
 
 	map = new Map w, h
@@ -46,13 +46,13 @@ exports.generateBigRoom = (game, w, h) ->
 
 	# 'generate' entities to inhabit the map
 	map.entities = [
-		new Dummy game, map, 6, 6
-		new FastDummy game, map, 12, 6
+		new Dummy map, 6, 6
+		new FastDummy map, 12, 6
 	]
 
 	map
 
-exports.generateCellularAutomata = (game, w, h) ->
+exports.generateCellularAutomata = (w, h) ->
 	{border, randomTiles} = exports.mapGen
 	generation = exports.cellularAutomataGeneration
 
@@ -65,7 +65,7 @@ exports.generateCellularAutomata = (game, w, h) ->
 		repeat 2, (..., neighbours) -> neighbours >= 7
 	]
 
-	_randomTile = randomTiles (-> game.random.mersenneTwister.rnd()), initProb
+	_randomTile = randomTiles (-> (require './game').random.mersenneTwister.rnd()), initProb
 
 	mapData = exports.createMapData w, h,
 		(a...) -> (border a...) ? (_randomTile a...)

@@ -9,11 +9,11 @@ exports.add = add = (clazz) ->
 
 	entityTypes[name] = clazz
 
-exports.fromJSON = (game, json) ->
+exports.fromJSON = (json) ->
 	Clazz = entityTypes[json.type]
 
 	if Clazz?
-		e = new Clazz game
+		e = new Clazz
 		e.loadFromJSON json
 		e
 
