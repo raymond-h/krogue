@@ -1,7 +1,9 @@
 _ = require 'lodash'
+winston = require 'winston'
 
 {Map} = require './map'
 {Dummy, FastDummy} = require './creatures'
+{repeat} = require './util'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
@@ -53,12 +55,17 @@ exports.generateBigRoom = (game, w, h) ->
 exports.generateCellularAutomata = (game, w, h) ->
 	{border, randomTiles} = exports.mapGen
 	generation = exports.cellularAutomataGeneration
-	_randomTile = randomTiles (-> game.random.mersenneTwister.rnd()), initProb
 
 	map = new Map game, w, h
 
-	initProb = 0
-	rules = []
+	initProb = 0.40
+	rules = _.flatten [
+		repeat 3, (..., neighbours) -> neighbours >= 5 or neighbours < 1
+		repeat 2, (..., neighbours) -> neighbours >= 4
+		repeat 2, (..., neighbours) -> neighbours >= 7
+	]
+
+	_randomTile = randomTiles (-> game.random.mersenneTwister.rnd()), initProb
 
 	mapData = exports.createMapData w, h,
 		(a...) -> (border a...) ? (_randomTile a...)
@@ -67,3 +74,5 @@ exports.generateCellularAutomata = (game, w, h) ->
 		mapData = generation mapData, w, h, rule
 
 	map.data = mapData
+
+	map

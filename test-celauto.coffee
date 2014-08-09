@@ -51,8 +51,8 @@ rules = _.flatten [
 	repeat 2, (..., neighbours) -> neighbours >= 7
 ]
 
-w = 150
-h = 100
+w = 80
+h = 25
 
 _randomTiles = randomTiles(Math.random, initProb)
 

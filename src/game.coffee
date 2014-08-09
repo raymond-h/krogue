@@ -39,13 +39,25 @@ module.exports = class Game
 	initGame: ->
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
-		@camera = new Camera { w: 80, h: 21 }, { x: 10, y: 6 }
+		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
 		@player = new Player @, null, 0, 0, 'KayArr'
 		@camera.target = @player
 		@timeManager.targets.push @player
 
 		@transitionToMap (MapGenerator.generateBigRoom @, 80, 25), 2, 2
+
+		@events.on 'key.n', =>
+			newMap = (MapGenerator.generateCellularAutomata @, 80, 21)
+			[startX, startY] = []
+
+			for row, y in newMap.data
+				for tile, x in row
+					if tile is '.'
+						[startX, startY] = [x, y]
+						break
+
+			@transitionToMap newMap, startX, startY
 
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
