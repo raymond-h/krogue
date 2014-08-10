@@ -4,6 +4,9 @@ _ = require 'lodash'
 {Entity} = require './entities'
 # direction = require './direction'
 
+exports.fromJSON = (json) ->
+	(new exports.Creature).loadFromJSON json
+
 class exports.Creature extends Entity
 	symbol: 'C'
 
@@ -56,7 +59,7 @@ class exports.Creature extends Entity
 
 	loadFromJSON: ->
 		super
-		
+
 		personality = require './personality'
 		# because of how loadFromJSON() works in Entity,
 		# @personalities will be assigned the JSON repr.
@@ -64,3 +67,5 @@ class exports.Creature extends Entity
 
 		@personalities =
 			personality.fromJSON p for p in @personalities
+
+		@

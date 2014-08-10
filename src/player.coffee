@@ -39,7 +39,9 @@ module.exports = class Player
 		d.promise
 
 	loadFromJSON: (json) ->
-		@creature = (require './entity-registry').fromJSON json.creature
+		if @creature? then @creature.loadFromJSON json.creature
+		else (require './creatures').fromJSON json.creature
+		
 		@
 
 	toJSON: ->

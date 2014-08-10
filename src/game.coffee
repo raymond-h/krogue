@@ -15,8 +15,7 @@ saveData = require './save-data'
 MapGenerator = require './map-generation'
 
 {Creature} = require './creatures'
-
-EntityRegistry = require './entity-registry'
+require './personality'
 
 class Game
 	constructor: ->
@@ -124,9 +123,7 @@ class Game
 				@quit()
 
 	loadFromJSON: (json) ->
-		@timeManager.targets.remove @player.creature
 		@player.loadFromJSON json.player
-		@timeManager.targets.push @player.creature
 
 		@camera.x = json.camera.x
 		@camera.y = json.camera.y
