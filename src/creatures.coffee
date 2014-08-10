@@ -10,7 +10,6 @@ class exports.Creature extends Entity
 	constructor: ->
 		super
 
-		# @personality = new (require './personality').FleeFromPlayer 5
 		@personalities = []
 
 	setPos: ->
@@ -54,3 +53,14 @@ class exports.Creature extends Entity
 			return @tickRate()
 
 		choices[0].tick this
+
+	loadFromJSON: ->
+		super
+		
+		personality = require './personality'
+		# because of how loadFromJSON() works in Entity,
+		# @personalities will be assigned the JSON repr.
+		# of each personality
+
+		@personalities =
+			personality.fromJSON p for p in @personalities

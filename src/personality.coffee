@@ -1,11 +1,42 @@
 _ = require 'lodash'
 
+exports.personalities = personalities = {}
+
+exports.add = add = (clazz) ->
+	dasherize = (className) ->
+		className
+		.replace /(\w)(?=[A-Z])/g, '$1-'
+		.toLowerCase()
+
+	clazz::typeName ?= dasherize clazz.name
+
+	name = (_.result clazz::, 'typeName')
+
+	personalities[name] = clazz
+
+exports.fromJSON = fromJSON = (json) ->
+	Clazz = personalities[json.type]
+
+	if Clazz?
+		(new Clazz).loadFromJSON json
+
+	else null
+
 class exports.BasePersonality
 	weight: (creature) -> 0
 
 	tick: (creature) -> 0
 
-class exports.FleeFromPlayer extends exports.BasePersonality
+	loadFromJSON: (json) ->
+		_.assign @, _.omit json, 'type'
+		@
+
+	toJSON: ->
+		o = _.pick @, (v, k, o) -> _.has o, k
+		o.type = @typeName
+		o
+
+add class exports.FleeFromPlayer extends exports.BasePersonality
 	constructor: (@safeDist) ->
 
 	weight: (creature) ->
@@ -28,7 +59,7 @@ class exports.FleeFromPlayer extends exports.BasePersonality
 
 		12
 
-class exports.RandomWalk extends exports.BasePersonality
+add class exports.RandomWalk extends exports.BasePersonality
 	weight: (creature) ->
 		50
 
