@@ -14,7 +14,7 @@ saveData = require './save-data'
 {Map} = require './map'
 MapGenerator = require './map-generation'
 
-{Human} = require './creatures'
+{Creature} = require './creatures'
 
 EntityRegistry = require './entity-registry'
 
@@ -43,11 +43,12 @@ class Game
 			@initGame()
 
 	initGame: ->
+		winston.silly "Init game"
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		creature = new Human null, 0, 0, 'KayArr'
+		creature = new Creature null, 0, 0
 		@player = new Player creature
 		@timeManager.targets.push creature
 

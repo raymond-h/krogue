@@ -15,7 +15,6 @@ module.exports = class Player
 			moveOffset = direction.directions[key.name] ? [0, 0]
 
 			if @creature.move moveOffset...
-				(require './game').camera.update()
 				d.resolve 12
 
 			else
