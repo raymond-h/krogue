@@ -2,7 +2,7 @@ _ = require 'lodash'
 winston = require 'winston'
 
 {Map} = require './map'
-{Dummy, FastDummy} = require './creatures'
+{Dummy, FastDummy, DummyWithPersonality} = require './creatures'
 {repeat} = require './util'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
@@ -47,7 +47,8 @@ exports.generateBigRoom = (w, h) ->
 	# 'generate' entities to inhabit the map
 	map.entities = [
 		new Dummy map, 6, 6
-		new FastDummy map, 12, 6
+		# new FastDummy map, 12, 6
+		new DummyWithPersonality map, 12, 6
 	]
 
 	map

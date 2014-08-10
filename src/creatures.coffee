@@ -31,6 +31,23 @@ class exports.FastDummy extends exports.Dummy
 
 	symbol: 'F'
 
+class exports.DummyWithPersonality extends exports.Creature
+	type: 'dummy-with-personality'
+	symbol: 'P'
+
+	constructor: ->
+		super
+		@personality = new (require './personality').FleeFromPlayer 9
+
+	tickRate: -> 11
+
+	aiTick: ->
+		w = @personality.weight(this)
+		(require 'winston').info "Weight: #{w}"
+		if w > 0 then @personality.tick(this)
+
+		else @tickRate()
+
 class exports.Human extends exports.Creature
 	type: 'human'
 	symbol: '@'
