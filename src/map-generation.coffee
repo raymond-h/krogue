@@ -2,7 +2,7 @@ _ = require 'lodash'
 winston = require 'winston'
 
 {Map} = require './map'
-# {Dummy, FastDummy, DummyWithPersonality} = require './creatures'
+{Creature} = require './creatures'
 {repeat} = require './util'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
@@ -45,10 +45,16 @@ exports.generateBigRoom = (w, h) ->
 	map.data = exports.createMapData map.w, map.h, tileCb
 
 	# 'generate' entities to inhabit the map
+	personality = require './personality'
+	e = new Creature map, 12, 6
+	e.speed = 30
+	e.personalities.push [
+		new personality.FleeFromPlayer 5
+		new personality.RandomWalk
+	]...
+
 	map.entities = [
-		# new Dummy map, 6, 6
-		# new FastDummy map, 12, 6
-		# new DummyWithPersonality map, 12, 6
+		e
 	]
 
 	map

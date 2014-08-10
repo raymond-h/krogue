@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 class exports.BasePersonality
 	weight: (creature) -> 0
 
@@ -23,5 +25,17 @@ class exports.FleeFromPlayer extends exports.BasePersonality
 		dir = direction.getDirection ac.x, ac.y, creature.x, creature.y
 
 		creature.move (direction.parse dir)...
+
+		12
+
+class exports.RandomWalk extends exports.BasePersonality
+	weight: (creature) ->
+		50
+
+	tick: (creature) ->
+		direction = require './direction'
+		game = require './game'
+
+		creature.move (game.random.sample _.values direction.directions)...
 
 		12

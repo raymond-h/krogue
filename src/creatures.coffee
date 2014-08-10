@@ -10,7 +10,8 @@ class exports.Creature extends Entity
 	constructor: ->
 		super
 
-		@personality = new (require './personality').FleeFromPlayer 5
+		# @personality = new (require './personality').FleeFromPlayer 5
+		@personalities = []
 
 	setPos: ->
 		super
@@ -30,6 +31,26 @@ class exports.Creature extends Entity
 		else @aiTick a...
 
 	aiTick: ->
-		if @personality.weight(this) > 0 then @personality.tick(this)
+		# no personalities => brainless
+		if @personalities.length is 0
+			return @tickRate()
 
-		else @tickRate()
+		# 0 is omitted because personalities with weight 0
+		# shouldn't even be considered
+		groups = _.omit (
+			_.groupBy @personalities, (p) => p.weight this
+		), '0'
+
+		weights = _.keys groups
+
+		# no potential choices => indifferent
+		if weights.length is 0
+			return @tickRate()
+
+		choices = groups[Math.max weights...]
+
+		# 2 or more choices => indecisive
+		if choices.length >= 2
+			return @tickRate()
+
+		choices[0].tick this
