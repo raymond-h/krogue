@@ -37,14 +37,12 @@ class exports.DummyWithPersonality extends exports.Creature
 
 	constructor: ->
 		super
-		@personality = new (require './personality').FleeFromPlayer 9
+		@personality = new (require './personality').FleeFromPlayer 3
 
 	tickRate: -> 11
 
 	aiTick: ->
-		w = @personality.weight(this)
-		(require 'winston').info "Weight: #{w}"
-		if w > 0 then @personality.tick(this)
+		if @personality.weight(this) > 0 then @personality.tick(this)
 
 		else @tickRate()
 
