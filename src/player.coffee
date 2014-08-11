@@ -12,12 +12,12 @@ module.exports = class Player
 
 		game.events.emit 'turn.player', 'player'
 
-		whilst (-> game.pendingLogs.length > 0),
+		whilst (-> game.renderer.hasMoreLogs()),
 			->
 				d = Q.defer()
 
 				game.events.once 'key.enter', ->
-					game.events.emit 'log.show-more'
+					game.renderer.showMoreLogs()
 					d.resolve()
 
 				d.promise

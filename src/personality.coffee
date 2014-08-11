@@ -70,7 +70,8 @@ add class exports.RandomWalk extends exports.BasePersonality
 
 		# game.message "Lorem ipsum dolor sit amet hurr durr gurr burr lol"
 
-		# game.message "Moo! #{game.random.int 0, 80}"
+		# for i in [1..(game.random.int 1, 5)]
+		# 	(game.message "Moo ##{game.random.int 0, 80}!")
 		# if (game.random.int 0, 8) <= 2
 		# 	game.message "That is of outmost curiosity!"
 

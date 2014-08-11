@@ -31,10 +31,12 @@ class TtyRenderer
 		@logWidth = 60 - TtyRenderer.strMore.length
 
 		@game.events
-		.on 'turn.player', @proceedShownLog
-		.on 'log.show-more', @proceedShownLog
+		.on 'turn.player', => @showMoreLogs()
 
-	proceedShownLog: =>
+	hasMoreLogs: ->
+		@game.pendingLogs.length > 0
+
+	showMoreLogs: ->
 		@logs = []
 
 		screenFull = =>
