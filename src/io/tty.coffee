@@ -3,9 +3,6 @@ program = blessed.program()
 
 # winston = require 'winston'
 
-program.reset = ->
-	program._write '\x1bc'
-
 initialize = (game) ->
 	program.reset()
 	program.alternateBuffer()
