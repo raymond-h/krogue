@@ -46,11 +46,12 @@ exports.generateBigRoom = (w, h) ->
 
 	# 'generate' entities to inhabit the map
 	personality = require './personality'
+
 	e = new Creature map, 12, 6
 	e.speed = 30
 	e.personalities.push [
 		new personality.FleeFromPlayer 5
-		new personality.RandomWalk
+		(new personality.RandomWalk).withMultiplier 0.5
 	]...
 
 	map.entities = [

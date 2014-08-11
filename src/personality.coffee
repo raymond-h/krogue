@@ -23,6 +23,11 @@ exports.fromJSON = fromJSON = (json) ->
 	else null
 
 class exports.BasePersonality
+	constructor: ->
+		@weightMultiplier = 1
+
+	withMultiplier: (@weightMultiplier) -> this
+
 	weight: (creature) -> 0
 
 	tick: (creature) -> 0
@@ -38,6 +43,7 @@ class exports.BasePersonality
 
 add class exports.FleeFromPlayer extends exports.BasePersonality
 	constructor: (@safeDist) ->
+		super
 
 	weight: (creature) ->
 		distanceSq = (e0, e1) ->
@@ -62,7 +68,7 @@ add class exports.FleeFromPlayer extends exports.BasePersonality
 
 add class exports.RandomWalk extends exports.BasePersonality
 	weight: (creature) ->
-		50
+		100
 
 	tick: (creature) ->
 		direction = require './direction'

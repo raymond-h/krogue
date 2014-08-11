@@ -70,7 +70,8 @@ class exports.Creature extends Entity
 		# 0 is omitted because personalities with weight 0
 		# shouldn't even be considered
 		groups = _.omit (
-			_.groupBy @personalities, (p) => p.weight this
+			_.groupBy @personalities,
+				(p) => (p.weight this) * p.weightMultiplier
 		), '0'
 
 		weights = _.keys groups
