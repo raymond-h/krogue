@@ -1,6 +1,8 @@
 blessed = require 'blessed'
 program = blessed.program()
 
+_ = require 'lodash'
+
 # winston = require 'winston'
 
 program.fillArea = (x, y, w, h, c) ->
@@ -104,7 +106,7 @@ class TtyRenderer
 		for e in @game.currentMap.entities
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
 				program.pos (e.y - c.y + y), (e.x - c.x + x)
-				program.write e.symbol
+				program.write _.result e, 'symbol'
 
 module.exports =
 	initialize: initialize
