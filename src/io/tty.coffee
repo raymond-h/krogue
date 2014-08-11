@@ -28,24 +28,26 @@ class TtyRenderer
 		@invalidate() # initial render
 
 		@logs = []
+		@pendingLogs = []
 		@logWidth = 60 - TtyRenderer.strMore.length
 
 		@game.events
 		.on 'turn.player', => @showMoreLogs()
+		.on 'log.add', (str) => @pendingLogs.push str
 
 	hasMoreLogs: ->
-		@game.pendingLogs.length > 0
+		@pendingLogs.length > 0
 
 	showMoreLogs: ->
 		@logs = []
 
 		screenFull = =>
-			len = @game.pendingLogs[0].length
+			len = @pendingLogs[0].length
 			(len += l.length + 1) for l in @logs
 			len >= @logWidth
 
-		while @game.pendingLogs.length > 0 and not screenFull()
-			@logs.push @game.pendingLogs.shift()
+		while @hasMoreLogs() and not screenFull()
+			@logs.push @pendingLogs.shift()
 			@invalidate()
 
 	invalidate: ->
@@ -74,7 +76,7 @@ class TtyRenderer
 			program.move x, y
 			program.write @logs.join ' '
 
-			if @game.pendingLogs.length > 0
+			if @pendingLogs.length > 0
 				program.write TtyRenderer.strMore
 
 	renderMap: (x, y) ->

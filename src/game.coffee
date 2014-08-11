@@ -29,7 +29,6 @@ class Game
 			winston.silly "Event: '#{@event}'; ", a
 
 		@logs = []
-		@pendingLogs = []
 
 	initialize: (@io) ->
 		winston.info '*** Starting game...'
@@ -117,7 +116,6 @@ class Game
 		@logs.push str
 		@logs.shift() while @logs.length > 20
 
-		@pendingLogs.push str
 		@events.emit 'log.add', str
 
 	main: ->
