@@ -23,6 +23,19 @@ class TtyRenderer
 
 		@invalidate() # initial render
 
+		@logs = []
+
+		@game.events
+		.on 'turn.player', @proceedShownLog
+		.on 'log.show-more', @proceedShownLog
+
+	proceedShownLog: =>
+		@logs = []
+
+		while @game.pendingLogs.length > 0 and @logs.length < 2
+			@logs.push @game.pendingLogs.shift()
+			@invalidate()
+
 	invalidate: ->
 		if not @invalidated
 			@invalidated = yes
@@ -37,6 +50,12 @@ class TtyRenderer
 
 		switch @game.state
 			when 'game'
+				if @logs.length > 0
+					program.move 0, 0
+					program.write @logs.join ' '
+
+					program.write ' --More--' if @game.pendingLogs.length > 0
+
 				c = @game.camera
 
 				program.move 0, 1

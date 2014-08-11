@@ -2,6 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 
 direction = require './direction'
+{whilst} = require './util'
 
 module.exports = class Player
 	constructor: (@creature) ->
@@ -9,34 +10,47 @@ module.exports = class Player
 	tick: ->
 		game = require './game'
 
-		d = Q.defer()
+		game.events.emit 'turn.player', 'player'
 
-		game.events.once 'key.*', (ch, key) =>
-			moveOffset = direction.directions[key.name] ? [0, 0]
+		whilst (-> game.pendingLogs.length > 0),
+			=>
+				d = Q.defer()
 
-			if @creature.move moveOffset...
-				d.resolve 12
+				game.events.once 'key.enter', =>
+					game.events.emit 'log.show-more'
+					d.resolve()
 
-			else
-				switch key.full
-					when 's' then game.save 'test-save.json'
-					when 'S-s' then game.load 'test-save.json'
+				d.promise
 
-					when 'p'
-						entities = @creature.map.entities
-						entities.push entities.shift()
-						@creature = entities[0]
-						(require './game').camera.update()
+		.then =>
+			d = Q.defer()
 
-					when 'd'
-						winston = require 'winston'
+			game.events.once 'key.*', (ch, key) =>
+				moveOffset = direction.directions[key.name] ? [0, 0]
 
-						for e in @creature.map.entities
-							winston.info e.toJSON()
+				if @creature.move moveOffset...
+					d.resolve 12
 
-				d.resolve 0
+				else
+					switch key.full
+						when 's' then game.save 'test-save.json'
+						when 'S-s' then game.load 'test-save.json'
 
-		d.promise
+						when 'p'
+							entities = @creature.map.entities
+							entities.push entities.shift()
+							@creature = entities[0]
+							(require './game').camera.update()
+
+						when 'd'
+							winston = require 'winston'
+
+							for e in @creature.map.entities
+								winston.info e.toJSON()
+
+					d.resolve 0
+
+			d.promise
 
 	loadFromJSON: (json) ->
 		if @creature? then @creature.loadFromJSON json.creature

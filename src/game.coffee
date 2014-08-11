@@ -28,6 +28,9 @@ class Game
 		@events.onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
 
+		@logs = []
+		@pendingLogs = []
+
 	initialize: (@io) ->
 		winston.info '*** Starting game...'
 
@@ -35,10 +38,14 @@ class Game
 		@io.initialized = yes
 		@renderer = new @io.Renderer @
 
-		@events.on 'key.c', (ch, key) =>
+		@events
+		.on 'key.c', (ch, key) =>
 			@quit() if key.ctrl
 
-		@events.on 'state.enter.game', =>
+		.on 'log.add', (str) ->
+			winston.info "<GAME> #{str}"
+
+		.on 'state.enter.game', =>
 			@initGame()
 
 	initGame: ->
@@ -106,6 +113,13 @@ class Game
 
 		@renderer.invalidate()
 
+	message: (str) ->
+		@logs.push str
+		@logs.shift() while @logs.length > 20
+
+		@pendingLogs.push str
+		@events.emit 'log.add', str
+
 	main: ->
 		async.whilst (-> true),
 			(next) =>
@@ -123,6 +137,7 @@ class Game
 				@quit()
 
 	loadFromJSON: (json) ->
+		@logs = json.logs
 		@player.loadFromJSON json.player
 
 		@camera.x = json.camera.x
@@ -138,6 +153,7 @@ class Game
 			camera:
 				x: @camera.x
 				y: @camera.y
+			@logs
 			map: @currentMap
 		}
 
