@@ -44,7 +44,8 @@ add class exports.FleeFromPlayer extends exports.BasePersonality
 			[dx, dy] = [e1.x-e0.x, e1.y-e0.y]
 			dx*dx + dy*dy
 
-		if (distanceSq (require './game').player.creature, creature) < (@safeDist*@safeDist)
+		game = require './game'
+		if (distanceSq game.player.creature, creature) < (@safeDist*@safeDist)
 			100
 
 		else 0
