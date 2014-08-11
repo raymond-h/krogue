@@ -24,6 +24,7 @@ class TtyRenderer
 		@invalidate() # initial render
 
 		@logs = []
+		@logWidth = 60
 
 		@game.events
 		.on 'turn.player', @proceedShownLog
@@ -32,7 +33,12 @@ class TtyRenderer
 	proceedShownLog: =>
 		@logs = []
 
-		while @game.pendingLogs.length > 0 and @logs.length < 2
+		screenFull = =>
+			len = @game.pendingLogs[0]
+			len += l.length + 1 for l in @logs
+			len >= @logWidth
+
+		while @game.pendingLogs.length > 0 and not screenFull()
 			@logs.push @game.pendingLogs.shift()
 			@invalidate()
 

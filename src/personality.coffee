@@ -67,8 +67,9 @@ add class exports.RandomWalk extends exports.BasePersonality
 		direction = require './direction'
 		game = require './game'
 
-		if (game.random.int 0, 8) <= 1
-			game.message "Moo! #{game.random.int 0, 80}"
+		game.message "Moo! #{game.random.int 0, 80}"
+		if (game.random.int 0, 8) <= 2
+			game.message "That is of outmost curiosity!"
 
 		creature.move (game.random.sample _.values direction.directions)...
 
