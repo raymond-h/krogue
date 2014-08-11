@@ -3,6 +3,11 @@ program = blessed.program()
 
 # winston = require 'winston'
 
+program.fillArea = (x, y, w, h, c) ->
+	str = (new Array w+1).join c
+	program.move x, y
+	(program.write str; program.down()) while h-- > 0
+
 initialize = (game) ->
 	program.reset()
 	program.alternateBuffer()
@@ -15,13 +20,15 @@ deinitialize = (game) ->
 	program.normalBuffer()
 
 class TtyRenderer
+	@strMore = ' [enter]'
+
 	constructor: (@game) ->
 		@invalidated = no
 
 		@invalidate() # initial render
 
 		@logs = []
-		@logWidth = 60
+		@logWidth = 60 - TtyRenderer.strMore.length
 
 		@game.events
 		.on 'turn.player', @proceedShownLog
@@ -49,7 +56,7 @@ class TtyRenderer
 				@render()
 
 	render: ->
-		program.clear()
+		# program.clear()
 
 		switch @game.state
 			when 'game'
@@ -59,11 +66,14 @@ class TtyRenderer
 			else null
 
 	renderLog: (x, y) ->
+		program.fillArea x, y, 60, 1, ' '
+
 		if @logs.length > 0
 			program.move x, y
 			program.write @logs.join ' '
 
-			program.write ' --More--' if @game.pendingLogs.length > 0
+			if @game.pendingLogs.length > 0
+				program.write TtyRenderer.strMore
 
 	renderMap: (x, y) ->
 		c = @game.camera
