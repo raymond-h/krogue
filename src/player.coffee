@@ -4,6 +4,21 @@ _ = require 'lodash'
 direction = require './direction'
 {whilst} = require './util'
 
+keys = {
+	'1': 'down-left'
+	'2': 'down'
+	'3': 'down-right'
+	'4': 'left'
+	'5': 'idle'
+	'6': 'right'
+	'7': 'up-left'
+	'8': 'up'
+	'9': 'up-right'
+
+	'up', 'down', 'left', 'right'
+	'.': 'idle'
+}
+
 module.exports = class Player
 	constructor: (@creature) ->
 
@@ -26,29 +41,33 @@ module.exports = class Player
 			d = Q.defer()
 
 			game.events.once 'key.*', (ch, key) =>
-				moveOffset = direction.directions[key.name] ? [0, 0]
+				moveDir = keys[key.full]
+				if moveDir?
+					return d.resolve 12 if moveDir is 'idle'
 
-				if @creature.move moveOffset...
-					d.resolve 12
+					moveOffset = direction.parse moveDir
 
-				else
-					switch key.full
-						when 's' then game.save 'test-save.json'
-						when 'S-s' then game.load 'test-save.json'
+					return d.resolve (
+						if (@creature.move moveOffset...) then 12 else 0
+					)
 
-						when 'p'
-							entities = @creature.map.entities
-							entities.push entities.shift()
-							@creature = entities[0]
-							(require './game').camera.update()
+				switch key.full
+					when 's' then game.save 'test-save.json'
+					when 'S-s' then game.load 'test-save.json'
 
-						when 'd'
-							winston = require 'winston'
+					when 'p'
+						entities = @creature.map.entities
+						entities.push entities.shift()
+						@creature = entities[0]
+						(require './game').camera.update()
 
-							for e in @creature.map.entities
-								winston.info e.toJSON()
+					when 'd'
+						winston = require 'winston'
 
-					d.resolve 0
+						for e in @creature.map.entities
+							winston.info e.toJSON()
+
+				d.resolve 0
 
 			d.promise
 
