@@ -44,24 +44,6 @@ class TtyRenderer
 				for cy in [0...c.viewport.h]
 					y = c.y + cy
 					row = @game.currentMap.data[y]
-
-					# {bresenhamLine} = require '../util'
-
-					# hasLineOfSight = (x0, y0, x1, y1) =>
-					# 	los = yes
-
-					# 	bresenhamLine x0, y0, x1, y1, (x, y) =>
-					# 		return if x is x1 and y is y1
-
-					# 		if @game.currentMap.data[y][x] is '#'
-					# 			los = no
-
-					# 	los
-
-					# row = for t, x in row[c.x ... c.x+c.viewport.w]
-					# 	if hasLineOfSight(c.target.x, c.target.y, (x + c.x), y)
-					# 		t
-					# 	else ' '
 					
 					# to only get the part that's on-screen
 					# we slice from left to right edge of viewport
