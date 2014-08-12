@@ -56,12 +56,12 @@ exports.generateBigRoom = (w, h) ->
 		(new personality.RandomWalk).withMultiplier 0.5
 	]...
 
-	item = new items['peculiar-object']
-	i = new MapItem map, 12, 4, item
-
 	map.entities = [
 		e
-		i
+		new MapItem map, 12, 4, new items['peculiar-object']
+		new MapItem map, 13, 4, new items['peculiar-object']
+		new MapItem map, 14, 4, new items['peculiar-object']
+		new MapItem map, 15, 4, new items['peculiar-object']
 	]
 
 	map

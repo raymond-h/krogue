@@ -1,8 +1,9 @@
 Q = require 'q'
 _ = require 'lodash'
+winston = require 'winston'
 
 direction = require './direction'
-{whilst} = require './util'
+{whilst, arrayRemove} = require './util'
 
 keys = {
 	'1': 'down-left'
@@ -59,13 +60,27 @@ module.exports = class Player
 						entities = @creature.map.entities
 						entities.push entities.shift()
 						@creature = entities[0]
-						(require './game').camera.update()
+						game.camera.update()
 
 					when 'd'
 						winston = require 'winston'
 
 						for e in @creature.map.entities
 							winston.info e.toJSON()
+
+					when 'i'
+						for item in @creature.inventory
+							game.message "#{item.typeName};"
+
+					when ','
+						map = @creature.map
+						items = map.entitiesAt @creature.x, @creature.y, 'item'
+						if items.length > 0
+							@creature.pickup items[0]
+							arrayRemove map.entities, items[0]
+							return d.resolve 3
+
+						else game.message 'There, frankly, is nothing here!'
 
 				d.resolve 0
 

@@ -47,6 +47,14 @@ Creature = class exports.Creature extends Entity
 		@species ?= new (require './creature-species').StrangeGoo
 		@personalities = []
 
+		@inventory = []
+
+	pickup: (item) ->
+		return @pickup item.item if item instanceof MapItem
+
+		@inventory.push item
+		yes
+
 	setPos: ->
 		super
 
