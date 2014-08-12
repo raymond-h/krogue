@@ -4,11 +4,15 @@ class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
 
-	objectPresent: (x, y) ->
-		for e in @entities
-			return e if (e.x is x and e.y is y)
+	entitiesAt: (x, y, type) ->
+		filter = (e) ->
+			matchesType =
+				if type? then (e.type is type)
+				else yes
 
-		null
+			matchesType and (e.x is x) and (e.y is y)
+
+		e for e in @entities when filter e
 
 	collidable: (x, y) ->
 		return true unless 0 <= x < @w and 0 <= y < @h

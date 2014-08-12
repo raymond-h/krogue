@@ -18,15 +18,8 @@ Entity = class exports.Entity
 		@y = y
 		(require './game').renderer.invalidate()
 
-	move: (x, y) ->
-		canMoveThere = not @collidable @x+x, @y+y
-		
-		@setPos @x+x, @y+y if canMoveThere
-
-		canMoveThere
-
-	collidable: (x, y) ->
-		(@map.collidable x, y) or (@map.objectPresent x, y)?
+	movePos: (x, y) ->
+		@setPos @x+x, @y+y
 
 	tickRate: 0
 
@@ -58,6 +51,17 @@ Creature = class exports.Creature extends Entity
 
 		game = require './game'
 		game.camera.update() if @ is game.player.creature
+
+	move: (x, y) ->
+		canMoveThere = not @collidable @x+x, @y+y
+		
+		@movePos x, y if canMoveThere
+
+		canMoveThere
+
+	collidable: (x, y) ->
+		(@map.collidable x, y) or
+		(@map.entitiesAt x, y, 'creature').length > 0
 
 	tickRate: -> @speed ? 12
 
