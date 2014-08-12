@@ -54,3 +54,8 @@ exports.arrayRemove = (a, item) ->
 	i = a.indexOf item
 	a[i..i] = [] if ~i
 	i
+
+exports.dasherize = (className) ->
+	className
+	.replace /(\w)(?=[A-Z])/g, '$1-'
+	.toLowerCase()

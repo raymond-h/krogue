@@ -1,13 +1,10 @@
 _ = require 'lodash'
 
+{dasherize} = require './util'
+
 exports.personalities = personalities = {}
 
 exports.add = add = (clazz) ->
-	dasherize = (className) ->
-		className
-		.replace /(\w)(?=[A-Z])/g, '$1-'
-		.toLowerCase()
-
 	clazz::typeName ?= dasherize clazz.name
 
 	name = (_.result clazz::, 'typeName')
