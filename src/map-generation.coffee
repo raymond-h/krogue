@@ -2,7 +2,8 @@ _ = require 'lodash'
 winston = require 'winston'
 
 {Map} = require './map'
-{Creature} = require './creature-species'
+{Creature, MapItem} = require './entities'
+
 {repeat} = require './util'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
@@ -46,6 +47,7 @@ exports.generateBigRoom = (w, h) ->
 
 	# 'generate' entities to inhabit the map
 	personality = require './personality'
+	{items} = require './items'
 
 	e = new Creature map, 12, 6
 	e.speed = 30
@@ -54,8 +56,12 @@ exports.generateBigRoom = (w, h) ->
 		(new personality.RandomWalk).withMultiplier 0.5
 	]...
 
+	item = new items['peculiar-object']
+	i = new MapItem map, 12, 4, item
+
 	map.entities = [
 		e
+		i
 	]
 
 	map

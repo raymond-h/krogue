@@ -14,6 +14,9 @@ class exports.Map
 
 		e for e in @entities when filter e
 
+	entitiesByType: (type) ->
+		e for e in @entities when e.type is type
+
 	collidable: (x, y) ->
 		return true unless 0 <= x < @w and 0 <= y < @h
 

@@ -98,12 +98,13 @@ class TtyRenderer
 			program.write row.join ''
 			program.feed()
 
-		@renderEntities x, y
+		@renderEntities x, y, map.entitiesByType 'item'
+		@renderEntities x, y, map.entitiesByType 'creature'
 
-	renderEntities: (x, y) ->
+	renderEntities: (x, y, entities) ->
 		c = @game.camera
 
-		for e in @game.currentMap.entities
+		for e in entities
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
 				program.pos (e.y - c.y + y), (e.x - c.x + x)
 				program.write _.result e, 'symbol'

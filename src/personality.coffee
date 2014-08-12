@@ -62,13 +62,6 @@ exports.personalities = personalities =
 			direction = require './direction'
 			game = require './game'
 
-			# game.message "Lorem ipsum dolor sit amet hurr durr gurr burr lol"
-
-			# for i in [1..(game.random.int 1, 5)]
-			# 	(game.message "Moo ##{game.random.int 0, 80}!")
-			# if (game.random.int 0, 8) <= 2
-			# 	game.message "That is of outmost curiosity!"
-
 			creature.move (game.random.sample _.values direction.directions)...
 
 			12

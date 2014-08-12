@@ -4,6 +4,7 @@ winston = require 'winston'
 exports.fromJSON = (json) ->
 	e = switch json.type
 		when 'creature' then new Creature
+		when 'item' then new MapItem
 
 	e.loadFromJSON json
 	e
@@ -111,5 +112,21 @@ Creature = class exports.Creature extends Entity
 		@species = creatureSpecies.fromJSON @species
 		@personalities =
 			personality.fromJSON p for p in @personalities
+
+		@
+
+MapItem = class exports.MapItem extends Entity
+	symbol: -> @item.symbol
+	type: 'item'
+
+	constructor: (m, x, y, @item) ->
+		super
+
+	loadFromJSON: ->
+		super
+
+		items = require './items'
+
+		@item = items.fromJSON @item
 
 		@
