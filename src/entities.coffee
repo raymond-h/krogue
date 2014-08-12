@@ -1,6 +1,13 @@
 _ = require 'lodash'
 winston = require 'winston'
 
+exports.fromJSON = (json) ->
+	e = switch json.type
+		when 'creature' then new Creature
+
+	e.loadFromJSON json
+	e
+
 Entity = class exports.Entity
 	symbol: '-'
 
@@ -36,13 +43,14 @@ Entity = class exports.Entity
 		o.type = @type
 		o
 
-class exports.Creature extends Entity
+Creature = class exports.Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
+	type: 'creature'
 
 	constructor: (m, x, y, @species = null) ->
 		super
 
-		@species ?= new (require './creatures').StrangeGoo
+		@species ?= new (require './creature-species').StrangeGoo
 		@personalities = []
 
 	setPos: ->
@@ -92,10 +100,11 @@ class exports.Creature extends Entity
 		super
 
 		personality = require './personality'
+		creatureSpecies = require './creature-species'
 		# because of how loadFromJSON() works in Entity,
-		# @personalities will be assigned the JSON repr.
-		# of each personality
+		# @personalities and @species will be assigned their JSON reps.
 
+		@species = creatureSpecies.fromJSON @species
 		@personalities =
 			personality.fromJSON p for p in @personalities
 

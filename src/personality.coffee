@@ -4,15 +4,13 @@ _ = require 'lodash'
 
 exports.personalities = personalities = {}
 
-exports.add = add = (clazz) ->
-	clazz::typeName ?= dasherize clazz.name
+exports.add = add = (Clazz) ->
+	Clazz::typeName ?= dasherize Clazz.name
 
-	name = (_.result clazz::, 'typeName')
-
-	personalities[name] = clazz
+	personalities[Clazz::typeName] = Clazz
 
 exports.fromJSON = fromJSON = (json) ->
-	Clazz = personalities[json.type]
+	Clazz = personalities[json.typeName]
 
 	if Clazz?
 		(new Clazz).loadFromJSON json
@@ -30,13 +28,13 @@ class exports.BasePersonality
 	tick: (creature) -> 0
 
 	loadFromJSON: (json) ->
-		_.assign @, _.omit json, 'type'
+		_.assign @, _.omit json, 'typeName'
 		@
 
 	toJSON: ->
-		o = _.pick @, (v, k, o) -> _.has o, k
-		o.type = @typeName
-		o
+		json = _.pick @, (v, k, o) -> _.has o, k
+		json.typeName = @typeName
+		json
 
 add class exports.FleeFromPlayer extends exports.BasePersonality
 	constructor: (@safeDist) ->

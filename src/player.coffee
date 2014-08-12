@@ -73,7 +73,7 @@ module.exports = class Player
 
 	loadFromJSON: (json) ->
 		if @creature? then @creature.loadFromJSON json.creature
-		else (require './creatures').fromJSON json.creature
+		else (require './entities').fromJSON json.creature
 		
 		@
 

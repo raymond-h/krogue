@@ -20,7 +20,7 @@ class exports.Map
 
 		map.entities =
 			for e in json.entities
-				ent = (require './creatures').fromJSON e
+				ent = (require './entities').fromJSON e
 				ent.map = map
 				ent
 

@@ -2,7 +2,7 @@ _ = require 'lodash'
 winston = require 'winston'
 
 {Map} = require './map'
-{Creature} = require './creatures'
+{Creature} = require './creature-species'
 {repeat} = require './util'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
