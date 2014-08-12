@@ -1,11 +1,9 @@
 _ = require 'lodash'
 
-{dasherize} = require './util'
-
-exports.fromJSON = fromJSON = (json) ->
-	Clazz = personalities[json.typeName]
-
-	if Clazz? then (new Clazz).loadFromJSON json
+exports.fromJSON = (json) ->
+	if personalities[json.typeName]?
+		_.assign (new personalities[json.typeName]),
+			_.omit json, 'typeName'
 
 	else null
 
@@ -18,10 +16,6 @@ Personality = class exports.Personality
 	weight: (creature) -> 0
 
 	tick: (creature) -> 0
-
-	loadFromJSON: (json) ->
-		_.assign @, _.omit json, 'typeName'
-		@
 
 	toJSON: ->
 		json = _.pick @, (v, k, o) -> _.has o, k

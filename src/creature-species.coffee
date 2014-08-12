@@ -1,10 +1,3 @@
-{dasherize} = require './util'
-
-exports.Creature = Creature = (require './entities').Creature
-
-exports.creatureFromJSON = (json) ->
-	(new Creature).loadFromJSON json
-
 exports.fromJSON = (json) ->
 	# when converting species to JSON
 	# only the type name is saved as string

@@ -14,7 +14,8 @@ saveData = require './save-data'
 {Map} = require './map'
 MapGenerator = require './map-generation'
 
-{Creature, Human} = require './creature-species'
+{Creature} = require './entities'
+{Human} = require './creature-species'
 require './personality'
 
 class Game

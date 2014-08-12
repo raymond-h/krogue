@@ -1,8 +1,11 @@
 _ = require 'lodash'
 
 exports.fromJSON = (json) ->
-	_.assign (new items[json.typeName]),
-		_.omit json, 'typeName'
+	if items[json.typeName]?
+		_.assign (new items[json.typeName]),
+			_.omit json, 'typeName'
+
+	else null
 
 Item = class exports.Item
 	symbol: 'I'
