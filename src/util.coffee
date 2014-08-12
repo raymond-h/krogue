@@ -55,7 +55,7 @@ exports.arrayRemove = (a, item) ->
 	a[i..i] = [] if ~i
 	i
 
-exports.dasherize = (className) ->
-	className
-	.replace /(\w)(?=[A-Z])/g, '$1-'
-	.toLowerCase()
+# exports.dasherize = (className) ->
+# 	className
+# 	.replace /(\w)(?=[A-Z])/g, '$1-'
+# 	.toLowerCase()

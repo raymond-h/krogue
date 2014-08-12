@@ -1,34 +1,31 @@
-{Creature} = require './entities'
 {dasherize} = require './util'
 
-exports.Creature = Creature
+exports.Creature = Creature = (require './entities').Creature
 
 exports.creatureFromJSON = (json) ->
 	(new Creature).loadFromJSON json
 
-exports.species = species = {}
-
-exports.add = add = (Clazz) ->
-	Clazz::typeName ?= dasherize Clazz.name
-
-	species[Clazz::typeName] = Clazz
-
 exports.fromJSON = (json) ->
-	# when converting species to JSON, only the name is saved as string
+	# when converting species to JSON
+	# only the type name is saved as string
 	# so 'json' in this case is simply a string
 	new species[json]
 
-CreatureSpecies = class exports.CreatureSpecies
+Species = class exports.Species
 	toJSON: ->
 		# species inst. contain no data themselves
-		# we can just save the name directly
+		# we can just save the type name directly
 		@typeName
 
 ###
 Species
 ###
-add class exports.StrangeGoo extends CreatureSpecies
-	symbol: 'g'
+exports.species = species =
+	'strange-goo': class exports.StrangeGoo extends Species
+		symbol: 'g'
 
-add class exports.Human extends CreatureSpecies
-	symbol: '@'
+	'human': class exports.Human extends Species
+		symbol: '@'
+
+for typeName, Clazz of species
+	Clazz::typeName ?= typeName
