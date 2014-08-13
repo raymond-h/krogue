@@ -1,21 +1,24 @@
 _ = require 'lodash'
 
+filter = (e, filter) ->
+	switch
+		when _.isFunction filter then filter e
+		when _.isString filter then e.type is filter
+		when _.isObject filter then _.where e, filter
+		else yes
+
 class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
 
-	entitiesAt: (x, y, type) ->
-		filter = (e) ->
-			matchesType =
-				if type? then (e.type is type)
-				else yes
+	entitiesAt: (x, y, f) ->
+		_filter = (e) ->
+			(filter e, f) and (e.x is x) and (e.y is y)
 
-			matchesType and (e.x is x) and (e.y is y)
+		e for e in @entities when _filter e
 
-		e for e in @entities when filter e
-
-	entitiesByType: (type) ->
-		e for e in @entities when e.type is type
+	listEntities: (f) ->
+		e for e in @entities when filter e, f
 
 	collidable: (x, y) ->
 		return true unless 0 <= x < @w and 0 <= y < @h

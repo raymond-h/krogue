@@ -3,7 +3,7 @@ program = blessed.program()
 
 _ = require 'lodash'
 
-# winston = require 'winston'
+winston = require 'winston'
 
 program.fillArea = (x, y, w, h, c) ->
 	str = (new Array w+1).join c
@@ -98,8 +98,8 @@ class TtyRenderer
 			program.write row.join ''
 			program.feed()
 
-		@renderEntities x, y, map.entitiesByType 'item'
-		@renderEntities x, y, map.entitiesByType 'creature'
+		@renderEntities x, y, (map.listEntities 'item')
+		@renderEntities x, y, (map.listEntities 'creature')
 
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
