@@ -77,10 +77,13 @@ module.exports = class Player
 						items = map.entitiesAt @creature.x, @creature.y, 'item'
 						if items.length > 0
 							@creature.pickup items[0]
-							arrayRemove map.entities, items[0]
 							return d.resolve 3
 
 						else game.message 'There, frankly, is nothing here!'
+
+					when 'S-d'
+						item = @creature.inventory[0]
+						@creature.drop item
 
 				d.resolve 0
 

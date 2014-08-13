@@ -1,6 +1,8 @@
 _ = require 'lodash'
 winston = require 'winston'
 
+{arrayRemove} = require './util'
+
 exports.fromJSON = (json) ->
 	e = switch json.type
 		when 'creature' then new Creature
@@ -49,10 +51,28 @@ Creature = class exports.Creature extends Entity
 
 		@inventory = []
 
+	isPlayer: ->
+		@ is (require './game').player.creature
+
 	pickup: (item) ->
-		return @pickup item.item if item instanceof MapItem
+		if item instanceof MapItem
+			return if @pickup item.item
+				arrayRemove @map.entities, item
+				(require './game').timeManager.targets.remove item
+				yes
+
+			else no
 
 		@inventory.push item
+		yes
+
+	drop: (item) ->
+		return no if not (item? and item in @inventory)
+
+		arrayRemove @inventory, item
+		i = new MapItem @map, @x, @y, item
+		@map.entities.push i
+		(require './game').timeManager.targets.push i
 		yes
 
 	setPos: ->
@@ -78,8 +98,7 @@ Creature = class exports.Creature extends Entity
 		game = require './game'
 		
 		# check if this creature is controlled by player
-		if @ is game.player.creature
-			game.player.tick a...
+		if @isPlayer() then game.player.tick a...
 
 		else @aiTick a...
 
