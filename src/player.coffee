@@ -70,7 +70,7 @@ module.exports = class Player
 
 					when 'i'
 						for item in @creature.inventory
-							game.message "#{item.typeName} (#{item.symbol});"
+							game.message "#{item.symbol} - #{item.name};"
 
 					when ','
 						map = @creature.map

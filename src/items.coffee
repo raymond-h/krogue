@@ -18,6 +18,8 @@ Item = class exports.Item
 itemsArray = [
 	class exports.PeculiarObject extends Item
 		typeName: 'peculiar-object'
+
+		name: 'peculiar object'
 		symbol: 'O'
 ]
 

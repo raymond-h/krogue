@@ -16,10 +16,14 @@ Species
 speciesArray = [
 	class exports.StrangeGoo extends Species
 		typeName: 'strange-goo'
+
+		name: 'strange goo'
 		symbol: 'g'
 
 	class exports.Human extends Species
 		typeName: 'human'
+
+		name: 'human'
 		symbol: '@'
 ]
 
