@@ -15,9 +15,12 @@ Item = class exports.Item
 		json.typeName = @typeName
 		json
 
-exports.items = items =
-	'peculiar-object': class PeculiarObject extends Item
+itemsArray = [
+	class exports.PeculiarObject extends Item
+		typeName: 'peculiar-object'
 		symbol: 'O'
+]
 
-for typeName, Clazz of items
-	Clazz::typeName ?= typeName
+exports.items = items = {}
+for Clazz in itemsArray
+	exports.items[Clazz::typeName] = Clazz

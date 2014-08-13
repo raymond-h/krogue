@@ -22,8 +22,10 @@ Personality = class exports.Personality
 		json.typeName = @typeName
 		json
 
-exports.personalities = personalities =
-	'flee-from-player': class exports.FleeFromPlayer extends Personality
+personalitiesArray = [
+	class exports.FleeFromPlayer extends Personality
+		typeName: 'flee-from-player'
+
 		constructor: (@safeDist) ->
 			super
 
@@ -48,7 +50,9 @@ exports.personalities = personalities =
 
 			12
 
-	'random-walk': class exports.RandomWalk extends Personality
+	class exports.RandomWalk extends Personality
+		typeName: 'random-walk'
+
 		weight: (creature) ->
 			100
 
@@ -59,6 +63,8 @@ exports.personalities = personalities =
 			creature.move (game.random.sample _.values direction.directions)...
 
 			12
+]
 
-for typeName, Clazz of personalities
-	Clazz::typeName ?= typeName
+exports.personalities = personalities = {}
+for Clazz in personalitiesArray
+	exports.personalities[Clazz::typeName] = Clazz

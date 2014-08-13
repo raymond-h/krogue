@@ -59,6 +59,7 @@ Creature = class exports.Creature extends Entity
 			return if @pickup item.item
 				arrayRemove @map.entities, item
 				(require './game').timeManager.targets.remove item
+				(require './game').renderer.invalidate()
 				yes
 
 			else no
@@ -73,6 +74,7 @@ Creature = class exports.Creature extends Entity
 		i = new MapItem @map, @x, @y, item
 		@map.entities.push i
 		(require './game').timeManager.targets.push i
+		(require './game').renderer.invalidate()
 		yes
 
 	setPos: ->
@@ -133,12 +135,15 @@ Creature = class exports.Creature extends Entity
 
 		personality = require './personality'
 		creatureSpecies = require './creature-species'
+		items = require './items'
 		# because of how loadFromJSON() works in Entity,
 		# @personalities and @species will be assigned their JSON reps.
 
 		@species = creatureSpecies.fromJSON @species
 		@personalities =
 			personality.fromJSON p for p in @personalities
+		@inventory =
+			items.fromJSON i for i in @inventory
 
 		@
 

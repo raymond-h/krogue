@@ -13,12 +13,16 @@ Species = class exports.Species
 ###
 Species
 ###
-exports.species = species =
-	'strange-goo': class exports.StrangeGoo extends Species
+speciesArray = [
+	class exports.StrangeGoo extends Species
+		typeName: 'strange-goo'
 		symbol: 'g'
 
-	'human': class exports.Human extends Species
+	class exports.Human extends Species
+		typeName: 'human'
 		symbol: '@'
+]
 
-for typeName, Clazz of species
-	Clazz::typeName ?= typeName
+exports.species = species = {}
+for Clazz in speciesArray
+	exports.species[Clazz::typeName] = Clazz
