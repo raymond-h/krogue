@@ -10,6 +10,7 @@ tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
 exports.mapGen =
 	border: (x,y, w,h) -> return '#' if not (0 < x < w-1 and 0 < y < h-1)
+	borderThick: (bw) -> (x,y, w,h) -> return '#' if not (bw <= x < (w-bw) and bw <= y < (h-bw))
 
 	randomTiles: (random, prob) ->
 		(x,y, w,h) ->
