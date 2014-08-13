@@ -30,10 +30,7 @@ personalitiesArray = [
 			super
 
 		weight: (creature) ->
-			distanceSq = (e0, e1) ->
-				[dx, dy] = [e1.x-e0.x, e1.y-e0.y]
-				dx*dx + dy*dy
-
+			{distanceSq} = require './util'
 			game = require './game'
 			if (distanceSq game.player.creature, creature) < (@safeDist*@safeDist)
 				100
@@ -42,9 +39,9 @@ personalitiesArray = [
 
 		tick: (creature) ->
 			direction = (require './direction')
-			ac = (require './game').player.creature
+			game = (require './game')
 
-			dir = direction.getDirection ac.x, ac.y, creature.x, creature.y
+			dir = direction.getDirection game.player.creature, creature
 
 			creature.move (direction.parse dir)...
 
@@ -63,6 +60,43 @@ personalitiesArray = [
 			creature.move (game.random.sample _.values direction.directions)...
 
 			12
+
+	class exports.WantItems extends Personality
+		typeName: 'want-items'
+
+		constructor: (@range = 1, @wantedItems = null) ->
+
+		weight: (creature) ->
+			{distanceSq} = require './util'
+
+			nearbyItems = creature.map.listEntities (e) =>
+				e.type is 'item' and (distanceSq creature, e) < @range*@range
+
+			if nearbyItems.length > 0 then 100 else 0
+
+		tick: (creature) ->
+			{distanceSq} = require './util'
+
+			itemsHere = creature.map.entitiesAt creature.x, creature.y, 'item'
+
+			if itemsHere.length > 0
+				item = itemsHere[0]
+				creature.pickup item
+
+			else
+				items = creature.map.listEntities 'item'
+
+				nearest = [Infinity, null]
+				for item in items
+					dSq = (distanceSq creature, item)
+					if dSq < nearest[0]*nearest[0]
+						nearest = [dSq, item]
+
+				direction = (require './direction')
+				
+				dir = direction.getDirection creature, nearest[1]
+				creature.move (direction.parse dir)...
+				12
 ]
 
 exports.personalities = personalities = {}

@@ -38,7 +38,9 @@ exports.asString = (offset) ->
 
 	dirs.join '-'
 
-exports.getDirection = (x0, y0, x1, y1) ->
+exports.getDirection = (p0, p1) ->
+	{x: x0, y: y0} = p0
+	{x: x1, y: y1} = p1
 	# y1 is sub. from y0, but x0 is sub. from x1.
 	# atan has positive Y be up, but in-game
 	# positive Y is down, so it needs to be inverted

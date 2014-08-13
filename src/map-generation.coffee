@@ -56,8 +56,16 @@ exports.generateBigRoom = (w, h) ->
 		(new personality.RandomWalk).withMultiplier 0.5
 	]...
 
+	e2 = new Creature map, 12, 14
+	e2.speed = 12
+	e2.personalities.push [
+		new personality.FleeFromPlayer 5
+		(new personality.WantItems 15).withMultiplier 0.5
+	]...
+
 	map.entities = [
 		e
+		e2
 		new Creature map, 9, 6
 		new MapItem map, 12, 4, new items['peculiar-object']
 		new MapItem map, 13, 4, new items['peculiar-object']

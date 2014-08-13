@@ -2,7 +2,9 @@ async = require 'async'
 Q = require 'q'
 _ = require 'lodash'
 
-exports.bresenhamLine = (x0, y0, x1, y1, callback) ->
+exports.bresenhamLine = (p0, p1, callback) ->
+	{x: x0, y: y0} = p0
+	{x: x1, y: y1} = p1
 	dx = Math.abs x1 - x0
 	dy = Math.abs y1 - y0
 	sx = if x0 < x1 then 1 else -1
@@ -54,6 +56,13 @@ exports.arrayRemove = (a, item) ->
 	i = a.indexOf item
 	a[i..i] = [] if ~i
 	i
+
+exports.distanceSq = (o0, o1) ->
+	[dx, dy] = [o1.x-o0.x, o1.y-o0.y]
+	dx*dx + dy*dy
+
+exports.distance = (o0, o1) ->
+	Math.sqrt exports.distanceSq o0, o1
 
 # exports.dasherize = (className) ->
 # 	className
