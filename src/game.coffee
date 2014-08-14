@@ -60,7 +60,7 @@ class Game
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
-		@events.on 'key.n', =>
+		@events.on 'key.k', =>
 			newMap = (MapGenerator.generateCellularAutomata 80, 21)
 			[startX, startY] = []
 
@@ -80,6 +80,8 @@ class Game
 		gun.gunType = 'handgun'
 
 		creature.equipment['right hand'] = gun
+
+		creature
 
 	quit: ->
 		@io.deinitialize @ if @io.initialized

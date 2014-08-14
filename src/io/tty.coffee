@@ -50,7 +50,8 @@ class TtyRenderer
 
 		while @hasMoreLogs() and not screenFull()
 			@logs.push @pendingLogs.shift()
-			@invalidate()
+		
+		@invalidate()
 
 	invalidate: ->
 		if not @invalidated

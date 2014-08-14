@@ -4,6 +4,7 @@ winston = require 'winston'
 
 direction = require './direction'
 {whilst, arrayRemove} = require './util'
+prompts = require './prompts'
 
 keys = {
 	'1': 'down-left'
@@ -52,9 +53,21 @@ module.exports = class Player
 						if (@creature.move moveOffset...) then 12 else 0
 					)
 
-				switch key.full
+				Q switch key.full
 					when 's' then game.save 'test-save.json'
-					when 'S-s' then game.load 'test-save.json'
+					when 'S-s'
+						prompts.yesNo 'Are you sure you want to load?'
+
+						.then (doLoad) ->
+							if doLoad
+								game.load 'test-save.json'
+								game.message "Loaded."
+
+					when 't'
+						prompts.yesNo 'Are you sure?'
+
+						.then (reply) ->
+							game.message "You replied: #{reply}"
 
 					when 'p'
 						entities = @creature.map.entities
@@ -77,7 +90,7 @@ module.exports = class Player
 						items = map.entitiesAt @creature.x, @creature.y, 'item'
 						if items.length > 0
 							@creature.pickup items[0]
-							return d.resolve 3
+							3
 
 						else game.message 'There, frankly, is nothing here!'
 
@@ -85,7 +98,7 @@ module.exports = class Player
 						item = @creature.inventory[0]
 						@creature.drop item
 
-				d.resolve 0
+				.then (cost = 0) -> d.resolve cost
 
 			d.promise
 
