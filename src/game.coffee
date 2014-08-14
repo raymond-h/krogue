@@ -12,7 +12,7 @@ saveData = require './save-data'
 {arrayRemove} = require './util'
 
 {Map} = require './map'
-MapGenerator = require './map-generation'
+MapGenerator = require './generation/maps'
 
 {Creature} = require './entities'
 {Human} = require './creature-species'
