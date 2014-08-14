@@ -55,6 +55,10 @@ class Game
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
 		creature = new Creature null, 0, 0, new Human
+		startingGun = new (require './items').Gun
+		startingGun.name = 'trusty handgun'
+		creature.inventory.push startingGun
+
 		@player = new Player creature
 		@timeManager.targets.push creature
 

@@ -21,6 +21,12 @@ itemsArray = [
 
 		name: 'peculiar object'
 		symbol: 'O'
+
+	class exports.Gun extends Item
+		typeName: 'gun'
+
+		name: 'gun'
+		symbol: '/'
 ]
 
 exports.items = items = {}
