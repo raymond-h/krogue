@@ -27,6 +27,18 @@ itemsArray = [
 
 		name: 'gun'
 		symbol: '/'
+
+		fire: (a...) ->
+			fn = fireHandlers[@gunType ? '_dud']
+
+			fn.apply @, a
+
+		fireHandlers:
+			'_dud': (creature, dir) ->
+				(require './game').message 'Nothing happens; this gun is a dud.'
+
+			'handgun': (creature, dir) ->
+				(require './game').message 'Out of ammo, single-use!!'
 ]
 
 exports.items = items = {}

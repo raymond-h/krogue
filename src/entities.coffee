@@ -50,6 +50,7 @@ Creature = class exports.Creature extends Entity
 		@personalities = []
 
 		@inventory = []
+		@equipment = {}
 
 	isPlayer: ->
 		@ is (require './game').player.creature

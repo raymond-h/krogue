@@ -54,11 +54,7 @@ class Game
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		creature = new Creature null, 0, 0, new Human
-		startingGun = new (require './items').Gun
-		startingGun.name = 'trusty handgun'
-		creature.inventory.push startingGun
-
+		creature = @createPlayerCreature()
 		@player = new Player creature
 		@timeManager.targets.push creature
 
@@ -75,6 +71,15 @@ class Game
 						break
 
 			@transitionToMap newMap, startX, startY
+
+	createPlayerCreature: ->
+		creature = new Creature null, 0, 0, new Human
+
+		gun = new (require './items').Gun
+		gun.name = 'trusty handgun'
+		gun.gunType = 'handgun'
+
+		creature.equipment['right hand'] = gun
 
 	quit: ->
 		@io.deinitialize @ if @io.initialized
