@@ -1,28 +1,49 @@
 Q = require 'q'
 _ = require 'lodash'
 
-exports.keys = (message, keys, opts) ->
-	{showKeys, separator} = _.defaults {}, opts,
-		showKeys: yes
-		separator: ','
+makeHandler = (matcher, done) ->
+	(a...) ->
+		done a... if matcher a...
 
+exports.generic = (message, event, matcher, opts) ->
 	game = require './game'
 	d = Q.defer()
 
-	if showKeys
-		message = "#{message} [#{keys.join separator}]"
+	handler = makeHandler matcher, (a...) ->
+		game.events.off event, handler
+		d.resolve a
 
-	keyHandler = (ch, key) ->
-		if key.full in keys
-			game.events.off 'key.*', keyHandler
-			d.resolve key.full
-
-	game.events.on 'key.*', keyHandler
+	game.events.on event, handler
 
 	game.message message
 	game.renderer.showMoreLogs()
 
 	d.promise
+
+exports.keys = (message, keys, opts) ->
+	{showKeys, separator} = _.defaults {}, opts,
+		showKeys: yes
+		separator: ','
+
+	if showKeys
+		message = "#{message} [#{keys.join separator}]"
+
+	exports.generic message, 'key.*',
+		(ch, key) -> key.full in keys
+
+	.then ([ch, key]) -> key.full
+
+exports.actions = (message, actions, opts) ->
+	{showActions, shownActions, separator} =
+		_.defaults {}, opts,
+			showActions: yes
+			separator: ','
+
+	if showActions
+		message = "#{message} [#{(shownActions ? actions).join separator}]"
+
+	exports.generic message, 'action.**',
+		(action, params...) -> action in actions
 
 exports.yesNo = (message, opts = {}) ->
 	opts.separator ?= ''
@@ -31,6 +52,6 @@ exports.yesNo = (message, opts = {}) ->
 	.then (reply) -> reply is 'y'
 
 exports.direction = (message, opts) ->
-	exports.keys message, ['up', 'down', 'left', 'right'], opts
+	exports.actions message, ['direction'], opts
 
-	.then (reply) -> reply
+	.then ([action, params...]) -> params[0]

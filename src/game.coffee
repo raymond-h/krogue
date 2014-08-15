@@ -29,6 +29,8 @@ class Game
 		@events.onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
 
+		(require './key-handling')(this)
+
 		@logs = []
 
 	initialize: (@io) ->

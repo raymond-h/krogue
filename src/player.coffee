@@ -42,20 +42,19 @@ module.exports = class Player
 		.then =>
 			d = Q.defer()
 
-			game.events.once 'key.*', (ch, key) =>
-				moveDir = keys[key.full]
-				if moveDir?
-					return d.resolve 12 if moveDir is 'idle'
+			game.events.once 'action.**', (action, params...) =>
+				Q switch action
+					when 'idle' then 12 # just wait a turn
 
-					moveOffset = direction.parse moveDir
+					when 'direction'
+						moveOffset = direction.parse params[0]
 
-					return d.resolve (
 						if (@creature.move moveOffset...) then 12 else 0
-					)
 
-				Q switch key.full
-					when 's' then game.save 'test-save.json'
-					when 'S-s'
+					when 'save'
+						game.save 'test-save.json'
+
+					when 'load'
 						prompts.yesNo 'Are you sure you want to load?'
 
 						.then (doLoad) ->
@@ -63,29 +62,22 @@ module.exports = class Player
 								game.load 'test-save.json'
 								game.message "Loaded."
 
-					when 't'
-						prompts.yesNo 'Are you sure?'
-
-						.then (reply) ->
-							game.message "You replied: #{reply}"
-
-					when 'p'
+					when 'possess'
 						entities = @creature.map.entities
 						entities.push entities.shift()
 						@creature = entities[0]
 						game.camera.update()
 
-					when 'd'
-						winston = require 'winston'
-
-						for e in @creature.map.entities
-							winston.info e.toJSON()
-
-					when 'i'
+					when 'inventory'
+						# winston.info 'Accessing inventory!!'
 						for item in @creature.inventory
+							# winston.info 'Wow!!!'
 							game.message "#{item.symbol} - #{item.name};"
+							# winston.info 'Amazing!!!'
+							null
+						# winston.info 'Done with inventory!'
 
-					when ','
+					when 'pickup'
 						map = @creature.map
 						items = map.entitiesAt @creature.x, @creature.y, 'item'
 						if items.length > 0
@@ -94,11 +86,23 @@ module.exports = class Player
 
 						else game.message 'There, frankly, is nothing here!'
 
-					when 'S-d'
+					when 'drop'
 						item = @creature.inventory[0]
 						@creature.drop item
 
-				.then (cost = 0) -> d.resolve cost
+					when 'test-dir'
+						prompts.direction 'Pick a direction!'
+
+						.then (dir) -> game.message "You answered: #{dir}"
+
+					when 'test-yn'
+						prompts.yesNo 'Are you sure?'
+
+						.then (reply) -> game.message "You answered: #{reply}"
+
+				.then (cost) -> if _.isNumber cost then cost else 0
+
+				.nodeify d.makeNodeResolver()
 
 			d.promise
 

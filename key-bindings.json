@@ -1,0 +1,25 @@
+{
+  "1": "direction.down-left",
+  "2": "direction.down",
+  "3": "direction.down-right",
+  "4": "direction.left",
+  "5": "idle",
+  "6": "direction.right",
+  "7": "direction.up-left",
+  "8": "direction.up",
+  "9": "direction.up-right",
+  "up": "direction.up",
+  "down": "direction.down",
+  "left": "direction.left",
+  "right": "direction.right",
+  ".": "idle",
+
+  "i": "inventory",
+  "s": "save",
+  "S-s": "load",
+  "p": "possess",
+  ",": "pickup",
+  "d": "drop",
+  "t": "test-dir",
+  "r": "test-yn"
+}
