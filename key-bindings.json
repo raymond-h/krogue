@@ -14,6 +14,7 @@
   "right": "direction.right",
   ".": "idle",
 
+  "enter": "more-logs",
   "i": "inventory",
   "s": "save",
   "S-s": "load",

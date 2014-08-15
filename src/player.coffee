@@ -16,7 +16,7 @@ module.exports = class Player
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
-				prompts.keys null, ['enter']
+				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
 		.then =>
