@@ -21,6 +21,8 @@
   "p": "possess",
   ",": "pickup",
   "d": "drop",
+  "f": "fire",
+
   "t": "test-dir",
   "r": "test-yn"
 }

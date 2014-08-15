@@ -1,13 +1,7 @@
 _ = require 'lodash'
 direction = require './direction'
-{snapToRange} = require './util'
 
 bindings = require '../key-bindings.json'
-
-fixDirection = (dir) ->
-	o = direction.parse dir
-	o = [ (snapToRange -1, o[0], 1), (snapToRange -1, o[1], 1) ]
-	direction.asString o
 
 module.exports = exports = (game) ->
 	game.events
@@ -18,7 +12,8 @@ module.exports = exports = (game) ->
 		if action?
 			parts = action.split('.')
 
-			if parts[0] is 'direction' then parts[1] = fixDirection parts[1]
+			if parts[0] is 'direction'
+				parts[1] = direction.normalize parts[1], 1
 
 			game.events.emit "action.#{parts.join '.'}", parts...
 

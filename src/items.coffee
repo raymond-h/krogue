@@ -29,7 +29,7 @@ itemsArray = [
 		symbol: '/'
 
 		fire: (a...) ->
-			fn = fireHandlers[@gunType ? '_dud']
+			fn = @fireHandlers[@gunType ? '_dud']
 
 			fn.apply @, a
 

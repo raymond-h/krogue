@@ -65,6 +65,14 @@ module.exports = class Player
 						item = @creature.inventory[0]
 						@creature.drop item
 
+					when 'fire'
+						prompts.direction 'Fire in what direction?'
+
+						.then (dir) =>
+							gun = @creature.equipment['right hand']
+
+							gun.fire @creature, dir
+
 					when 'test-dir'
 						prompts.direction 'Pick a direction!'
 
