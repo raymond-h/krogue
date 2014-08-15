@@ -1,6 +1,7 @@
 blessed = require 'blessed'
 program = blessed.program()
 
+wordwrap = require 'wordwrap'
 _ = require 'lodash'
 
 winston = require 'winston'
@@ -31,25 +32,25 @@ class TtyRenderer
 
 		@logs = []
 		@pendingLogs = []
+
 		@logWidth = 60 - TtyRenderer.strMore.length
 
 		@game.events
 		.on 'turn.player', => @showMoreLogs()
+
 		.on 'log.add', (str) => @pendingLogs.push str
 
+		@wrap = wordwrap.hard @logWidth
+
 	hasMoreLogs: ->
-		@pendingLogs.length > 0
+		@logs.length > 1
 
 	showMoreLogs: ->
-		@logs = []
+		if @hasMoreLogs() then @logs.shift()
 
-		screenFull = =>
-			len = @pendingLogs[0].length
-			(len += l.length + 1) for l in @logs
-			len >= @logWidth
-
-		while @hasMoreLogs() and not screenFull()
-			@logs.push @pendingLogs.shift()
+		else
+			@logs = @wrap(@pendingLogs.join ' ').split /(?:\r?\n|\r)/
+			@pendingLogs = []
 		
 		@invalidate()
 
@@ -77,9 +78,9 @@ class TtyRenderer
 
 		if @logs.length > 0
 			program.move x, y
-			program.write @logs.join ' '
+			program.write @logs[0]
 
-			if @pendingLogs.length > 0
+			if @hasMoreLogs()
 				program.write TtyRenderer.strMore
 
 	renderMap: (x, y) ->
