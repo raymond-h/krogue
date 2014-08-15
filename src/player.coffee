@@ -49,13 +49,8 @@ module.exports = class Player
 						game.camera.update()
 
 					when 'inventory'
-						# winston.info 'Accessing inventory!!'
 						for item in @creature.inventory
-							# winston.info 'Wow!!!'
 							game.message "#{item.symbol} - #{item.name};"
-							# winston.info 'Amazing!!!'
-							null
-						# winston.info 'Done with inventory!'
 
 					when 'pickup'
 						map = @creature.map
