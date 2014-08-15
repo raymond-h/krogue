@@ -6,21 +6,6 @@ direction = require './direction'
 {whilst, arrayRemove} = require './util'
 prompts = require './prompts'
 
-keys = {
-	'1': 'down-left'
-	'2': 'down'
-	'3': 'down-right'
-	'4': 'left'
-	'5': 'idle'
-	'6': 'right'
-	'7': 'up-left'
-	'8': 'up'
-	'9': 'up-right'
-
-	'up', 'down', 'left', 'right'
-	'.': 'idle'
-}
-
 module.exports = class Player
 	constructor: (@creature) ->
 
