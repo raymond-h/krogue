@@ -32,7 +32,10 @@ personalitiesArray = [
 		weight: (creature) ->
 			{distanceSq} = require './util'
 			game = require './game'
-			if (distanceSq game.player.creature, creature) < (@safeDist*@safeDist)
+			if (
+				(creature.canSee game.player.creature) and 
+				(creature.distanceSqTo game.player.creature) < (@safeDist*@safeDist)
+			)
 				100
 
 			else 0
@@ -41,7 +44,7 @@ personalitiesArray = [
 			direction = (require './direction')
 			game = (require './game')
 
-			dir = direction.getDirection game.player.creature, creature
+			dir = direction.opposite(creature.directionTo game.player.creature)
 
 			creature.move (direction.parse dir)...
 
@@ -69,12 +72,13 @@ personalitiesArray = [
 		weight: (creature) ->
 			{distanceSq} = require './util'
 
-			nearbyItems = creature.map.listEntities (e) =>
-				e.type is 'item' and (distanceSq creature, e) < @range*@range
+			nearest = creature.findNearest @range, (e) ->
+				e.type is 'item' and creature.canSee e
 
-			if nearbyItems.length > 0 then 100 else 0
+			if nearest? then 100 else 0
 
 		tick: (creature) ->
+			direction = require './direction'
 			{distanceSq} = require './util'
 
 			itemsHere = creature.map.entitiesAt creature.x, creature.y, 'item'
@@ -84,17 +88,10 @@ personalitiesArray = [
 				creature.pickup item
 
 			else
-				items = creature.map.listEntities 'item'
+				nearest = creature.findNearest @range, (e) ->
+					e.type is 'item' and creature.canSee e
 
-				nearest = [Infinity, null]
-				for item in items
-					dSq = (distanceSq creature, item)
-					if dSq < nearest[0]*nearest[0]
-						nearest = [dSq, item]
-
-				direction = (require './direction')
-				
-				dir = direction.getDirection creature, nearest[1]
+				dir = creature.directionTo nearest
 				creature.move (direction.parse dir)...
 				12
 ]

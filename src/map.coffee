@@ -25,6 +25,9 @@ class exports.Map
 
 		@data[y][x] is '#'
 
+	seeThrough: (x, y) ->
+		not @collidable x, y # temporary
+
 	@fromJSON = (json) ->
 		map = new exports.Map json.w, json.h, json.data
 

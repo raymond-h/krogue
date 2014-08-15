@@ -1,7 +1,8 @@
 _ = require 'lodash'
 winston = require 'winston'
 
-{arrayRemove} = require '../util'
+{bresenhamLine, arrayRemove, distanceSq} = require '../util'
+direction = require '../direction'
 
 {Entity} = require './entity'
 MapItem = require './map-item'
@@ -61,6 +62,40 @@ module.exports = class Creature extends Entity
 		@movePos x, y if canMoveThere
 
 		canMoveThere
+
+	distanceSqTo: (to) ->
+		distanceSq @, to
+
+	distanceTo: (to) ->
+		Math.sqrt @distanceSqTo to
+
+	inRange: (range, to) ->
+		(@distanceSqTo to) <= (range*range)
+
+	directionTo: (to) ->
+		direction.getDirection @, to
+
+	findNearest: (maxRange = Infinity, cb) ->
+		minDist = maxRange * maxRange
+		nearest = null
+
+		for e in @map.entities when cb e
+			dSq = @distanceSqTo e
+
+			if dSq < minDist*minDist
+				[minDist, nearest] = [dSq, e]
+
+		nearest
+
+	canSee: (to) ->
+		visible = yes
+
+		bresenhamLine @, to, (x, y) =>
+			return if x is to.x and y is to.y
+
+			if not @map.seeThrough x, y then visible = no
+
+		visible
 
 	collidable: (x, y) ->
 		(@map.collidable x, y) or
