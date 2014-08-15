@@ -16,13 +16,8 @@ module.exports = class Player
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
-				d = Q.defer()
-
-				game.events.once 'key.enter', ->
-					game.renderer.showMoreLogs()
-					d.resolve()
-
-				d.promise
+				prompts.keys null, ['enter']
+				.then -> game.renderer.showMoreLogs()
 
 		.then =>
 			d = Q.defer()

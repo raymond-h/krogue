@@ -23,7 +23,7 @@ deinitialize = (game) ->
 	program.normalBuffer()
 
 class TtyRenderer
-	@strMore = ' [enter]'
+	@strMore = ' [more]'
 
 	constructor: (@game) ->
 		@invalidated = no

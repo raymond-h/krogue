@@ -15,8 +15,9 @@ exports.generic = (message, event, matcher, opts) ->
 
 	game.events.on event, handler
 
-	game.message message
-	game.renderer.showMoreLogs()
+	if message?
+		game.message message
+		game.renderer.showMoreLogs()
 
 	d.promise
 
@@ -25,7 +26,7 @@ exports.keys = (message, keys, opts) ->
 		showKeys: yes
 		separator: ','
 
-	if showKeys
+	if message? and showKeys
 		message = "#{message} [#{keys.join separator}]"
 
 	exports.generic message, 'key.*',
@@ -39,7 +40,7 @@ exports.actions = (message, actions, opts) ->
 			showActions: yes
 			separator: ','
 
-	if showActions
+	if message? and showActions
 		message = "#{message} [#{(shownActions ? actions).join separator}]"
 
 	exports.generic message, 'action.**',
