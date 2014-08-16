@@ -207,7 +207,9 @@ module.exports = class Creature extends Entity
 		creatureSpecies = require '../creature-species'
 		items = require '../items'
 		# because of how loadFromJSON() works in Entity,
-		# @personalities and @species will be assigned their JSON reps.
+		# fields with class instances will be assigned their JSON reps.
+
+		@health = new RangedValue @health
 
 		@species = creatureSpecies.fromJSON @species
 		@personalities =
