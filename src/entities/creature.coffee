@@ -3,9 +3,12 @@ winston = require 'winston'
 
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
+RangedValue = require '../ranged-value'
 
 {Entity} = require './entity'
 MapItem = require './map-item'
+
+msg = (m) -> (require '../game').message m
 
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
@@ -13,6 +16,8 @@ module.exports = class Creature extends Entity
 
 	constructor: (m, x, y, @species = null) ->
 		super
+
+		@health = new RangedValue max: 30
 
 		@species ?= new (require '../creature-species').StrangeGoo
 		@personalities = []
@@ -22,6 +27,16 @@ module.exports = class Creature extends Entity
 
 	isPlayer: ->
 		@ is (require '../game').player.creature
+
+	damage: (dmg, attacker) ->
+		@health.current -= dmg
+		msg "The #{@species.name} was hurt for #{dmg} damage!"
+		# emit 'hurt', @, attacker, dmg
+		@die attacker if @health.empty()
+
+	die: (cause) ->
+		# emit 'dead', @, cause
+		msg "The #{@species.name} has died!"
 
 	pickup: (item) ->
 		game = require '../game'
@@ -71,7 +86,8 @@ module.exports = class Creature extends Entity
 
 		if @map.collidable x, y
 			# kicking a wall
-			game.message "You kick a wall! Luckily, your suit protects you."
+			game.message "You kick a wall!"
+			@damage 3, 'wall'
 			yes
 
 		else
@@ -79,6 +95,7 @@ module.exports = class Creature extends Entity
 			if creatures.length > 0
 				target = creatures[0]
 				game.message "You kick at the #{target.species.name}!"
+				target.damage 2, @
 				yes
 
 			else

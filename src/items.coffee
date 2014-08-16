@@ -58,6 +58,7 @@ itemsArray = [
 						target = found.creature
 
 						game.message "The bullet hits the #{target.species.name}!"
+						target.damage 10, creature
 
 					else game.message 'The bullet seems to have disappeared...'
 ]
