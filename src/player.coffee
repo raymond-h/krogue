@@ -75,11 +75,15 @@ module.exports = class Player
 
 							gun.fire @creature, dir
 
+							6
+
 					when 'kick'
 						prompts.direction 'Kick in what direction?'
 
 						.then (dir) =>
 							@creature.kick dir
+
+							12
 
 					when 'test-dir'
 						prompts.direction 'Pick a direction!'
