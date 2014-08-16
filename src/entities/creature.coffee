@@ -152,4 +152,9 @@ module.exports = class Creature extends Entity
 		@inventory =
 			items.fromJSON i for i in @inventory
 
+		@equipment =
+			_.zipObject (
+				[s, items.fromJSON i] for s,i of @equipment
+			)
+
 		@

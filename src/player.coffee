@@ -50,7 +50,11 @@ module.exports = class Player
 
 					when 'inventory'
 						for item in @creature.inventory
-							game.message "#{item.symbol} - #{item.name};"
+							game.message "#{item.symbol} - #{item.name}."
+
+					when 'equipment'
+						for slot,item of @creature.equipment
+							game.message "#{slot}: #{item.symbol} - #{item.name}."
 
 					when 'pickup'
 						map = @creature.map
