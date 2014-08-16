@@ -7,16 +7,37 @@ module.exports = class Random
 
 	rnd: -> @mersenneTwister.rnd()
 
-	int: (min, max) ->
+	range: (min, max) ->
 		@rnd() * (max - min) // 1 + min
 
+	chance: (chance) ->
+		@rnd() < chance
+
+	direction: (n, diagonal = no) ->
+		choices = switch n
+			when 4
+				if diagonal then [
+					'up-left', 'up-right'
+					'down-left', 'down-right'
+				]
+
+				else ['up', 'down', 'left', 'right']
+
+			when 8 then [
+				'up-left', 'up-right'
+				'down-left', 'down-right'
+				'up', 'down', 'left', 'right'
+			]
+
+		@sample choices
+
 	sample: (a, n) ->
-		if not n? then a[@int 0, a.length]
+		if not n? then a[@range 0, a.length]
 
 		else @shuffle(a[..])[...n]
 
 	shuffle: (a) ->
 		for i in [0...a.length]
-			j = @int i, a.length
+			j = @range i, a.length
 			[ a[i], a[j] ] = [ a[j], a[i] ]
 		a

@@ -60,7 +60,7 @@ personalitiesArray = [
 			direction = require './direction'
 			game = require './game'
 
-			creature.move (game.random.sample _.values direction.directions)...
+			creature.move (direction.parse game.random.direction 8)...
 
 			12
 
