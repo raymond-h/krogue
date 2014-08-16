@@ -36,6 +36,8 @@ module.exports = class Creature extends Entity
 
 	die: (cause) ->
 		emit 'game.creature.dead', @, cause
+		if not @isPlayer()
+			@map.removeEntity @
 
 	pickup: (item) ->
 		game = require '../game'
@@ -43,7 +45,7 @@ module.exports = class Creature extends Entity
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
-				
+
 				game.renderer.invalidate()
 				yes
 
@@ -79,7 +81,7 @@ module.exports = class Creature extends Entity
 	kick: (dir) ->
 		game = require '../game'
 
-		[x, y] = direction.parse dir
+		{x, y} = direction.parse dir
 		x += @x; y += @y
 
 		if @map.collidable x, y

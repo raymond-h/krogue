@@ -2,13 +2,13 @@ winston = require 'winston'
 _ = require 'lodash'
 
 directions = exports.directions =
-	up: [0, -1]
+	up: {x: 0, y: -1}
 
-	down: [0, 1]
+	down: {x: 0, y: 1}
 
-	left: [-1, 0]
+	left: {x: -1, y: 0}
 
-	right: [1, 0]
+	right: {x: 1, y: 0}
 
 aliases = exports.aliases =
 	top: 'up'
@@ -27,14 +27,14 @@ exports.split = (dir) ->
 exports.parse = (dir) ->
 	exports.split dir
 	.map (d) -> directions[d] ? directions[aliases[d]]
-	.reduce ((p, c) -> [p[0]+c[0], p[1]+c[1]]), [0, 0]
+	.reduce ((p, c) -> x: p.x+c.x, y: p.y+c.y), {x: 0, y: 0}
 
 exports.asString = (offset) ->
-	dirs = while offset[0] isnt 0 or offset[1] isnt 0
-		if offset[1] > 0 then offset[1]--; 'down'
-		else if offset[1] < 0 then offset[1]++; 'up'
-		else if offset[0] > 0 then offset[0]--; 'right'
-		else if offset[0] < 0 then offset[0]++; 'left'
+	dirs = while offset.x isnt 0 or offset.y isnt 0
+		if offset.y > 0 then offset.y--; 'down'
+		else if offset.y < 0 then offset.y++; 'up'
+		else if offset.x > 0 then offset.x--; 'right'
+		else if offset.x < 0 then offset.x++; 'left'
 
 	dirs.join '-'
 
@@ -42,10 +42,9 @@ exports.normalize = (dir, maxDist = 1) ->
 	{snapToRange} = require './util'
 
 	o = exports.parse dir
-	exports.asString [
-		(snapToRange -maxDist, o[0], maxDist)
-		(snapToRange -maxDist, o[1], maxDist)
-	]
+	exports.asString
+		x: (snapToRange -maxDist, o.x, maxDist)
+		y: (snapToRange -maxDist, o.y, maxDist)
 
 exports.getDirection = (p0, p1) ->
 	{x: x0, y: y0} = p0
@@ -81,8 +80,8 @@ exports.radToDirection = (angle) ->
 
 exports.opposite = (dir) ->
 	switch
-		when _.isArray dir and dir.length is 2
-			dir.map (d) -> -d
+		when dir.x? and dir.y?
+			x: -dir.x, y: -dir.y
 
 		when _.isString dir
 			exports.split dir

@@ -29,7 +29,7 @@ module.exports = class Player
 					when 'direction'
 						moveOffset = direction.parse params[0]
 
-						if (@creature.move moveOffset...) then 12 else 0
+						if (@creature.move moveOffset.x, moveOffset.y) then 12 else 0
 
 					when 'save'
 						game.save 'test-save.json'

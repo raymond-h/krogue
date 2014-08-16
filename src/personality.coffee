@@ -46,7 +46,8 @@ personalitiesArray = [
 
 			dir = direction.opposite(creature.directionTo game.player.creature)
 
-			creature.move (direction.parse dir)...
+			offset = direction.parse dir
+			creature.move offset.x, offset.y
 
 			12
 
@@ -60,7 +61,8 @@ personalitiesArray = [
 			direction = require './direction'
 			game = require './game'
 
-			creature.move (direction.parse game.random.direction 8)...
+			offset = direction.parse game.random.direction 8
+			creature.move offset.x, offset.y
 
 			12
 
@@ -92,7 +94,8 @@ personalitiesArray = [
 					e.type is 'item' and creature.canSee e
 
 				dir = creature.directionTo nearest
-				creature.move (direction.parse dir)...
+				offset = direction.parse dir
+				creature.move offset.x, offset.y
 				12
 ]
 

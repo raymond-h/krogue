@@ -44,13 +44,12 @@ itemsArray = [
 
 				emit 'game.creature.fire', creature, @, dir
 
+				offset = direction.parse dir
 				endPos =
-					direction.parse dir
-					.map (axis) => axis * (@range ? 1)
-					.map (axis, i) =>
-						(if i is 0 then creature.x else creature.y) + axis
+					x: creature.x + offset.x * @range
+					y: creature.y + offset.y * @range
 
-				found = creature.raytraceUntilBlocked {x: endPos[0], y: endPos[1]}
+				found = creature.raytraceUntilBlocked endPos
 
 				switch found.type
 					when 'none'
@@ -58,7 +57,7 @@ itemsArray = [
 
 					when 'wall'
 						emit 'game.creature.fire.hit.wall',
-							creature, @, dir, {x: endPos[0], y: endPos[1]}
+							creature, @, dir, found
 
 					when 'creature'
 						target = found.creature
