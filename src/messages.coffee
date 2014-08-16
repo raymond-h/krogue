@@ -54,14 +54,14 @@ module.exports = (game) ->
 
 		msg "#{It_kicks} at #{the target}!"
 
-	.on 'game.creature.handgun.fire', (firer, item, dir) ->
+	.on 'game.creature.fire', (firer, item, dir) ->
 		msg 'BANG!'
 
-	.on 'game.creature.handgun.hit.none', (firer, item, dir) ->
+	.on 'game.creature.fire.hit.none', (firer, item, dir) ->
 		msg 'The bullet doesn\'t hit anything...'
 
-	.on 'game.creature.handgun.hit.wall', (firer, item, dir, pos) ->
+	.on 'game.creature.fire.hit.wall', (firer, item, dir, pos) ->
 		msg 'The bullet strikes a wall...'
 
-	.on 'game.creature.handgun.hit.creature', (firer, item, dir, target) ->
+	.on 'game.creature.fire.hit.creature', (firer, item, dir, target) ->
 		msg "The bullet hits #{the target}!"

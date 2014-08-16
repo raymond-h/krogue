@@ -42,7 +42,7 @@ itemsArray = [
 				direction = require './direction'
 				emit = (a...) -> game.events.emit a...
 
-				emit 'game.creature.handgun.fire', creature, @, dir
+				emit 'game.creature.fire', creature, @, dir
 
 				endPos =
 					direction.parse dir
@@ -54,16 +54,16 @@ itemsArray = [
 
 				switch found.type
 					when 'none'
-						emit 'game.creature.handgun.hit.none', creature, @, dir
+						emit 'game.creature.fire.hit.none', creature, @, dir
 
 					when 'wall'
-						emit 'game.creature.handgun.hit.wall',
+						emit 'game.creature.fire.hit.wall',
 							creature, @, dir, {x: endPos[0], y: endPos[1]}
 
 					when 'creature'
 						target = found.creature
 
-						emit 'game.creature.handgun.hit.creature', creature, @, dir, target
+						emit 'game.creature.fire.hit.creature', creature, @, dir, target
 						target.damage 10, creature
 ]
 
