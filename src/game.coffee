@@ -80,6 +80,7 @@ class Game
 		gun = new (require './items').Gun
 		gun.name = 'trusty handgun'
 		gun.gunType = 'handgun'
+		gun.range = 5
 
 		creature.equipment['right hand'] = gun
 

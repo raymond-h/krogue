@@ -38,7 +38,28 @@ itemsArray = [
 				(require './game').message 'Nothing happens; this gun is a dud.'
 
 			'handgun': (creature, dir) ->
-				(require './game').message 'Out of ammo, single-use!!'
+				game = require './game'
+				direction = require './direction'
+
+				game.message 'BANG!'
+
+				endPos =
+					direction.parse dir
+					.map (axis) => axis * (@range ? 1)
+					.map (axis, i) =>
+						(if i is 0 then creature.x else creature.y) + axis
+
+				found = creature.raytraceUntilBlocked {x: endPos[0], y: endPos[1]}
+
+				switch found.type
+					when 'none' then game.message 'You hit nothing...'
+					when 'wall' then game.message 'The bullet strikes a wall...'
+					when 'creature'
+						target = found.creature
+
+						game.message "The bullet hits the #{target.species.name}!"
+
+					else game.message 'The bullet seems to have disappeared...'
 ]
 
 exports.items = items = {}

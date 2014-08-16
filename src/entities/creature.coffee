@@ -97,6 +97,30 @@ module.exports = class Creature extends Entity
 
 		visible
 
+	raytraceUntilBlocked: (to, cb) ->
+		found = { type: 'none' }
+
+		bresenhamLine @, to, (x, y) =>
+			return if x is @x and y is @y
+
+			if @map.collidable x, y
+				found = {
+					type: 'wall'
+					x, y
+				}
+				return no
+
+			creatures = @map.entitiesAt x, y, 'creature'
+			if creatures.length > 0
+				found = {
+					type: 'creature'
+					creature: creatures[0]
+					x, y
+				}
+				return no
+
+		found
+
 	collidable: (x, y) ->
 		(@map.collidable x, y) or
 		(@map.entitiesAt x, y, 'creature').length > 0
