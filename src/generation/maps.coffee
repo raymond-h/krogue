@@ -64,7 +64,7 @@ exports.generateBigRoom = (w, h) ->
 		(new personality.WantItems 15).withMultiplier 0.5
 	]...
 
-	map.entities = [
+	map.addEntities [
 		e
 		e2
 		new Creature map, 9, 6

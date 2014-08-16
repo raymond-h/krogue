@@ -22,6 +22,8 @@ class exports.Entity
 	movePos: (x, y) ->
 		@setPos @x+x, @y+y
 
+	isPlayer: -> no
+
 	tickRate: 0
 
 	tick: ->

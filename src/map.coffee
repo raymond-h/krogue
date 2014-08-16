@@ -1,4 +1,5 @@
 _ = require 'lodash'
+{arrayRemove} = require './util'
 
 filter = (e, filter) ->
 	switch
@@ -10,6 +11,24 @@ filter = (e, filter) ->
 class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
+
+	addEntity: (e, addToTimeManager) ->
+		e.map = @
+		@entities.push e
+		if (addToTimeManager ? yes)
+			(require './game').timeManager.targets.push e
+		@
+
+	addEntities: (entities...) ->
+		entities = _.flatten entities
+
+		@addEntity e for e in entities
+
+	removeEntity: (e) ->
+		e.map = null
+		arrayRemove @entities, e
+		(require './game').timeManager.targets.remove e
+		@
 
 	entitiesAt: (x, y, f) ->
 		_filter = (e) ->
@@ -31,17 +50,13 @@ class exports.Map
 	@fromJSON = (json) ->
 		map = new exports.Map json.w, json.h, json.data
 
-		map.entities =
-			for e in json.entities
-				ent = (require './entities').fromJSON e
-				ent.map = map
-				ent
+		for e in json.entities
+			map.addEntity (require './entities').fromJSON e
 
 		map
 
 	toJSON: ->
 		{
 			@w, @h, @data
-			entities: @entities.filter (e) ->
-				e isnt (require './game').player.creature
+			entities: @entities.filter (e) -> not e.isPlayer()
 		}

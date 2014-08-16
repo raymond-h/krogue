@@ -42,8 +42,8 @@ module.exports = class Creature extends Entity
 
 		if item instanceof MapItem
 			return if @pickup item.item
-				arrayRemove @map.entities, item
-				game.timeManager.targets.remove item
+				@map.removeEntity item
+				
 				game.renderer.invalidate()
 				yes
 
@@ -58,9 +58,8 @@ module.exports = class Creature extends Entity
 		game = require '../game'
 
 		arrayRemove @inventory, item
-		i = new MapItem @map, @x, @y, item
-		@map.entities.push i
-		game.timeManager.targets.push i
+		@map.addEntity new MapItem @map, @x, @y, item
+
 		game.renderer.invalidate()
 		yes
 
