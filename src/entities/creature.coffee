@@ -81,6 +81,12 @@ module.exports = class Creature extends Entity
 
 		canMoveThere
 
+	moveTo: (p) ->
+		@move @directionTo p
+
+	moveAwayFrom: (p) ->
+		@move direction.opposite @directionTo p
+
 	kick: (dir) ->
 		game = require '../game'
 
