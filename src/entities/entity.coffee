@@ -15,11 +15,15 @@ class exports.Entity
 	constructor: (@map, @x, @y) ->
 
 	setPos: (x, y) ->
+		if _.isObject x then {x, y} = x
+
 		@x = x
 		@y = y
 		(require '../game').renderer.invalidate()
 
 	movePos: (x, y) ->
+		if _.isObject x then {x, y} = x
+
 		@setPos @x+x, @y+y
 
 	isPlayer: -> no

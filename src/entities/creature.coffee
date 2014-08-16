@@ -72,6 +72,8 @@ module.exports = class Creature extends Entity
 		game.camera.update() if @ is game.player.creature
 
 	move: (x, y) ->
+		if _.isObject x then {x, y} = x
+
 		canMoveThere = not @collidable @x+x, @y+y
 		
 		@movePos x, y if canMoveThere

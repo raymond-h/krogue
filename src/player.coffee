@@ -27,9 +27,7 @@ module.exports = class Player
 					when 'idle' then 12 # just wait a turn
 
 					when 'direction'
-						moveOffset = direction.parse params[0]
-
-						if (@creature.move moveOffset.x, moveOffset.y) then 12 else 0
+						if (@creature.move direction.parse params[0]) then 12 else 0
 
 					when 'save'
 						game.save 'test-save.json'

@@ -40,14 +40,17 @@ itemsArray = [
 			'handgun': (creature, dir) ->
 				game = require './game'
 				direction = require './direction'
+				vectorMath = require './vector-math'
+
 				emit = (a...) -> game.events.emit a...
 
 				emit 'game.creature.fire', creature, @, dir
 
 				offset = direction.parse dir
 				endPos =
-					x: creature.x + offset.x * @range
-					y: creature.y + offset.y * @range
+					vectorMath.add creature, (
+						vectorMath.mult offset, @range
+					)
 
 				found = creature.raytraceUntilBlocked endPos
 

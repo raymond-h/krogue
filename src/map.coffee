@@ -40,11 +40,15 @@ class exports.Map
 		e for e in @entities when filter e, f
 
 	collidable: (x, y) ->
+		if _.isObject x then {x, y} = x
+
 		return true unless 0 <= x < @w and 0 <= y < @h
 
 		@data[y][x] is '#'
 
 	seeThrough: (x, y) ->
+		if _.isObject x then {x, y} = x
+		
 		not @collidable x, y # temporary
 
 	@fromJSON = (json) ->
