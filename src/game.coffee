@@ -40,6 +40,8 @@ class Game
 		@io.initialized = yes
 		@renderer = new @io.Renderer @
 
+		(require './messages')(@)
+
 		@events
 		.on 'key.c', (ch, key) =>
 			@quit() if key.ctrl

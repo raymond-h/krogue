@@ -40,8 +40,9 @@ itemsArray = [
 			'handgun': (creature, dir) ->
 				game = require './game'
 				direction = require './direction'
+				emit = (a...) -> game.events.emit a...
 
-				game.message 'BANG!'
+				emit 'game.creature.handgun.fire', creature, @, dir
 
 				endPos =
 					direction.parse dir
@@ -52,15 +53,18 @@ itemsArray = [
 				found = creature.raytraceUntilBlocked {x: endPos[0], y: endPos[1]}
 
 				switch found.type
-					when 'none' then game.message 'You hit nothing...'
-					when 'wall' then game.message 'The bullet strikes a wall...'
+					when 'none'
+						emit 'game.creature.handgun.hit.none', creature, @, dir
+
+					when 'wall'
+						emit 'game.creature.handgun.hit.wall',
+							creature, @, dir, {x: endPos[0], y: endPos[1]}
+
 					when 'creature'
 						target = found.creature
 
-						game.message "The bullet hits the #{target.species.name}!"
+						emit 'game.creature.handgun.hit.creature', creature, @, dir, target
 						target.damage 10, creature
-
-					else game.message 'The bullet seems to have disappeared...'
 ]
 
 exports.items = items = {}

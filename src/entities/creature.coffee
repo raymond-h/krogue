@@ -8,7 +8,7 @@ RangedValue = require '../ranged-value'
 {Entity} = require './entity'
 MapItem = require './map-item'
 
-msg = (m) -> (require '../game').message m
+emit = (a...) -> (require '../game').events.emit a...
 
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
@@ -28,15 +28,14 @@ module.exports = class Creature extends Entity
 	isPlayer: ->
 		@ is (require '../game').player.creature
 
-	damage: (dmg, attacker) ->
+	damage: (dmg, cause) ->
+		emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
-		msg "The #{@species.name} was hurt for #{dmg} damage!"
-		# emit 'hurt', @, attacker, dmg
-		@die attacker if @health.empty()
+
+		@die cause if @health.empty()
 
 	die: (cause) ->
-		# emit 'dead', @, cause
-		msg "The #{@species.name} has died!"
+		emit 'game.creature.dead', @, cause
 
 	pickup: (item) ->
 		game = require '../game'
@@ -86,20 +85,21 @@ module.exports = class Creature extends Entity
 
 		if @map.collidable x, y
 			# kicking a wall
-			game.message "You kick a wall!"
-			@damage 3, 'wall'
+			emit 'game.creature.kick.wall', @, dir
+
+			@damage 3, 'kicking a wall'
 			yes
 
 		else
 			creatures = @map.entitiesAt x, y, 'creature'
 			if creatures.length > 0
 				target = creatures[0]
-				game.message "You kick at the #{target.species.name}!"
+				emit 'game.creature.kick.creature', @, dir, target
 				target.damage 2, @
 				yes
 
 			else
-				game.message "You do a cool kick without hitting anything!"
+				emit 'game.creature.kick.none', @, dir
 				no
 
 	distanceSqTo: (to) ->
