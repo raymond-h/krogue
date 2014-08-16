@@ -44,9 +44,7 @@ personalitiesArray = [
 			direction = (require './direction')
 			game = (require './game')
 
-			dir = direction.opposite(creature.directionTo game.player.creature)
-
-			creature.move direction.parse dir
+			creature.move direction.opposite creature.directionTo game.player.creature
 
 			12
 
@@ -60,7 +58,7 @@ personalitiesArray = [
 			direction = require './direction'
 			game = require './game'
 
-			creature.move direction.parse game.random.direction 8
+			creature.move game.random.direction 8
 
 			12
 
@@ -91,8 +89,7 @@ personalitiesArray = [
 				nearest = creature.findNearest @range, (e) ->
 					e.type is 'item' and creature.canSee e
 
-				dir = creature.directionTo nearest
-				creature.move direction.parse dir
+				creature.move creature.directionTo nearest
 				12
 ]
 

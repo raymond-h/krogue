@@ -1,5 +1,6 @@
 _ = require 'lodash'
 winston = require 'winston'
+direction = require '../direction'
 
 exports.fromJSON = (json) ->
 	e = switch json.type
@@ -22,6 +23,7 @@ class exports.Entity
 		(require '../game').renderer.invalidate()
 
 	movePos: (x, y) ->
+		if _.isString x then x = direction.parse x
 		if _.isObject x then {x, y} = x
 
 		@setPos @x+x, @y+y
