@@ -63,6 +63,28 @@ module.exports = class Creature extends Entity
 
 		canMoveThere
 
+	kick: (dir) ->
+		game = require '../game'
+
+		[x, y] = direction.parse dir
+		x += @x; y += @y
+
+		if @map.collidable x, y
+			# kicking a wall
+			game.message "You kick a wall! Luckily, your suit protects you."
+			yes
+
+		else
+			creatures = @map.entitiesAt x, y, 'creature'
+			if creatures.length > 0
+				target = creatures[0]
+				game.message "You kick at the #{target.species.name}!"
+				yes
+
+			else
+				game.message "You do a cool kick without hitting anything!"
+				no
+
 	distanceSqTo: (to) ->
 		distanceSq @, to
 

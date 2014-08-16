@@ -62,7 +62,7 @@ class Game
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
-		@events.on 'key.k', =>
+		@events.on 'key.z', =>
 			newMap = (MapGenerator.generateCellularAutomata 80, 21)
 			[startX, startY] = []
 

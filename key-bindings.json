@@ -23,6 +23,7 @@
   ",": "pickup",
   "d": "drop",
   "f": "fire",
+  "k": "kick",
 
   "t": "test-dir",
   "r": "test-yn"
