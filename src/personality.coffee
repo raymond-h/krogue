@@ -79,18 +79,18 @@ personalitiesArray = [
 			direction = require './direction'
 			{distanceSq} = require './util'
 
+			nearest = creature.findNearest @range, (e) ->
+				e.type is 'item' and creature.canSee e
+
+			creature.moveTo nearest
+
 			itemsHere = creature.map.entitiesAt creature.x, creature.y, 'item'
 
 			if itemsHere.length > 0
 				item = itemsHere[0]
 				creature.pickup item
 
-			else
-				nearest = creature.findNearest @range, (e) ->
-					e.type is 'item' and creature.canSee e
-
-				creature.moveTo nearest
-				12
+			12
 ]
 
 exports.personalities = personalities = {}
