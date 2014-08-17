@@ -78,6 +78,10 @@ exports.radToDirection = (angle) ->
 
 		angle -= 2/8
 
+exports.directionToRad = (dir) ->
+	{x, y} = exports.parse dir
+	Math.atan2 -y, x
+
 exports.opposite = (dir) ->
 	switch
 		when dir.x? and dir.y?

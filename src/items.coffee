@@ -67,6 +67,40 @@ itemsArray = [
 
 						emit 'game.creature.fire.hit.creature', creature, @, dir, target
 						target.damage 10, creature
+
+			'shotgun': (creature, dir) ->
+				game = require './game'
+				direction = require './direction'
+				vectorMath = require './vector-math'
+				emit = (a...) -> game.events.emit a...
+
+				emit 'game.creature.fire', creature, @, dir
+
+				# shotguns shoot in a spread - need angle of dir first
+				angle = direction.directionToRad dir
+				compareAngles = (a0, a1) ->
+					Math.PI - Math.abs(Math.abs(a0-a1) - Math.PI)
+
+				spread = @spread ? (10 / 180 * Math.PI)
+
+				targets = creature.map.listEntities (e) =>
+					# we don't want to hit ourselves
+					return no if e is creature
+
+					diff = vectorMath.sub e, creature
+					a = Math.atan2 -diff.y, diff.x
+
+					(compareAngles angle, a) <= spread/2 and
+						(creature.distanceSqTo e) <= (@range*@range) and
+						creature.canSee e
+
+				if targets.length > 0
+					for target in targets
+						emit 'game.creature.fire.hit.creature',
+							creature, @, dir, target
+
+				else
+					emit 'game.creature.fire.hit.none', creature, @, dir
 ]
 
 exports.items = items = {}

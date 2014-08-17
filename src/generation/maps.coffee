@@ -68,6 +68,8 @@ exports.generateBigRoom = (w, h) ->
 		e
 		e2
 		new Creature map, 9, 6
+		new Creature map, 10, 7
+		new Creature map, 7, 7
 		new MapItem map, 12, 4, new items['peculiar-object']
 		new MapItem map, 13, 4, new items['peculiar-object']
 		new MapItem map, 14, 4, new items['peculiar-object']
