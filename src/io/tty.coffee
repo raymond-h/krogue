@@ -63,6 +63,9 @@ class TtyRenderer
 
 				@render()
 
+	showList: (@menu) ->
+		@invalidate()
+
 	render: ->
 		# program.clear()
 
@@ -70,6 +73,7 @@ class TtyRenderer
 			when 'game'
 				@renderLog 0, 0
 				@renderMap 0, 1
+				@renderMenu @menu if @menu?
 
 			else null
 
@@ -82,6 +86,29 @@ class TtyRenderer
 
 			if @hasMoreLogs()
 				program.write TtyRenderer.strMore
+
+	renderMenu: (menu) ->
+		repeat = (str, n) -> (new Array n+1).join str
+
+		x = menu.x ? 0
+		y = menu.y ? 1
+		width = menu.width
+		if not width?
+			width = Math.max (i.length for i in menu.items)...
+			width = Math.max menu.header.length, width
+			width += 2
+
+		delimiter = (repeat '-', width-2)
+		rows = [delimiter, menu.header, delimiter, menu.items..., delimiter]
+
+		height = menu.height ? rows.length
+
+		for row, i in rows
+			program.move x, y+i
+			program.write '|'
+			program.write row
+			program.write repeat ' ', (width - row.length - 2)
+			program.write '|'
 
 	renderMap: (x, y) ->
 		c = @game.camera

@@ -5,6 +5,16 @@ makeHandler = (matcher, done) ->
 	(a...) ->
 		done a... if matcher a...
 
+charRange = (start, end) ->
+	[start.charCodeAt(0)..end.charCodeAt(0)]
+	.map (i) -> String.fromCharCode i
+
+exports.listOptions = listOptions = [
+	(charRange 'a', 'z')...
+	(charRange 'A', 'Z')...
+	(charRange '0', '9')...
+]
+
 exports.generic = (message, event, matcher, opts) ->
 	game = require './game'
 	d = Q.defer()
@@ -56,3 +66,34 @@ exports.direction = (message, opts) ->
 	exports.actions message, ['direction'], opts
 
 	.then ([action, params...]) -> params[0]
+
+exports.list = (header, choices, opts) ->
+	pressedKey = (key) -> switch
+		when 'A' <= key <= 'Z' then "S-#{key.toLowerCase()}"
+		else key
+
+	_choices = for v, i in choices
+		key: v.key ? listOptions[i]
+		name: if _.isString v then v else (v.name ? '???')
+		index: i
+
+	mapDisplayed = _.zipObject (
+		[(pressedKey v.key), v] for v in _choices
+	)
+
+	(require './game').renderer.showList
+		header: header
+		items: ("#{v.key} - #{v.name}" for v in _choices)
+
+	exports.keys null, ['escape', (_.keys mapDisplayed)...]
+
+	.then (key) ->
+		(require './game').renderer.showList null
+		return { cancelled: yes } if key is 'escape'
+
+		choice = mapDisplayed[key]
+		{
+			key: choice.key
+			value: choices[choice.index]
+			index: choice.index
+		}
