@@ -70,7 +70,6 @@ module.exports = class Player
 							.then ({cancelled, value: slot}) =>
 								return game.message 'Never mind.' if cancelled
 
-								# game.message "Equip #{item.name} to #{slot}!"
 								@creature.equip slot, item
 								6
 
