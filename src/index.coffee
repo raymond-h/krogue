@@ -1,3 +1,4 @@
+(require 'q').longStackSupport = yes
 argv = (require 'yargs').argv
 
 winston = require 'winston'
