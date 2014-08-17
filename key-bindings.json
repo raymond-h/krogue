@@ -16,7 +16,7 @@
 
   "enter": "more-logs",
   "i": "inventory",
-  "e": "equipment",
+  "e": "equip",
   "s": "save",
   "S-s": "load",
   "p": "possess",

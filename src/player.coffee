@@ -47,12 +47,32 @@ module.exports = class Player
 						game.camera.update()
 
 					when 'inventory'
-						for item in @creature.inventory
-							game.message "#{item.symbol} - #{item.name}."
+						choices = [
+							("#{i.name} (#{s})" for s,i of @creature.equipment)...
+							(i.name for i in @creature.inventory)...
+						]
 
-					when 'equipment'
-						for slot,item of @creature.equipment
-							game.message "#{slot}: #{item.symbol} - #{item.name}."
+						prompts.list 'Inventory', choices
+						
+						.then ({cancelled, key, value}) ->
+							if cancelled
+								game.message 'Never mind.'
+
+							else
+								game.message "You picked #{key}: #{value}!"
+
+					when 'equip'
+						prompts.list 'Equip which item?', @creature.inventory
+
+						.then ({cancelled, value: item}) =>
+							return game.message 'Never mind.' if cancelled
+
+							prompts.list 'To what slot?', ['right hand', 'left hand']
+							.then ({cancelled, value: slot}) =>
+
+								return game.message 'Never mind.' if cancelled
+
+								game.message "Equip #{item.name} to #{slot}!"
 
 					when 'pickup'
 						map = @creature.map
