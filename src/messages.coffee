@@ -65,3 +65,17 @@ module.exports = (game) ->
 
 	.on 'game.creature.fire.hit.creature', (firer, item, dir, target) ->
 		msg "The bullet hits #{the target}!"
+
+	.on 'game.creature.equip', (equipper, slot, item) ->
+		It_equips =
+			if equipper.isPlayer() then 'You equip'
+			else "The #{equipper.species.name} equips"
+
+		msg "#{It_equips} the #{item.name}."
+
+	.on 'game.creature.unequip', (equipper, slot, item) ->
+		It_puts =
+			if equipper.isPlayer() then 'You put'
+			else "The #{equipper.species.name} puts"
+
+		msg "#{It_puts} away the #{item.name}."

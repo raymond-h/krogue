@@ -75,6 +75,7 @@ exports.list = (header, choices, opts) ->
 	_choices = for v, i in choices
 		key: v.key ? listOptions[i]
 		name: if _.isString v then v else (v.name ? '???')
+		orig: v
 		index: i
 
 	mapDisplayed = _.zipObject (

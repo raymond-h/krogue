@@ -65,6 +65,35 @@ module.exports = class Creature extends Entity
 		game.renderer.invalidate()
 		yes
 
+	equip: (slot, item) ->
+		return no if not (slot in @species.equipSlots)
+		return no if not (item in @inventory)
+
+		game = require '../game'
+
+		(@unequip slot) if @equipment[slot]?
+
+		arrayRemove @inventory, item
+		@equipment[slot] = item
+		game.events.emit 'game.creature.equip', @, slot, item
+		yes
+
+	unequip: (item) ->
+		game = require '../game'
+
+		if _.isString item
+			[slot, item] = [item, @equipment[item]]
+
+		else
+			break for slot, i of @equipment when i is item
+
+		if not slot? or item? or @equipment[slot] isnt item then no
+		else
+			delete @equipment[slot]
+			@inventory.push item
+			game.events.emit 'game.creature.unequip', @, slot, item
+			yes
+
 	setPos: ->
 		super
 

@@ -53,7 +53,7 @@ module.exports = class Player
 						]
 
 						prompts.list 'Inventory', choices
-						
+
 						.then ({cancelled, key, value}) ->
 							if cancelled
 								game.message 'Never mind.'
@@ -63,16 +63,28 @@ module.exports = class Player
 
 					when 'equip'
 						prompts.list 'Equip which item?', @creature.inventory
-
 						.then ({cancelled, value: item}) =>
 							return game.message 'Never mind.' if cancelled
 
-							prompts.list 'To what slot?', ['right hand', 'left hand']
+							prompts.list 'To what slot?', @creature.species.equipSlots
 							.then ({cancelled, value: slot}) =>
-
 								return game.message 'Never mind.' if cancelled
 
-								game.message "Equip #{item.name} to #{slot}!"
+								# game.message "Equip #{item.name} to #{slot}!"
+								@creature.equip slot, item
+								6
+
+					when 'unequip'
+						equips = for s,i of @creature.equipment
+							slot: s
+							name: "#{i.name} (#{s})"
+
+						prompts.list 'Put away which item?', equips
+						.then ({cancelled, value}) =>
+							return game.message 'Never mind.' if cancelled
+
+							@creature.unequip value.slot
+							6
 
 					when 'pickup'
 						map = @creature.map

@@ -5,6 +5,8 @@ exports.fromJSON = (json) ->
 	new species[json]
 
 Species = class exports.Species
+	equipSlots: []
+
 	toJSON: ->
 		# species inst. contain no data themselves
 		# we can just save the type name directly
@@ -25,6 +27,10 @@ speciesArray = [
 
 		name: 'human'
 		symbol: '@'
+		equipSlots: [
+			'head'
+			'right hand', 'left hand'
+		]
 ]
 
 exports.species = species = {}
