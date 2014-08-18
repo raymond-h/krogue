@@ -22,12 +22,11 @@ module.exports = class Camera
 		else 0
 
 	update: ->
-		target = (require './game').player?.creature
 		wb = @worldBounds
 
-		if target?
-			@x += @calculateOffset (target.x - @x), @viewport.w, @minBoundDist.x
-			@y += @calculateOffset (target.y - @y), @viewport.h, @minBoundDist.y
+		if @target?
+			@x += @calculateOffset (@target.x - @x), @viewport.w, @minBoundDist.x
+			@y += @calculateOffset (@target.y - @y), @viewport.h, @minBoundDist.y
 
 		# keep camera within bounds
 		@x = snapToRange (edge wb, 'left'), @x, (edge wb, 'right')-@viewport.w

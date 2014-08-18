@@ -4,19 +4,8 @@ MersenneTwister = require 'mersennetwister'
 winston = require 'winston'
 Q = require 'q'
 
-TimeManager = require './time-manager'
-Camera = require './camera'
-Random = require './random'
-Player = require './player'
 saveData = require './save-data'
 {arrayRemove} = require './util'
-
-{Map} = require './map'
-MapGenerator = require './generation/maps'
-
-{Creature} = require './entities'
-{Human} = require './creature-species'
-require './personality'
 
 class Game
 	constructor: ->
@@ -54,6 +43,13 @@ class Game
 
 	initGame: ->
 		winston.silly "Init game"
+
+		Player = require './player'
+		MapGenerator = require './generation/maps'
+		TimeManager = require './time-manager'
+		Camera = require './camera'
+		Random = require './random'
+
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
@@ -61,6 +57,7 @@ class Game
 		creature = @createPlayerCreature()
 		@player = new Player creature
 		@timeManager.add creature
+		@camera.target = creature
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
@@ -77,6 +74,9 @@ class Game
 			@transitionToMap newMap, startX, startY
 
 	createPlayerCreature: ->
+		{Creature} = require './entities'
+		{Human} = require './creature-species'
+
 		creature = new Creature null, 0, 0, new Human
 
 		gun = (require './generation/items').generateStartingGun()
@@ -150,6 +150,8 @@ class Game
 
 		@camera.x = json.camera.x
 		@camera.y = json.camera.y
+
+		{Map} = require './map'
 		@transitionToMap Map.fromJSON json.map
 
 		# puts player last in targets list
