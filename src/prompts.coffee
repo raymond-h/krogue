@@ -2,6 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 
 game = require './game'
+{whilst} = require './util'
 
 makeHandler = (matcher, done) ->
 	(a...) ->
@@ -10,6 +11,10 @@ makeHandler = (matcher, done) ->
 charRange = (start, end) ->
 	[start.charCodeAt(0)..end.charCodeAt(0)]
 	.map (i) -> String.fromCharCode i
+
+pressedKey = (key) -> switch
+	when 'A' <= key <= 'Z' then "S-#{key.toLowerCase()}"
+	else key
 
 exports.listOptions = listOptions = [
 	(charRange 'a', 'z')...
@@ -69,10 +74,6 @@ exports.direction = (message, opts) ->
 	.then ([action, params...]) -> params[0]
 
 exports.list = (header, choices, opts) ->
-	pressedKey = (key) -> switch
-		when 'A' <= key <= 'Z' then "S-#{key.toLowerCase()}"
-		else key
-
 	_choices = for v, i in choices
 		key: v.key ? listOptions[i]
 		name: if _.isString v then v else (v.name ? '???')
@@ -99,3 +100,51 @@ exports.list = (header, choices, opts) ->
 			value: choices[choice.index]
 			index: choice.index
 		}
+
+exports.multichoiceList = (header, choices, opts) ->
+	_choices = for v, i in choices
+		key: v.key ? listOptions[i]
+		name: if _.isString v then v else (v.name ? '???')
+		orig: v
+		index: i
+		checked: no
+
+	mapDisplayed = _.zipObject (
+		[(pressedKey v.key), v] for v in _choices
+	)
+
+	updateList = ->
+		game.renderer.showList
+			header: header
+			items: for v in _choices
+				"#{v.key} #{if v.checked then '+' else '-'} #{v.name}"
+
+	updateList()
+
+	done = no
+	whilst (-> not done),
+		->
+			exports.keys null, ['escape', 'return', (_.keys mapDisplayed)...]
+
+			.then (key) ->
+				switch key
+					when 'return' then done = yes
+					when 'escape' then done = 'cancel'
+
+					else
+						choice = mapDisplayed[key]
+						choice.checked = not choice.checked
+
+				updateList()
+
+	.then ->
+		game.renderer.showList null
+		return { cancelled: yes } if done is 'cancel'
+
+		choices:
+			for choice in _choices when choice.checked
+				{
+					key: choice.key
+					value: choices[choice.index]
+					index: choice.index
+				}

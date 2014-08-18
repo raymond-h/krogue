@@ -27,5 +27,6 @@
   "k": "kick",
 
   "t": "test-dir",
-  "r": "test-yn"
+  "r": "test-yn",
+  "m": "test-multi"
 }

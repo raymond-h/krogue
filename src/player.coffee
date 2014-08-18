@@ -153,6 +153,25 @@ module.exports = class Player
 
 						.then (reply) -> game.message "You answered: #{reply}"
 
+					when 'test-multi'
+						choices = [
+							'apples'
+							'bananas'
+							'oranges'
+						]
+
+						prompts.multichoiceList 'Pick any fruits!', choices
+
+						.then (replies) ->
+							return game.message 'Cancelled.' if replies.cancelled
+
+							replies = replies.choices.map (c) -> c.value
+
+							if replies.length > 0
+								game.message "You picked: #{replies.join ', '}"
+
+							else game.message 'You picked none!!'
+
 				.then (cost) -> if _.isNumber cost then cost else 0
 
 				.nodeify d.makeNodeResolver()
