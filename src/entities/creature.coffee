@@ -2,8 +2,6 @@ _ = require 'lodash'
 winston = require 'winston'
 
 game = require '../game'
-emit = (a...) -> game.emit a...
-
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
@@ -30,7 +28,7 @@ module.exports = class Creature extends Entity
 		@ is game.player.creature
 
 	damage: (dmg, cause) ->
-		emit 'game.creature.hurt', @, dmg, cause
+		game.emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
 
 		@die cause if @health.empty()
@@ -45,7 +43,7 @@ module.exports = class Creature extends Entity
 			@map.removeEntity @
 			game.timeManager.remove @
 
-		emit 'game.creature.dead', @, cause
+		game.emit 'game.creature.dead', @, cause
 
 	pickup: (item) ->
 		if item instanceof MapItem
@@ -126,7 +124,7 @@ module.exports = class Creature extends Entity
 
 		if @map.collidable x, y
 			# kicking a wall
-			emit 'game.creature.kick.wall', @, dir
+			game.emit 'game.creature.kick.wall', @, dir
 
 			@damage 3, 'kicking a wall'
 			yes
@@ -135,12 +133,12 @@ module.exports = class Creature extends Entity
 			creatures = @map.entitiesAt x, y, 'creature'
 			if creatures.length > 0
 				target = creatures[0]
-				emit 'game.creature.kick.creature', @, dir, target
+				game.emit 'game.creature.kick.creature', @, dir, target
 				target.damage 2, @
 				yes
 
 			else
-				emit 'game.creature.kick.none', @, dir
+				game.emit 'game.creature.kick.none', @, dir
 				no
 
 	distanceSqTo: (to) ->

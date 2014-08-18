@@ -1,8 +1,6 @@
 _ = require 'lodash'
 
 game = require './game'
-emit = (a...) -> game.emit a...
-
 direction = require './direction'
 vectorMath = require './vector-math'
 
@@ -44,7 +42,7 @@ itemsArray = [
 				game.message 'Nothing happens; this gun is a dud.'
 
 			'handgun': (creature, dir) ->
-				emit 'game.creature.fire', creature, @, dir
+				game.emit 'game.creature.fire', creature, @, dir
 
 				offset = direction.parse dir
 				endPos =
@@ -56,20 +54,20 @@ itemsArray = [
 
 				switch found.type
 					when 'none'
-						emit 'game.creature.fire.hit.none', creature, @, dir
+						game.emit 'game.creature.fire.hit.none', creature, @, dir
 
 					when 'wall'
-						emit 'game.creature.fire.hit.wall',
+						game.emit 'game.creature.fire.hit.wall',
 							creature, @, dir, found
 
 					when 'creature'
 						target = found.creature
 
-						emit 'game.creature.fire.hit.creature', creature, @, dir, target
+						game.emit 'game.creature.fire.hit.creature', creature, @, dir, target
 						target.damage 10, creature
 
 			'shotgun': (creature, dir) ->
-				emit 'game.creature.fire', creature, @, dir
+				game.emit 'game.creature.fire', creature, @, dir
 
 				# shotguns shoot in a spread - need angle of dir first
 				angle = direction.directionToRad dir
@@ -91,12 +89,12 @@ itemsArray = [
 
 				if targets.length > 0
 					for target in targets
-						emit 'game.creature.fire.hit.creature',
+						game.emit 'game.creature.fire.hit.creature',
 							creature, @, dir, target
 						target.damage 10, creature
 
 				else
-					emit 'game.creature.fire.hit.none', creature, @, dir
+					game.emit 'game.creature.fire.hit.none', creature, @, dir
 ]
 
 exports.items = items = {}
