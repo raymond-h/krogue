@@ -35,10 +35,18 @@ module.exports = class Creature extends Entity
 		@die cause if @health.empty()
 
 	die: (cause) ->
-		emit 'game.creature.dead', @, cause
+		game = require '../game'
+
 		if not @isPlayer()
+			for item in @inventory
+				mapItem = new MapItem @map, @x, @y, item
+				@map.addEntity mapItem
+				game.timeManager.add mapItem
+
 			@map.removeEntity @
-			(require '../game').timeManager.remove @
+			game.timeManager.remove @
+
+		emit 'game.creature.dead', @, cause
 
 	pickup: (item) ->
 		game = require '../game'
