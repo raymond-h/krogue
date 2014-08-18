@@ -9,13 +9,14 @@ module.exports = class TimeManager
 	constructor: ->
 		@targets = []
 
-		@targets.remove = (i) -> arrayRemove @, i
-
-		@targets.removeAll = (items...) ->
-			@remove item for item in items
-
 		@targets.rotate = ->
 			@push @shift()
+
+	add: (targets...) ->
+		@targets.push targets...
+
+	remove: (targets...) ->
+		arrayRemove @targets, t for t in targets
 
 	tick: (callback) ->
 		if @targets.length > 0

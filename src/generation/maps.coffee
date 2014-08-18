@@ -64,7 +64,7 @@ exports.generateBigRoom = (w, h) ->
 		(new personality.WantItems 15).withMultiplier 0.5
 	]...
 
-	map.addEntities [
+	map.addEntity [
 		e
 		e2
 		new Creature map, 9, 6
@@ -74,7 +74,7 @@ exports.generateBigRoom = (w, h) ->
 		new MapItem map, 13, 4, new items['peculiar-object']
 		new MapItem map, 14, 4, new items['peculiar-object']
 		new MapItem map, 15, 4, new items['peculiar-object']
-	]
+	]...
 
 	map
 

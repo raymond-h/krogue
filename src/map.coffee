@@ -12,22 +12,14 @@ class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
 
-	addEntity: (e, addToTimeManager) ->
-		e.map = @
-		@entities.push e
-		if (addToTimeManager ? yes)
-			(require './game').timeManager.targets.push e
+	addEntity: (entities...) ->
+		e.map = @ for e in entities 
+		@entities.push entities...
 		@
-
-	addEntities: (entities...) ->
-		entities = _.flatten entities
-
-		@addEntity e for e in entities
 
 	removeEntity: (e) ->
 		e.map = null
 		arrayRemove @entities, e
-		(require './game').timeManager.targets.remove e
 		@
 
 	entitiesAt: (x, y, f) ->

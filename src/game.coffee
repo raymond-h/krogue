@@ -60,6 +60,7 @@ class Game
 
 		creature = @createPlayerCreature()
 		@player = new Player creature
+		@timeManager.add creature
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
@@ -94,14 +95,13 @@ class Game
 
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
-			for e in @currentMap.entities when not e.isPlayer()
-				@timeManager.targets.remove e
-
 			@currentMap.removeEntity @player.creature
+			@timeManager.remove @currentMap.entities...
 
 		@currentMap = map
 		@camera.bounds map
 
+		@timeManager.add map.entities...
 		map.addEntity @player.creature
 
 		if x? and y?

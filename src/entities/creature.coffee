@@ -38,6 +38,7 @@ module.exports = class Creature extends Entity
 		emit 'game.creature.dead', @, cause
 		if not @isPlayer()
 			@map.removeEntity @
+			(require '../game').timeManager.remove @
 
 	pickup: (item) ->
 		game = require '../game'
@@ -45,6 +46,7 @@ module.exports = class Creature extends Entity
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
+				game.timeManager.remove item
 
 				game.renderer.invalidate()
 				yes
@@ -60,7 +62,10 @@ module.exports = class Creature extends Entity
 		game = require '../game'
 
 		arrayRemove @inventory, item
-		@map.addEntity new MapItem @map, @x, @y, item
+
+		mapItem = new MapItem @map, @x, @y, item
+		@map.addEntity mapItem
+		game.timeManager.add mapItem
 
 		game.renderer.invalidate()
 		yes
