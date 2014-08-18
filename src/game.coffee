@@ -79,10 +79,7 @@ class Game
 	createPlayerCreature: ->
 		creature = new Creature null, 0, 0, new Human
 
-		gun = new (require './items').Gun
-		gun.name = 'trusty shotgun'
-		gun.gunType = 'shotgun'
-		gun.range = 5
+		gun = (require './generation/items').generateStartingGun()
 
 		creature.equipment['right hand'] = gun
 

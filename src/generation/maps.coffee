@@ -3,8 +3,9 @@ winston = require 'winston'
 
 {Map} = require '../map'
 {Creature, MapItem} = require '../entities'
-
 {repeat} = require '../util'
+
+creatureGen = require './creatures'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
@@ -37,6 +38,7 @@ exports.createMapData = (w, h, tileCb) ->
 Generation functions
 ###
 exports.generateBigRoom = (w, h) ->
+	game = require '../game'
 	{border} = exports.mapGen
 
 	map = new Map w, h
@@ -47,29 +49,22 @@ exports.generateBigRoom = (w, h) ->
 	map.data = exports.createMapData map.w, map.h, tileCb
 
 	# 'generate' entities to inhabit the map
-	personality = require '../personality'
 	{items} = require '../items'
 
-	e = new Creature map, 12, 6
-	e.speed = 30
-	e.personalities.push [
-		new personality.FleeFromPlayer 5
-		(new personality.RandomWalk).withMultiplier 0.5
-	]...
+	generatePos = ->
+		loop
+			x = game.random.range 0, w
+			y = game.random.range 0, h
 
-	e2 = new Creature map, 12, 14
-	e2.speed = 12
-	e2.personalities.push [
-		new personality.FleeFromPlayer 5
-		(new personality.WantItems 15).withMultiplier 0.5
-	]...
+			break if map.data[y][x] isnt '#'
+		[x, y]
+
+	entities = for i in [1..5]
+		[x, y] = generatePos()
+		creatureGen.generateStrangeGoo x, y
 
 	map.addEntity [
-		e
-		e2
-		new Creature map, 9, 6
-		new Creature map, 10, 7
-		new Creature map, 7, 7
+		entities...
 		new MapItem map, 12, 4, new items['peculiar-object']
 		new MapItem map, 13, 4, new items['peculiar-object']
 		new MapItem map, 14, 4, new items['peculiar-object']

@@ -1,0 +1,1 @@
+exports.generateFeatures = (w, h, map) ->
