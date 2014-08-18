@@ -13,7 +13,7 @@ class exports.Map
 		@entities = []
 
 	addEntity: (entities...) ->
-		e.map = @ for e in entities 
+		e.map = @ for e in entities
 		@entities.push entities...
 		@
 

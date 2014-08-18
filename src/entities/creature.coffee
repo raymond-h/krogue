@@ -205,7 +205,7 @@ module.exports = class Creature extends Entity
 
 	tickRate: -> @speed ? 12
 
-	tick: (a...) ->		
+	tick: (a...) ->
 		# check if this creature is controlled by player
 		if @isPlayer() then game.player.tick a...
 

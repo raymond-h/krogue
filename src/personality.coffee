@@ -34,7 +34,7 @@ personalitiesArray = [
 		weight: (creature) ->
 			{distanceSq} = require './util'
 			if (
-				(creature.canSee game.player.creature) and 
+				(creature.canSee game.player.creature) and
 				(creature.distanceSqTo game.player.creature) < (@safeDist*@safeDist)
 			)
 				100

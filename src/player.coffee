@@ -126,7 +126,10 @@ module.exports = class Player
 								game.message 'Your hand is surprisingly bad at firing bullets.'
 								2
 							else if not item.fire?
-								game.message "You find the lack of bullets from your #{item.name} disturbing."
+								game.message "
+									You find the lack of bullets
+									from your #{item.name} disturbing.
+								"
 								2
 							else
 								item.fire @creature, dir
