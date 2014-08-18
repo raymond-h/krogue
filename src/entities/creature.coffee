@@ -92,7 +92,7 @@ module.exports = class Creature extends Entity
 		else
 			break for slot, i of @equipment when i is item
 
-		if not slot? or item? or @equipment[slot] isnt item then no
+		if not (slot? or item?) or @equipment[slot] isnt item then no
 		else
 			delete @equipment[slot]
 			@inventory.push item
