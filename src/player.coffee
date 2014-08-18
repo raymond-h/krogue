@@ -120,11 +120,17 @@ module.exports = class Player
 						prompts.direction 'Fire in what direction?'
 
 						.then (dir) =>
-							gun = @creature.equipment['right hand']
+							item = @creature.equipment['right hand']
 
-							gun.fire @creature, dir
-
-							6
+							if not item?
+								game.message 'Your hand is surprisingly bad at firing bullets.'
+								2
+							else if not item.fire?
+								game.message "You find the lack of bullets from your #{item.name} disturbing."
+								2
+							else
+								item.fire @creature, dir
+								6
 
 					when 'kick'
 						prompts.direction 'Kick in what direction?'
