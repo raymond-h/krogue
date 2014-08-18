@@ -15,8 +15,6 @@ class Game extends EventEmitter2
 
 		@state = 'main-menu'
 
-		# @events = new EventEmitter2
-
 		@onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
 
@@ -33,9 +31,7 @@ class Game extends EventEmitter2
 
 		(require './messages')(@)
 
-		#@events
-		@
-		.on 'key.c', (ch, key) =>
+		@on 'key.c', (ch, key) =>
 			@quit() if key.ctrl
 
 		.on 'log.add', (str) ->
@@ -64,9 +60,7 @@ class Game extends EventEmitter2
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
-		#@events
-		@
-		.on 'key.z', =>
+		@on 'key.z', =>
 			newMap = (MapGenerator.generateCellularAutomata 80, 21)
 			[startX, startY] = []
 
@@ -138,9 +132,7 @@ class Game extends EventEmitter2
 			(next) =>
 				switch @state
 					when 'main-menu'
-						#@events
-						@
-						.once 'key.s', =>
+						@once 'key.s', =>
 							@goState 'game'
 							next()
 
