@@ -54,6 +54,7 @@ module.exports = class Creature extends Entity
 			else no
 
 		@inventory.push item
+		game.events.emit 'game.creature.pickup', @, item
 		yes
 
 	drop: (item) ->
@@ -67,6 +68,7 @@ module.exports = class Creature extends Entity
 		@map.addEntity mapItem
 		game.timeManager.add mapItem
 
+		game.events.emit 'game.creature.drop', @, item
 		game.renderer.invalidate()
 		yes
 

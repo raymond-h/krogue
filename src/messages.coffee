@@ -66,6 +66,20 @@ module.exports = (game) ->
 	.on 'game.creature.fire.hit.creature', (firer, item, dir, target) ->
 		msg "The bullet hits #{the target}!"
 
+	.on 'game.creature.pickup', (creature, item) ->
+		It_picks =
+			if creature.isPlayer() then 'You pick'
+			else "The #{creature.species.name} picks"
+
+		msg "#{It_picks} up the #{item.name}."
+
+	.on 'game.creature.drop', (creature, item) ->
+		It_drops =
+			if creature.isPlayer() then 'You drop'
+			else "The #{creature.species.name} drops"
+
+		msg "#{It_drops} the #{item.name}."
+
 	.on 'game.creature.equip', (equipper, slot, item) ->
 		It_equips =
 			if equipper.isPlayer() then 'You equip'

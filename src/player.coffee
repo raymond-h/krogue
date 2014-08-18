@@ -86,17 +86,35 @@ module.exports = class Player
 							6
 
 					when 'pickup'
-						map = @creature.map
-						items = map.entitiesAt @creature.x, @creature.y, 'item'
-						if items.length > 0
-							@creature.pickup items[0]
-							3
+						items = @creature.map.entitiesAt @creature.x, @creature.y, 'item'
 
-						else game.message 'There, frankly, is nothing here!'
+						switch items.length
+							when 0
+								game.message 'There, frankly, is nothing here!'
+
+							when 1
+								@creature.pickup items[0]
+								3
+
+							else
+								prompts.list 'Pick up which item?', ("#{i.item.name}" for i in items)
+								.then ({cancelled, index}) =>
+									return game.message 'Never mind.' if cancelled
+									
+									@creature.pickup items[index]
+									3
 
 					when 'drop'
-						item = @creature.inventory[0]
-						@creature.drop item
+						if @creature.inventory.length is 0
+							game.message 'You empty your empty inventory onto the ground.'
+
+						else
+							prompts.list 'Drop which item?', @creature.inventory
+							.then ({cancelled, value: item}) =>
+								return game.message 'Never mind.' if cancelled
+
+								@creature.drop item
+								3
 
 					when 'fire'
 						prompts.direction 'Fire in what direction?'
