@@ -98,6 +98,7 @@ itemsArray = [
 					for target in targets
 						emit 'game.creature.fire.hit.creature',
 							creature, @, dir, target
+						target.damage 10, creature
 
 				else
 					emit 'game.creature.fire.hit.none', creature, @, dir
