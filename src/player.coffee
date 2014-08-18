@@ -2,6 +2,8 @@ Q = require 'q'
 _ = require 'lodash'
 winston = require 'winston'
 
+game = require './game'
+
 direction = require './direction'
 {whilst, arrayRemove} = require './util'
 prompts = require './prompts'
@@ -10,8 +12,6 @@ module.exports = class Player
 	constructor: (@creature) ->
 
 	tick: ->
-		game = require './game'
-
 		game.events.emit 'turn.player', 'player'
 
 		whilst (-> game.renderer.hasMoreLogs()),

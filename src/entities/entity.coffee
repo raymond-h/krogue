@@ -1,5 +1,7 @@
 _ = require 'lodash'
 winston = require 'winston'
+
+game = require '../game'
 direction = require '../direction'
 
 exports.fromJSON = (json) ->
@@ -20,7 +22,7 @@ class exports.Entity
 
 		@x = x
 		@y = y
-		(require '../game').renderer.invalidate()
+		game.renderer.invalidate()
 
 	movePos: (x, y) ->
 		if _.isString x then x = direction.parse x

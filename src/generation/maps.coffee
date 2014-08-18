@@ -1,6 +1,7 @@
 _ = require 'lodash'
 winston = require 'winston'
 
+game = require '../game'
 {Map} = require '../map'
 {Creature, MapItem} = require '../entities'
 {repeat} = require '../util'
@@ -38,7 +39,6 @@ exports.createMapData = (w, h, tileCb) ->
 Generation functions
 ###
 exports.generateBigRoom = (w, h) ->
-	game = require '../game'
 	{border} = exports.mapGen
 
 	map = new Map w, h
@@ -86,7 +86,7 @@ exports.generateCellularAutomata = (w, h) ->
 		repeat 2, (..., neighbours) -> neighbours >= 7
 	]
 
-	_randomTile = randomTiles (-> (require '../game').random.rnd()), initProb
+	_randomTile = randomTiles (-> game.random.rnd()), initProb
 
 	mapData = exports.createMapData w, h,
 		(a...) -> (border a...) ? (_randomTile a...)

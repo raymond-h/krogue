@@ -1,8 +1,8 @@
-exports.generateStrangeGoo = (x, y) ->
-	game = require '../game'
-	personality = require '../personality'
-	{Creature} = require '../entities'
+game = require '../game'
+personality = require '../personality'
+{Creature} = require '../entities'
 
+exports.generateStrangeGoo = (x, y) ->
 	c = new Creature null, x, y
 
 	if game.random.chance 0.50

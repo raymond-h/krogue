@@ -1,14 +1,15 @@
 _ = require 'lodash'
 winston = require 'winston'
 
+game = require '../game'
+emit = (a...) -> game.events.emit a...
+
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
 
 {Entity} = require './entity'
 MapItem = require './map-item'
-
-emit = (a...) -> (require '../game').events.emit a...
 
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
@@ -26,7 +27,7 @@ module.exports = class Creature extends Entity
 		@equipment = {}
 
 	isPlayer: ->
-		@ is (require '../game').player.creature
+		@ is game.player.creature
 
 	damage: (dmg, cause) ->
 		emit 'game.creature.hurt', @, dmg, cause
@@ -35,8 +36,6 @@ module.exports = class Creature extends Entity
 		@die cause if @health.empty()
 
 	die: (cause) ->
-		game = require '../game'
-
 		if not @isPlayer()
 			for item in @inventory
 				mapItem = new MapItem @map, @x, @y, item
@@ -49,8 +48,6 @@ module.exports = class Creature extends Entity
 		emit 'game.creature.dead', @, cause
 
 	pickup: (item) ->
-		game = require '../game'
-
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
@@ -68,8 +65,6 @@ module.exports = class Creature extends Entity
 	drop: (item) ->
 		return no if not (item? and item in @inventory)
 
-		game = require '../game'
-
 		arrayRemove @inventory, item
 
 		mapItem = new MapItem @map, @x, @y, item
@@ -84,8 +79,6 @@ module.exports = class Creature extends Entity
 		return no if not (slot in @species.equipSlots)
 		return no if not (item in @inventory)
 
-		game = require '../game'
-
 		(@unequip slot) if @equipment[slot]?
 
 		arrayRemove @inventory, item
@@ -94,8 +87,6 @@ module.exports = class Creature extends Entity
 		yes
 
 	unequip: (item) ->
-		game = require '../game'
-
 		if _.isString item
 			[slot, item] = [item, @equipment[item]]
 
@@ -111,8 +102,6 @@ module.exports = class Creature extends Entity
 
 	setPos: ->
 		super
-
-		game = require '../game'
 		game.camera.update() if @ is game.player.creature
 
 	move: (x, y) ->
@@ -132,8 +121,6 @@ module.exports = class Creature extends Entity
 		@move direction.opposite @directionTo p
 
 	kick: (dir) ->
-		game = require '../game'
-
 		{x, y} = direction.parse dir
 		x += @x; y += @y
 
@@ -220,9 +207,7 @@ module.exports = class Creature extends Entity
 
 	tickRate: -> @speed ? 12
 
-	tick: (a...) ->
-		game = require '../game'
-		
+	tick: (a...) ->		
 		# check if this creature is controlled by player
 		if @isPlayer() then game.player.tick a...
 

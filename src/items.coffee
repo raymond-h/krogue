@@ -1,5 +1,11 @@
 _ = require 'lodash'
 
+game = require './game'
+emit = (a...) -> game.events.emit a...
+
+direction = require './direction'
+vectorMath = require './vector-math'
+
 exports.fromJSON = (json) ->
 	if items[json.typeName]?
 		_.assign (new items[json.typeName]),
@@ -35,15 +41,9 @@ itemsArray = [
 
 		fireHandlers:
 			'_dud': (creature, dir) ->
-				(require './game').message 'Nothing happens; this gun is a dud.'
+				game.message 'Nothing happens; this gun is a dud.'
 
 			'handgun': (creature, dir) ->
-				game = require './game'
-				direction = require './direction'
-				vectorMath = require './vector-math'
-
-				emit = (a...) -> game.events.emit a...
-
 				emit 'game.creature.fire', creature, @, dir
 
 				offset = direction.parse dir
@@ -69,11 +69,6 @@ itemsArray = [
 						target.damage 10, creature
 
 			'shotgun': (creature, dir) ->
-				game = require './game'
-				direction = require './direction'
-				vectorMath = require './vector-math'
-				emit = (a...) -> game.events.emit a...
-
 				emit 'game.creature.fire', creature, @, dir
 
 				# shotguns shoot in a spread - need angle of dir first

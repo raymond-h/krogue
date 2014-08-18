@@ -1,6 +1,8 @@
 Q = require 'q'
 _ = require 'lodash'
 
+game = require './game'
+
 makeHandler = (matcher, done) ->
 	(a...) ->
 		done a... if matcher a...
@@ -16,7 +18,6 @@ exports.listOptions = listOptions = [
 ]
 
 exports.generic = (message, event, matcher, opts) ->
-	game = require './game'
 	d = Q.defer()
 
 	handler = makeHandler matcher, (a...) ->
@@ -82,14 +83,14 @@ exports.list = (header, choices, opts) ->
 		[(pressedKey v.key), v] for v in _choices
 	)
 
-	(require './game').renderer.showList
+	game.renderer.showList
 		header: header
 		items: ("#{v.key} - #{v.name}" for v in _choices)
 
 	exports.keys null, ['escape', (_.keys mapDisplayed)...]
 
 	.then (key) ->
-		(require './game').renderer.showList null
+		game.renderer.showList null
 		return { cancelled: yes } if key is 'escape'
 
 		choice = mapDisplayed[key]

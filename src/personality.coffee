@@ -1,5 +1,7 @@
 _ = require 'lodash'
 
+game = require './game'
+
 exports.fromJSON = (json) ->
 	if personalities[json.typeName]?
 		_.assign (new personalities[json.typeName]),
@@ -31,7 +33,6 @@ personalitiesArray = [
 
 		weight: (creature) ->
 			{distanceSq} = require './util'
-			game = require './game'
 			if (
 				(creature.canSee game.player.creature) and 
 				(creature.distanceSqTo game.player.creature) < (@safeDist*@safeDist)
@@ -42,7 +43,6 @@ personalitiesArray = [
 
 		tick: (creature) ->
 			direction = (require './direction')
-			game = (require './game')
 
 			creature.moveAwayFrom game.player.creature
 
@@ -56,7 +56,6 @@ personalitiesArray = [
 
 		tick: (creature) ->
 			direction = require './direction'
-			game = require './game'
 
 			creature.move game.random.direction 8
 

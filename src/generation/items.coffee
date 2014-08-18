@@ -1,8 +1,7 @@
+game = require '../game'
 items = require '../items'
 
 exports.generateGun = (type, name) ->
-	game = require '../game'
-
 	type ?= game.random.sample ['handgun', 'shotgun']
 	name ?= type
 
@@ -19,8 +18,6 @@ exports.generateGun = (type, name) ->
 	gun
 
 exports.generateStartingGun = (type) ->
-	game = require '../game'
-
 	type ?= game.random.sample ['handgun', 'shotgun']
 
 	exports.generateGun type, "trusty #{type}"
