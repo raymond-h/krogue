@@ -16,7 +16,7 @@ initialize = (game) ->
 	program.alternateBuffer()
 
 	program.on 'keypress', (ch, key) ->
-		game.events.emit "key.#{key.name}", ch, key
+		game.emit "key.#{key.name}", ch, key
 
 deinitialize = (game) ->
 	program.clear()
@@ -37,7 +37,7 @@ class TtyRenderer
 
 		@logWidth = 60 - TtyRenderer.strMore.length
 
-		@game.events
+		@game
 		.on 'turn.player', => @showMoreLogs()
 
 		.on 'log.add', (str) => @pendingLogs.push str

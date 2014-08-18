@@ -7,15 +7,17 @@ Q = require 'q'
 saveData = require './save-data'
 {arrayRemove} = require './util'
 
-class Game
+class Game extends EventEmitter2
 	constructor: ->
-		@state = 'main-menu'
-
-		@events = new EventEmitter2
+		super
 			wildcard: yes
 			newListener: no
 
-		@events.onAny (a...) ->
+		@state = 'main-menu'
+
+		# @events = new EventEmitter2
+
+		@onAny (a...) ->
 			winston.silly "Event: '#{@event}'; ", a
 
 		(require './key-handling')(this)
@@ -31,7 +33,8 @@ class Game
 
 		(require './messages')(@)
 
-		@events
+		#@events
+		@
 		.on 'key.c', (ch, key) =>
 			@quit() if key.ctrl
 
@@ -61,7 +64,9 @@ class Game
 
 		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
 
-		@events.on 'key.z', =>
+		#@events
+		@
+		.on 'key.z', =>
 			newMap = (MapGenerator.generateCellularAutomata 80, 21)
 			[startX, startY] = []
 
@@ -116,9 +121,9 @@ class Game
 		saveData.load @, filename
 
 	goState: (state) ->
-		@events.emit "state.exit.#{@state}", 'exit', @state
+		@emit "state.exit.#{@state}", 'exit', @state
 		@state = state
-		@events.emit "state.enter.#{@state}", 'enter', @state
+		@emit "state.enter.#{@state}", 'enter', @state
 
 		@renderer.invalidate()
 
@@ -126,14 +131,16 @@ class Game
 		@logs.push str
 		@logs.shift() while @logs.length > 20
 
-		@events.emit 'log.add', str
+		@emit 'log.add', str
 
 	main: ->
 		async.whilst (-> true),
 			(next) =>
 				switch @state
 					when 'main-menu'
-						@events.once 'key.s', =>
+						#@events
+						@
+						.once 'key.s', =>
 							@goState 'game'
 							next()
 

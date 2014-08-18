@@ -17,7 +17,7 @@ the = (cause) ->
 module.exports = (game) ->
 	msg = (m) -> game.message m
 
-	game.events
+	game
 
 	.on 'game.creature.hurt', (target, dmg, cause) ->
 		It_was =

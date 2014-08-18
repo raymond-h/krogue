@@ -12,7 +12,7 @@ module.exports = class Player
 	constructor: (@creature) ->
 
 	tick: ->
-		game.events.emit 'turn.player', 'player'
+		game.emit 'turn.player', 'player'
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
@@ -22,7 +22,7 @@ module.exports = class Player
 		.then =>
 			d = Q.defer()
 
-			game.events.once 'action.**', (action, params...) =>
+			game.once 'action.**', (action, params...) =>
 				Q switch action
 					when 'idle' then 12 # just wait a turn
 

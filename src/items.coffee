@@ -1,7 +1,7 @@
 _ = require 'lodash'
 
 game = require './game'
-emit = (a...) -> game.events.emit a...
+emit = (a...) -> game.emit a...
 
 direction = require './direction'
 vectorMath = require './vector-math'

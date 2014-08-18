@@ -2,7 +2,7 @@ _ = require 'lodash'
 winston = require 'winston'
 
 game = require '../game'
-emit = (a...) -> game.events.emit a...
+emit = (a...) -> game.emit a...
 
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
@@ -59,7 +59,7 @@ module.exports = class Creature extends Entity
 			else no
 
 		@inventory.push item
-		game.events.emit 'game.creature.pickup', @, item
+		game.emit 'game.creature.pickup', @, item
 		yes
 
 	drop: (item) ->
@@ -71,7 +71,7 @@ module.exports = class Creature extends Entity
 		@map.addEntity mapItem
 		game.timeManager.add mapItem
 
-		game.events.emit 'game.creature.drop', @, item
+		game.emit 'game.creature.drop', @, item
 		game.renderer.invalidate()
 		yes
 
@@ -83,7 +83,7 @@ module.exports = class Creature extends Entity
 
 		arrayRemove @inventory, item
 		@equipment[slot] = item
-		game.events.emit 'game.creature.equip', @, slot, item
+		game.emit 'game.creature.equip', @, slot, item
 		yes
 
 	unequip: (item) ->
@@ -97,7 +97,7 @@ module.exports = class Creature extends Entity
 		else
 			delete @equipment[slot]
 			@inventory.push item
-			game.events.emit 'game.creature.unequip', @, slot, item
+			game.emit 'game.creature.unequip', @, slot, item
 			yes
 
 	setPos: ->

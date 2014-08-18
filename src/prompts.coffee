@@ -21,10 +21,10 @@ exports.generic = (message, event, matcher, opts) ->
 	d = Q.defer()
 
 	handler = makeHandler matcher, (a...) ->
-		game.events.off event, handler
+		game.off event, handler
 		d.resolve a
 
-	game.events.on event, handler
+	game.on event, handler
 
 	if message?
 		game.message message

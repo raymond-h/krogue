@@ -4,9 +4,7 @@ direction = require './direction'
 bindings = require '../key-bindings.json'
 
 module.exports = exports = (game) ->
-	game.events
-
-	.on 'key.*', (ch, key) ->
+	game.on 'key.*', (ch, key) ->
 		action = bindings[key.full]
 
 		if action?
@@ -15,6 +13,6 @@ module.exports = exports = (game) ->
 			if parts[0] is 'direction'
 				parts[1] = direction.normalize parts[1], 1
 
-			game.events.emit "action.#{parts.join '.'}", parts...
+			game.emit "action.#{parts.join '.'}", parts...
 
 exports.bindings = bindings
