@@ -97,24 +97,28 @@ module.exports = class Player
 								3
 
 							else
-								prompts.list 'Pick up which item?', ("#{i.item.name}" for i in items)
-								.then ({cancelled, index}) =>
+								prompts.multichoiceList 'Pick up which item?', ("#{i.item.name}" for i in items)
+								.then ({cancelled, choices}) =>
 									return game.message 'Never mind.' if cancelled
 									
-									@creature.pickup items[index]
-									3
+									for c in choices
+										@creature.pickup items[c.index]
+
+									3 * choices.length
 
 					when 'drop'
 						if @creature.inventory.length is 0
 							game.message 'You empty your empty inventory onto the ground.'
 
 						else
-							prompts.list 'Drop which item?', @creature.inventory
-							.then ({cancelled, value: item}) =>
+							prompts.multichoiceList 'Drop which item?', @creature.inventory
+							.then ({cancelled, choices}) =>
 								return game.message 'Never mind.' if cancelled
 
-								@creature.drop item
-								3
+								for c in choices
+									@creature.drop c.value
+
+								3 * choices.length
 
 					when 'fire'
 						prompts.direction 'Fire in what direction?'
