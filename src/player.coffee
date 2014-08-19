@@ -53,23 +53,23 @@ module.exports = class Player
 						]
 
 						prompts.list 'Inventory', choices
+						.then (choice) ->
+							return game.message 'Never mind.' if not choice?
 
-						.then ({cancelled, key, value}) ->
-							if cancelled
-								game.message 'Never mind.'
-
-							else
-								game.message "You picked #{key}: #{value}!"
+							{key, value} = choice
+							game.message "You picked #{key}: #{value}!"
 
 					when 'equip'
 						prompts.list 'Equip which item?', @creature.inventory
-						.then ({cancelled, value: item}) =>
-							return game.message 'Never mind.' if cancelled
+						.then (choice) =>
+							return game.message 'Never mind.' if not choice?
 
+							{value: item} = choice
 							prompts.list 'To what slot?', @creature.species.equipSlots
-							.then ({cancelled, value: slot}) =>
-								return game.message 'Never mind.' if cancelled
+							.then (choice) =>
+								return game.message 'Never mind.' if not choice?
 
+								{value: slot} = choice
 								@creature.equip slot, item
 								6
 
@@ -79,10 +79,10 @@ module.exports = class Player
 							name: "#{i.name} (#{s})"
 
 						prompts.list 'Put away which item?', equips
-						.then ({cancelled, value}) =>
-							return game.message 'Never mind.' if cancelled
+						.then (choice) =>
+							return game.message 'Never mind.' if not choice?
 
-							@creature.unequip value.slot
+							@creature.unequip choice.value.slot
 							6
 
 					when 'pickup'
@@ -98,8 +98,8 @@ module.exports = class Player
 
 							else
 								prompts.multichoiceList 'Pick up which item?', ("#{i.item.name}" for i in items)
-								.then ({cancelled, choices}) =>
-									return game.message 'Never mind.' if cancelled
+								.then (choices) =>
+									return game.message 'Never mind.' if not choices?
 									
 									for c in choices
 										@creature.pickup items[c.index]
@@ -112,8 +112,8 @@ module.exports = class Player
 
 						else
 							prompts.multichoiceList 'Drop which item?', @creature.inventory
-							.then ({cancelled, choices}) =>
-								return game.message 'Never mind.' if cancelled
+							.then (choices) =>
+								return game.message 'Never mind.' if not choices?
 
 								for c in choices
 									@creature.drop c.value
@@ -165,14 +165,13 @@ module.exports = class Player
 						]
 
 						prompts.multichoiceList 'Pick any fruits!', choices
+						.then (choices) ->
+							return game.message 'Cancelled.' if not choices?
 
-						.then (replies) ->
-							return game.message 'Cancelled.' if replies.cancelled
+							choices = choices.map (c) -> c.value
 
-							replies = replies.choices.map (c) -> c.value
-
-							if replies.length > 0
-								game.message "You picked: #{replies.join ', '}"
+							if choices.length > 0
+								game.message "You picked: #{choices.join ', '}"
 
 							else game.message 'You picked none!!'
 

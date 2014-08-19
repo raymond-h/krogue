@@ -92,7 +92,7 @@ exports.list = (header, choices, opts) ->
 
 	.then (key) ->
 		game.renderer.showList null
-		return { cancelled: yes } if key is 'escape'
+		return null if key is 'escape'
 
 		choice = mapDisplayed[key]
 		{
@@ -139,12 +139,11 @@ exports.multichoiceList = (header, choices, opts) ->
 
 	.then ->
 		game.renderer.showList null
-		return { cancelled: yes } if done is 'cancel'
+		return null if done is 'cancel'
 
-		choices:
-			for choice in _choices when choice.checked
-				{
-					key: choice.key
-					value: choices[choice.index]
-					index: choice.index
-				}
+		for choice in _choices when choice.checked
+			{
+				key: choice.key
+				value: choices[choice.index]
+				index: choice.index
+			}
