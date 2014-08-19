@@ -148,12 +148,12 @@ module.exports = class Player
 							12
 
 					when 'test-dir'
-						prompts.direction 'Pick a direction!'
+						prompts.direction 'Pick a direction!', cancelable: yes
 
 						.then (dir) -> game.message "You answered: #{dir}"
 
 					when 'test-yn'
-						prompts.yesNo 'Are you sure?'
+						prompts.yesNo 'Are you sure?', cancelable: yes
 
 						.then (reply) -> game.message "You answered: #{reply}"
 

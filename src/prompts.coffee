@@ -4,10 +4,6 @@ _ = require 'lodash'
 game = require './game'
 {whilst} = require './util'
 
-makeHandler = (matcher, done) ->
-	(a...) ->
-		done a... if matcher a...
-
 charRange = (start, end) ->
 	[start.charCodeAt(0)..end.charCodeAt(0)]
 	.map (i) -> String.fromCharCode i
@@ -24,12 +20,15 @@ exports.listOptions = listOptions = [
 
 exports.generic = (message, event, matcher, opts) ->
 	d = Q.defer()
+	event = [].concat event
 
-	handler = makeHandler matcher, (a...) ->
-		game.off event, handler
-		d.resolve a
+	handler = (a...) ->
+		if matcher @event, a...
+			(game.off e, handler) for e in event
 
-	game.on event, handler
+			d.resolve [@event, a...]
+
+	(game.on e, handler) for e in event
 
 	if message?
 		game.message message
@@ -38,40 +37,64 @@ exports.generic = (message, event, matcher, opts) ->
 	d.promise
 
 exports.keys = (message, keys, opts) ->
-	{showKeys, separator} = _.defaults {}, opts,
+	{showKeys, shownKeys, separator} = _.defaults {}, opts,
 		showKeys: yes
 		separator: ','
 
 	if message? and showKeys
-		message = "#{message} [#{keys.join separator}]"
+		message = "#{message} [#{(shownKeys ? keys).join separator}]"
 
 	exports.generic message, 'key.*',
-		(ch, key) -> key.full in keys
+		(event, ch, key) -> key.full in keys
+	, opts
 
-	.then ([ch, key]) -> key.full
+	.then ([event, ch, key]) -> key.full
 
 exports.actions = (message, actions, opts) ->
-	{showActions, shownActions, separator} =
+	{showActions, shownActions, separator, cancelable} =
 		_.defaults {}, opts,
 			showActions: yes
 			separator: ','
+			cancelable: no
 
 	if message? and showActions
 		message = "#{message} [#{(shownActions ? actions).join separator}]"
 
-	exports.generic message, 'action.**',
-		(action, params...) -> action in actions
+	exports.generic message, ['key.escape', 'action.**'],
+		(event, action, params...) ->
+			return yes if cancelable and event is 'key.escape'
+
+			action in actions
+	, opts
+
+	.then ([event, a...]) ->
+		if event is 'key.escape' then null
+		else a
 
 exports.yesNo = (message, opts = {}) ->
+	opts.shownKeys ?= ['y', 'n']
 	opts.separator ?= ''
-	exports.keys message, ['y', 'n'], opts
 
-	.then (reply) -> reply is 'y'
+	choices = ['y', 'n']
+	if opts.cancelable
+		choices.push 'escape'
 
-exports.direction = (message, opts) ->
+	exports.keys message, choices, opts
+	.then (reply) ->
+		switch reply
+			when 'escape' then null
+			when 'y' then yes
+			else no
+
+exports.direction = (message, opts = {}) ->
+	opts.shownActions ?= ['direction','escape'] if opts.cancelable
+
 	exports.actions message, ['direction'], opts
 
-	.then ([action, params...]) -> params[0]
+	.then (reply) ->
+		return null if not reply?
+
+		reply[1] # first param
 
 exports.list = (header, choices, opts) ->
 	_choices = for v, i in choices
