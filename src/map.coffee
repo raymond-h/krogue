@@ -38,6 +38,12 @@ class exports.Map
 
 		@data[y][x] is '#'
 
+	hasBlockingEntities: (x, y) ->
+		for e in @entities when e.x is x and e.y is y
+			return yes if e.blocking
+
+		no
+
 	seeThrough: (x, y) ->
 		if _.isObject x then {x, y} = x
 		

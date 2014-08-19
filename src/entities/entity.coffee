@@ -14,6 +14,7 @@ exports.fromJSON = (json) ->
 
 class exports.Entity
 	symbol: '-'
+	blocking: no
 
 	constructor: (@map, @x, @y) ->
 

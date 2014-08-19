@@ -12,6 +12,7 @@ MapItem = require './map-item'
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
 	type: 'creature'
+	blocking: yes
 
 	constructor: (m, x, y, @species = null) ->
 		super
@@ -200,8 +201,7 @@ module.exports = class Creature extends Entity
 		found
 
 	collidable: (x, y) ->
-		(@map.collidable x, y) or
-		(@map.entitiesAt x, y, 'creature').length > 0
+		(@map.collidable x, y) or (@map.hasBlockingEntities x, y)
 
 	tickRate: -> @speed ? 12
 
