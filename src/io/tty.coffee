@@ -127,8 +127,15 @@ class TtyRenderer
 
 			program.write row.join ''
 
-		@renderEntities x, y, (map.listEntities 'item')
-		@renderEntities x, y, (map.listEntities 'creature')
+		entityLayer =
+			'creature': 3
+			'item': 2
+			'stairs': 1
+
+		entities = map.entities[..].sort (a, b) ->
+			entityLayer[a.type] - entityLayer[b.type]
+
+		@renderEntities x, y, entities
 
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
