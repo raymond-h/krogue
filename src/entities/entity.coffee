@@ -50,3 +50,11 @@ class exports.Entity
 
 exports.Creature = require './creature'
 exports.MapItem = require './map-item'
+
+class exports.Stairs extends exports.Entity
+	symbol: '>'
+	type: 'stairs'
+	blocking: no
+
+	constructor: (m, x, y, @target = {}) ->
+		super

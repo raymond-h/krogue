@@ -24,7 +24,7 @@ module.exports = class Player
 
 			game.once 'action.**', (action, params...) =>
 				Q @doAction action, params...
-				
+
 				.then (cost) -> if _.isNumber cost then cost else 0
 				.nodeify d.makeNodeResolver()
 
@@ -182,6 +182,16 @@ module.exports = class Player
 						game.message "You picked: #{choices.join ', '}"
 
 					else game.message 'You picked none!!'
+
+			when 'down-stairs'
+				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y, 'stairs'
+
+				if stairs?
+					{target: {map, x, y}} = stairs
+					MapGenerator = require './generation/maps'
+
+					newMap = MapGenerator.generateCellularAutomata 100, 50
+					game.transitionToMap newMap, x, y
 
 	loadFromJSON: (json) ->
 		if @creature? then @creature.loadFromJSON json.creature

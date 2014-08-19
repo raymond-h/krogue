@@ -3,7 +3,7 @@ winston = require 'winston'
 
 game = require '../game'
 {Map} = require '../map'
-{Creature, MapItem} = require '../entities'
+{Creature, MapItem, Stairs} = require '../entities'
 {repeat} = require '../util'
 
 creatureGen = require './creatures'
@@ -67,8 +67,15 @@ exports.generateBigRoom = (w, h) ->
 		[x, y] = generatePos()
 		creatureGen.generateStrangeGoo x, y
 
+	[x, y] = generatePos()
+	stairs = new Stairs map, x, y
+	stairs.target =
+		x: 20
+		y: 20
+
 	map.addEntity [
 		entities...
+		stairs
 		new MapItem map, 12, 4, new items['peculiar-object']
 		new MapItem map, 13, 4, new items['peculiar-object']
 		new MapItem map, 14, 4, new items['peculiar-object']

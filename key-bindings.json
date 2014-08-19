@@ -15,6 +15,7 @@
   ".": "idle",
 
   "enter": "more-logs",
+  ">": "down-stairs",
   "i": "inventory",
   "e": "equip",
   "S-e": "unequip",
