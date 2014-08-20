@@ -8,6 +8,7 @@ exports.fromJSON = (json) ->
 	e = switch json.type
 		when 'creature' then new exports.Creature
 		when 'item' then new exports.MapItem
+		when 'stairs' then new exports.Stairs
 
 	e.loadFromJSON json
 	e

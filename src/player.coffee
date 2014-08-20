@@ -187,10 +187,16 @@ module.exports = class Player
 				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y, 'stairs'
 
 				if stairs?
-					{target: {map, x, y}} = stairs
+					{target: {map, position}} = stairs
 					MapGenerator = require './generation/maps'
-
+					
 					newMap = MapGenerator.generateCellularAutomata 100, 50
+
+					if _.isString position
+						{x, y} = newMap.positions[position]
+
+					else {x, y} = position
+
 					game.transitionToMap newMap, x, y
 
 	loadFromJSON: (json) ->

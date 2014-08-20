@@ -11,6 +11,7 @@ filter = (e, filter) ->
 class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
+		@positions = {}
 
 	addEntity: (entities...) ->
 		e.map = @ for e in entities
@@ -51,6 +52,7 @@ class exports.Map
 
 	@fromJSON = (json) ->
 		map = new exports.Map json.w, json.h, json.data
+		map.positions = json.positions
 
 		for e in json.entities
 			map.addEntity (require './entities').fromJSON e
@@ -59,6 +61,6 @@ class exports.Map
 
 	toJSON: ->
 		{
-			@w, @h, @data
+			@w, @h, @data, @positions
 			entities: @entities.filter (e) -> not e.isPlayer()
 		}

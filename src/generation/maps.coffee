@@ -70,8 +70,7 @@ exports.generateBigRoom = (w, h) ->
 	[x, y] = generatePos()
 	stairs = new Stairs map, x, y
 	stairs.target =
-		x: 20
-		y: 20
+		position: 'entrance'
 
 	map.addEntity [
 		entities...
@@ -81,6 +80,10 @@ exports.generateBigRoom = (w, h) ->
 		new MapItem map, 14, 4, new items['peculiar-object']
 		new MapItem map, 15, 4, new items['peculiar-object']
 	]...
+
+	[x, y] = generatePos()
+	map.positions =
+		'entrance': {x, y}
 
 	map
 
@@ -106,5 +109,13 @@ exports.generateCellularAutomata = (w, h) ->
 		mapData = generation mapData, w, h, rule
 
 	map.data = mapData
+
+	loop
+		x = game.random.range 0, w
+		y = game.random.range 0, h
+		break if mapData[y][x] isnt '#'
+
+	map.positions =
+		'entrance': {x, y}
 
 	map
