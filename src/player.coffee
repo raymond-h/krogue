@@ -4,6 +4,7 @@ winston = require 'winston'
 
 game = require './game'
 
+{Stairs} = require './entities'
 direction = require './direction'
 {whilst, arrayRemove} = require './util'
 prompts = require './prompts'
@@ -196,6 +197,12 @@ module.exports = class Player
 						{x, y} = newMap.positions[position]
 
 					else {x, y} = position
+
+					stairsBack = new Stairs newMap, x, y
+					stairsBack.target =
+						position: 'entrance'
+
+					newMap.addEntity stairsBack
 
 					game.transitionToMap newMap, x, y
 
