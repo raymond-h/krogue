@@ -3,6 +3,7 @@ async = require 'async'
 MersenneTwister = require 'mersennetwister'
 winston = require 'winston'
 Q = require 'q'
+_ = require 'lodash'
 
 saveData = require './save-data'
 {arrayRemove} = require './util'
@@ -21,6 +22,12 @@ class Game extends EventEmitter2
 		(require './key-handling')(this)
 
 		@logs = []
+
+		@mapIdCounter = 0
+		@maps = {}
+
+	generateMapId: ->
+		"map-#{@mapIdCounter++}"
 
 	initialize: (@io) ->
 		winston.info '*** Starting game...'
@@ -58,19 +65,19 @@ class Game extends EventEmitter2
 		@timeManager.add creature
 		@camera.target = creature
 
-		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 2, 2
+		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 'entrance'
 
-		@on 'key.z', =>
-			newMap = (MapGenerator.generateCellularAutomata 80, 21)
-			[startX, startY] = []
+		# @on 'key.z', =>
+		# 	newMap = (MapGenerator.generateCellularAutomata 80, 21)
+		# 	[startX, startY] = []
 
-			for row, y in newMap.data
-				for tile, x in row
-					if tile is '.'
-						[startX, startY] = [x, y]
-						break
+		# 	for row, y in newMap.data
+		# 		for tile, x in row
+		# 			if tile is '.'
+		# 				[startX, startY] = [x, y]
+		# 				break
 
-			@transitionToMap newMap, startX, startY
+		# 	@transitionToMap newMap, startX, startY
 
 	createPlayerCreature: ->
 		{Creature} = require './entities'
@@ -94,11 +101,17 @@ class Game extends EventEmitter2
 			@currentMap.removeEntity @player.creature
 			@timeManager.remove @currentMap.entities...
 
+		map.id ?= @generateMapId()
+		@maps[map.id] = map
+
 		@currentMap = map
 		@camera.bounds map
 
 		@timeManager.add map.entities...
 		map.addEntity @player.creature
+
+		if _.isString x
+			{x, y} = map.positions[x]
 
 		if x? and y?
 			@player.creature.setPos x, y
@@ -151,7 +164,10 @@ class Game extends EventEmitter2
 		@camera.y = json.camera.y
 
 		{Map} = require './map'
-		@transitionToMap Map.fromJSON json.map
+		for id, map of json.maps
+			@maps[id] = Map.fromJSON map
+
+		@transitionToMap @maps[json.currentMap]
 
 		# puts player last in targets list
 		@timeManager.targets.rotate()
@@ -163,7 +179,8 @@ class Game extends EventEmitter2
 				x: @camera.x
 				y: @camera.y
 			@logs
-			map: @currentMap
+			currentMap: @currentMap.id
+			@maps
 		}
 
 module.exports = new Game

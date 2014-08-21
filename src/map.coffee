@@ -52,6 +52,7 @@ class exports.Map
 
 	@fromJSON = (json) ->
 		map = new exports.Map json.w, json.h, json.data
+		map.id = json.id
 		map.positions = json.positions
 
 		for e in json.entities
@@ -61,6 +62,6 @@ class exports.Map
 
 	toJSON: ->
 		{
-			@w, @h, @data, @positions
+			@id, @w, @h, @data, @positions
 			entities: @entities.filter (e) -> not e.isPlayer()
 		}

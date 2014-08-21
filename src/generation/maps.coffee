@@ -61,13 +61,13 @@ exports.generateBigRoom = (w, h) ->
 			y = game.random.range 0, h
 
 			break if map.data[y][x] isnt '#'
-		[x, y]
+		{x, y}
 
 	entities = for i in [1..5]
-		[x, y] = generatePos()
+		{x, y} = generatePos()
 		creatureGen.generateStrangeGoo x, y
 
-	[x, y] = generatePos()
+	{x, y} = generatePos()
 	stairs = new Stairs map, x, y
 	stairs.target =
 		position: 'entrance'
@@ -81,9 +81,8 @@ exports.generateBigRoom = (w, h) ->
 		new MapItem map, 15, 4, new items['peculiar-object']
 	]...
 
-	[x, y] = generatePos()
 	map.positions =
-		'entrance': {x, y}
+		'entrance': generatePos()
 
 	map
 
@@ -102,20 +101,28 @@ exports.generateCellularAutomata = (w, h) ->
 
 	_randomTile = randomTiles (-> game.random.rnd()), initProb
 
-	mapData = exports.createMapData w, h,
+	map.data = exports.createMapData w, h,
 		(a...) -> (border a...) ? (_randomTile a...)
 
 	for rule in rules
-		mapData = generation mapData, w, h, rule
+		map.data = generation map.data, w, h, rule
 
-	map.data = mapData
+	generatePos = ->
+		loop
+			x = game.random.range 0, w
+			y = game.random.range 0, h
 
-	loop
-		x = game.random.range 0, w
-		y = game.random.range 0, h
-		break if mapData[y][x] isnt '#'
+			break if map.data[y][x] isnt '#'
+		{x, y}
 
 	map.positions =
-		'entrance': {x, y}
+		'entrance': generatePos()
+
+	{x, y} = generatePos()
+	stairs = new Stairs map, x, y
+	stairs.target =
+		position: 'entrance'
+
+	map.addEntity stairs
 
 	map
