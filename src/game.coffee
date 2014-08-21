@@ -51,7 +51,7 @@ class Game extends EventEmitter2
 		winston.silly "Init game"
 
 		Player = require './player'
-		MapGenerator = require './generation/maps'
+		{GenerationManager} = require './generation/manager'
 		TimeManager = require './time-manager'
 		Camera = require './camera'
 		Random = require './random'
@@ -59,13 +59,15 @@ class Game extends EventEmitter2
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
+		@generationManager = new GenerationManager
 
 		creature = @createPlayerCreature()
 		@player = new Player creature
 		@timeManager.add creature
 		@camera.target = creature
 
-		@transitionToMap (MapGenerator.generateBigRoom 80, 25), 'entrance'
+		# @transitionToMap (MapGenerator.generateBigRoom 80, 25), 'entrance'
+		@goTo 'main-1', 'entrance'
 
 		# @on 'key.z', =>
 		# 	newMap = (MapGenerator.generateCellularAutomata 80, 21)
@@ -95,6 +97,12 @@ class Game extends EventEmitter2
 		@io.deinitialize @ if @io.initialized
 
 		Q.delay(100).then -> process.exit 0
+
+	goTo: (mapId, position) ->
+		map = @maps[mapId] ?
+			@generationManager.generateMap mapId
+
+		@transitionToMap map, position
 
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
@@ -157,6 +165,9 @@ class Game extends EventEmitter2
 				@quit()
 
 	loadFromJSON: (json) ->
+		@generationManager.connections =
+			json.generationManager.connections
+
 		@logs = json.logs
 		@player.loadFromJSON json.player
 
@@ -179,6 +190,7 @@ class Game extends EventEmitter2
 				x: @camera.x
 				y: @camera.y
 			@logs
+			@generationManager
 			currentMap: @currentMap.id
 			@maps
 		}
