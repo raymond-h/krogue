@@ -2,7 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 MersenneTwister = require 'mersennetwister'
 
-{createMapData, mapGen: {border, borderThick, randomTiles}, cellularAutomataGeneration} = require './src/map-generation'
+{createMapData, mapGen: {border, borderThick, randomTiles}, cellularAutomataGeneration} = require './src/generation/maps'
 {repeat} = require './src/util'
 
 printMap = (map) ->

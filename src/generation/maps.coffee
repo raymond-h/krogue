@@ -98,11 +98,10 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 
 	map = new Map w, h
 
-	initProb = 0.40
+	initProb = 0.44
 	rules = _.flatten [
-		repeat 3, (..., neighbours) -> neighbours >= 5 or neighbours < 1
-		repeat 2, (..., neighbours) -> neighbours >= 4
-		repeat 2, (..., neighbours) -> neighbours >= 7
+		repeat 6, (..., neighbours) -> neighbours >= 5
+		repeat 3, (..., neighbours) -> neighbours >= 4
 	]
 
 	_randomTile = randomTiles (-> game.random.rnd()), initProb
