@@ -185,7 +185,16 @@ module.exports = class Player
 					else game.message 'You picked none!!'
 
 			when 'down-stairs'
-				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y, 'stairs'
+				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y,
+					(e) -> e.type is 'stairs' and e.down
+
+				if stairs?
+					{target: {map, position}} = stairs
+					game.goTo map, position
+
+			when 'up-stairs'
+				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y,
+					(e) -> e.type is 'stairs' and not e.down
 
 				if stairs?
 					{target: {map, position}} = stairs

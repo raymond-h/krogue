@@ -16,6 +16,7 @@
 
   "enter": "more-logs",
   ">": "down-stairs",
+  "<": "up-stairs",
   "i": "inventory",
   "e": "equip",
   "S-e": "unequip",

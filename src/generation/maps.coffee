@@ -87,6 +87,7 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 
 		stairs = new Stairs map, x, y
 		stairs.target = {map: targetMap, position}
+		stairs.down = (name is 'exit')
 		
 		map.addEntity stairs
 
@@ -122,6 +123,7 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 
 		stairs = new Stairs map, x, y
 		stairs.target = {map: targetMap, position}
+		stairs.down = (name is 'exit')
 
 		map.addEntity stairs
 
