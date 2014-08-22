@@ -43,7 +43,7 @@ class exports.GenerationManager
 			@generateCave path, level, connections
 
 	generateStart: (path, level, connections) ->
-		MapGenerator.generateBigRoom path, level, connections, 80, 25
+		MapGenerator.generateBigRoom path, level, connections, 80, 21
 
 	generateCave: (path, level, connections) ->
 		MapGenerator.generateCellularAutomata path, level, connections, 100, 50
