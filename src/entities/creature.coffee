@@ -161,7 +161,7 @@ module.exports = class Creature extends Entity
 		for e in @map.entities when cb e
 			dSq = @distanceSqTo e
 
-			if dSq < minDist*minDist
+			if dSq < minDist
 				[minDist, nearest] = [dSq, e]
 
 		nearest
