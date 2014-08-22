@@ -1,6 +1,9 @@
 game = require '../game'
 items = require '../items'
 
+exports.generatePeculiarObject = ->
+	new items.PeculiarObject
+
 exports.generateGun = (type, name) ->
 	type ?= game.random.sample ['handgun', 'shotgun']
 	name ?= type

@@ -3,10 +3,11 @@ winston = require 'winston'
 
 game = require '../game'
 {Map} = require '../map'
-{Creature, MapItem, Stairs} = require '../entities'
+{MapItem, Stairs} = require '../entities'
 {repeat} = require '../util'
 
 creatureGen = require './creatures'
+itemGen = require './items'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
@@ -65,17 +66,18 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	# 'generate' entities to inhabit the map
 	{items} = require '../items'
 
-	entities = for i in [1..5]
+	creatures = for i in [1..5]
 		{x, y} = generatePos map
 		creatureGen.generateStrangeGoo x, y
 
-	map.addEntity [
-		entities...
-		new MapItem map, 12, 4, new items['peculiar-object']
-		new MapItem map, 13, 4, new items['peculiar-object']
-		new MapItem map, 14, 4, new items['peculiar-object']
-		new MapItem map, 15, 4, new items['peculiar-object']
-	]...
+	mapItems = for i in [1..3]
+		{x, y} = generatePos map
+
+		new MapItem null, x, y,
+			itemGen.generatePeculiarObject()
+
+	map.addEntity creatures...
+	map.addEntity mapItems...
 
 	# exits and entrances (incl. stairs)
 	map.positions =
