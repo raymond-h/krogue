@@ -67,17 +67,12 @@ personalitiesArray = [
 		constructor: (@range = 1, @wantedItems = null) ->
 
 		weight: (creature) ->
-			{distanceSq} = require './util'
-
 			nearest = creature.findNearest @range, (e) ->
 				e.type is 'item' and creature.canSee e
 
 			if nearest? then 100 else 0
 
 		tick: (creature) ->
-			direction = require './direction'
-			{distanceSq} = require './util'
-
 			nearest = creature.findNearest @range, (e) ->
 				e.type is 'item' and creature.canSee e
 
@@ -88,6 +83,37 @@ personalitiesArray = [
 			if itemsHere.length > 0
 				item = itemsHere[0]
 				creature.pickup item
+
+			12
+
+	class exports.AttackAllButSpecies extends Personality
+		typeName: 'attack-all-but-species'
+
+		constructor: (@species) ->
+
+		locateTarget: (creature) ->
+			creature.findNearest null, (e) =>
+				e isnt creature and
+				(e.type is 'creature') and
+				(e.species.typeName isnt @species) and
+				(creature.canSee e)
+
+		weight: (creature) ->
+			if (@locateTarget creature)? then 100 else 0
+
+		tick: (creature) ->
+			target = @locateTarget creature
+
+			winston = require 'winston'
+			winston.info "Metroid #{creature.x},#{creature.y} attacking #{target}"
+			winston.info "-- #{target.species.name} #{target.x},#{target.y}"
+
+			creature.moveTo target
+
+			if Math.abs(creature.x - target.x) <= 1 and
+					Math.abs(creature.y - target.y) <= 1
+
+				creature.kick creature.directionTo target
 
 			12
 ]

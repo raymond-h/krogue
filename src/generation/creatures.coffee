@@ -1,6 +1,7 @@
 game = require '../game'
 personality = require '../personality'
 {Creature} = require '../entities'
+species = require '../creature-species'
 
 exports.generateStrangeGoo = (x, y) ->
 	c = new Creature null, x, y
@@ -20,3 +21,13 @@ exports.generateStrangeGoo = (x, y) ->
 		]...
 
 	c
+
+exports.generateViolentDonkey = (x, y) ->
+	m = new Creature null, x, y, new species.ViolentDonkey
+	m.speed = 8
+
+	m.personalities.push [
+		new personality.AttackAllButSpecies m.species.typeName
+	]...
+
+	m

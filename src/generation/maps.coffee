@@ -70,6 +70,12 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 		{x, y} = generatePos map
 		creatureGen.generateStrangeGoo x, y
 
+	creatures.push (
+		for i in [1..3]
+			{x, y} = generatePos map
+			creatureGen.generateViolentDonkey x, y
+	)...
+
 	mapItems = for i in [1..3]
 		{x, y} = generatePos map
 

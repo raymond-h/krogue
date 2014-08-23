@@ -31,6 +31,12 @@ speciesArray = [
 			'head'
 			'right hand', 'left hand'
 		]
+
+	class exports.ViolentDonkey extends Species
+		typeName: 'violent-donkey'
+
+		name: 'violent donkey'
+		symbol: 'h'
 ]
 
 exports.species = species = {}
