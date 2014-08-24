@@ -19,15 +19,23 @@ class exports.Gun extends Item
 	symbol: '/'
 
 	fire: (a...) ->
-		fn = @fireHandlers[@gunType ? '_dud']
+		fn = @fireHandlers[@fireType()]
 
 		fn.apply @, a
+
+	fireType: ->
+		switch @gunType
+			when 'handgun' then 'line'
+
+			when 'shotgun' then 'spread'
+
+			else '_dud'
 
 	fireHandlers:
 		'_dud': (creature, dir) ->
 			game.message 'Nothing happens; this gun is a dud.'
 
-		'handgun': (creature, dir) ->
+		'line': (creature, dir) ->
 			game.emit 'game.creature.fire', creature, @, dir
 
 			offset = direction.parse dir
@@ -52,7 +60,7 @@ class exports.Gun extends Item
 					game.emit 'game.creature.fire.hit.creature', creature, @, dir, target
 					target.damage 10, creature
 
-		'shotgun': (creature, dir) ->
+		'spread': (creature, dir) ->
 			game.emit 'game.creature.fire', creature, @, dir
 
 			# shotguns shoot in a spread - need angle of dir first
