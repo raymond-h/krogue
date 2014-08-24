@@ -41,3 +41,15 @@ module.exports = class Random
 			j = @range i, a.length
 			[ a[i], a[j] ] = [ a[j], a[i] ]
 		a
+
+	unitCirclePoint: ->
+		t = 2*Math.PI * @rnd()
+		r = Math.sqrt @rnd()
+		[r * Math.cos(t), r * Math.sin(t)]
+
+	gaussian: (mean = 0, stdev = 1) ->
+		[x, y] = @unitCirclePoint()
+		s = x*x + y*y
+
+		c = Math.sqrt(-2 * Math.log(s) / s)
+		[x*c, y*c].map (v) -> stdev * v + mean
