@@ -4,7 +4,7 @@ exports.fromJSON = (json) ->
 	# so 'json' in this case is simply a string
 	new species[json]
 
-Species = class exports.Species
+class exports.Species
 	equipSlots: []
 
 	toJSON: ->
@@ -12,33 +12,8 @@ Species = class exports.Species
 		# we can just save the type name directly
 		@typeName
 
-###
-Species
-###
-speciesArray = [
-	class exports.StrangeGoo extends Species
-		typeName: 'strange-goo'
-
-		name: 'strange goo'
-		symbol: 'g'
-
-	class exports.Human extends Species
-		typeName: 'human'
-
-		name: 'human'
-		symbol: '@'
-		equipSlots: [
-			'head'
-			'right hand', 'left hand'
-		]
-
-	class exports.ViolentDonkey extends Species
-		typeName: 'violent-donkey'
-
-		name: 'violent donkey'
-		symbol: 'h'
-]
-
-exports.species = species = {}
-for Clazz in speciesArray
-	exports.species[Clazz::typeName] = Clazz
+exports.species = {}
+for name, Clazz of (require './definitions/creature-species')
+	if Clazz::typeName?
+		exports[name] =
+		exports.species[Clazz::typeName] = Clazz
