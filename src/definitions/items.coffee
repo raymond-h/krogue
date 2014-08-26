@@ -28,39 +28,48 @@ class exports.Gun extends Item
 			else '_dud'
 
 	fireHandlers:
-		'_dud': (creature, dir) ->
+		'_dud': (creature, offset) ->
 			game.message 'Nothing happens; this gun is a dud.'
 
-		'line': (creature, dir) ->
-			game.emit 'game.creature.fire', creature, @, dir
+		'line': (creature, offset) ->
+			game.emit 'game.creature.fire', creature, @, offset
 
-			offset = direction.parse dir
-			endPos =
-				vectorMath.add creature, (
-					vectorMath.mult offset, @range
-				)
+			if _.isString offset
+				offset = direction.parse offset
+
+			{x, y} = offset
+			angle = Math.atan2 -y, x
+			offset =
+				x: Math.round Math.cos(angle) * @range
+				y: -Math.round Math.sin(angle) * @range
+
+			endPos = vectorMath.add creature, offset
 
 			found = creature.raytraceUntilBlocked endPos
 
 			switch found.type
 				when 'none'
-					game.emit 'game.creature.fire.hit.none', creature, @, dir
+					game.emit 'game.creature.fire.hit.none', creature, @, offset
 
 				when 'wall'
 					game.emit 'game.creature.fire.hit.wall',
-						creature, @, dir, found
+						creature, @, offset, found
 
 				when 'creature'
 					target = found.creature
 
-					game.emit 'game.creature.fire.hit.creature', creature, @, dir, target
+					game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
 					target.damage 10, creature
 
-		'spread': (creature, dir) ->
-			game.emit 'game.creature.fire', creature, @, dir
+		'spread': (creature, offset) ->
+			game.emit 'game.creature.fire', creature, @, offset
 
-			# shotguns shoot in a spread - need angle of dir first
-			angle = direction.directionToRad dir
+			if _.isString offset
+				offset = direction.parse offset
+
+			# shotguns shoot in a spread - need angle of offset first
+			angle = Math.atan2 -offset.y, offset.x
+
 			compareAngles = (a0, a1) ->
 				Math.PI - Math.abs(Math.abs(a0-a1) - Math.PI)
 
@@ -80,8 +89,8 @@ class exports.Gun extends Item
 			if targets.length > 0
 				for target in targets
 					game.emit 'game.creature.fire.hit.creature',
-						creature, @, dir, target
+						creature, @, offset, target
 					target.damage 10, creature
 
 			else
-				game.emit 'game.creature.fire.hit.none', creature, @, dir
+				game.emit 'game.creature.fire.hit.none', creature, @, offset
