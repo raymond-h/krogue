@@ -21,3 +21,9 @@ class exports.ViolentDonkey extends Species
 
 	name: 'violent donkey'
 	symbol: 'h'
+
+class exports.TinyAlien extends Species
+	typeName: 'tiny-alien'
+
+	name: 'tiny alien'
+	symbol: 'i'
