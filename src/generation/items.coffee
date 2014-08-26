@@ -20,7 +20,7 @@ exports.generateGun = (type, name) ->
 
 	gun
 
-exports.generateStartingGun = (type) ->
-	type ?= game.random.sample ['handgun', 'shotgun']
+exports.generateStartingGun = ->
+	type = 'handgun'
 
-	exports.generateGun type, "trusty #{type}"
+	exports.generateGun type, "trusty handgun"
