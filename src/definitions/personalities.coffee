@@ -1,6 +1,7 @@
 game = require '../game'
 
 {Personality} = require '../personality'
+direction = (require '../direction')
 
 class exports.FleeFromPlayer extends Personality
 	constructor: (@safeDist) ->
@@ -17,8 +18,6 @@ class exports.FleeFromPlayer extends Personality
 		else 0
 
 	tick: (creature) ->
-		direction = (require '../direction')
-
 		creature.moveAwayFrom game.player.creature
 
 		12
@@ -83,5 +82,54 @@ class exports.AttackAllButSpecies extends Personality
 				Math.abs(creature.y - target.y) <= 1
 
 			creature.kick creature.directionTo target
+
+		12
+
+class exports.FleeIfWeak extends Personality
+	weight: (creature) ->
+		if creature.health.percent < 0.2 then 100 else 0
+
+	tick: (creature) ->
+		enemy = creature.findNearest 10, (e) -> e.type is 'creature'
+
+		creature.moveAwayFrom enemy
+
+		12
+
+class exports.Gunman extends Personality
+	weight: (creature) ->
+		if creature.equipment['right hand']?.typeName is 'gun'
+			100
+		else 0
+
+	tick: (creature) ->
+		gun = creature.equipment['right hand']
+		range = gun.range
+
+		target = creature.findNearest 30,
+			(e) -> e.type is 'creature'
+
+		if target? and (creature.distanceSqTo target) > range*range
+			creature.moveTo target
+
+		else
+			gun.fire creature, creature.directionTo target
+
+		6
+
+class exports.Kicker extends Personality
+	weight: (creature) ->
+		100
+
+	tick: (creature) ->
+		target = creature.findNearest 30,
+			(e) -> e.type is 'creature'
+
+		if Math.abs(creature.x - target.x) <= 1 and
+				Math.abs(creature.y - target.y) <= 1
+
+			creature.kick creature.directionTo target
+
+		else creature.moveTo target
 
 		12

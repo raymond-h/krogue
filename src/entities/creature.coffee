@@ -158,7 +158,7 @@ module.exports = class Creature extends Entity
 		minDist = maxRange * maxRange
 		nearest = null
 
-		for e in @map.entities when cb e
+		for e in @map.entities when not (e is @) and cb e
 			dSq = @distanceSqTo e
 
 			if dSq < minDist

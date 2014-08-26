@@ -3,6 +3,8 @@ personality = require '../personality'
 {Creature} = require '../entities'
 species = require '../creature-species'
 
+itemGen = require './items'
+
 exports.generateStrangeGoo = (x, y) ->
 	c = new Creature null, x, y
 
@@ -31,3 +33,19 @@ exports.generateViolentDonkey = (x, y) ->
 	]...
 
 	m
+
+exports.generateTinyAlien = (x, y) ->
+	c = new Creature null, x, y, new species.TinyAlien
+	c.speed = 10
+
+	c.personalities.push [
+		(new personality.FleeIfWeak).withMultiplier 10
+		new personality.Kicker
+	]...
+
+	if game.random.chance 0.5
+		c.equipment['right hand'] = itemGen.generateGun()
+
+		c.personalities.push (new personality.Gunman).withMultiplier 2
+
+	c

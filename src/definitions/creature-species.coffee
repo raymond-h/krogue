@@ -19,3 +19,7 @@ class exports.ViolentDonkey extends Species
 class exports.TinyAlien extends Species
 	name: 'tiny alien'
 	symbol: 'i'
+	equipSlots: [
+		'head'
+		'right hand', 'left hand'
+	]
