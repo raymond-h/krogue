@@ -3,8 +3,6 @@ game = require '../game'
 {Personality} = require '../personality'
 
 class exports.FleeFromPlayer extends Personality
-	typeName: 'flee-from-player'
-
 	constructor: (@safeDist) ->
 		super
 
@@ -26,8 +24,6 @@ class exports.FleeFromPlayer extends Personality
 		12
 
 class exports.RandomWalk extends Personality
-	typeName: 'random-walk'
-
 	weight: (creature) ->
 		100
 
@@ -39,8 +35,6 @@ class exports.RandomWalk extends Personality
 		12
 
 class exports.WantItems extends Personality
-	typeName: 'want-items'
-
 	constructor: (@range = 1, @wantedItems = null) ->
 
 	weight: (creature) ->
@@ -64,8 +58,6 @@ class exports.WantItems extends Personality
 		12
 
 class exports.AttackAllButSpecies extends Personality
-	typeName: 'attack-all-but-species'
-
 	constructor: (@species) ->
 
 	locateTarget: (creature) ->

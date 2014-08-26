@@ -22,8 +22,9 @@ class exports.Personality
 		json.typeName = @typeName
 		json
 
-exports.personalities = {}
+exports.personalities = personalities = {}
 for name, Clazz of (require './definitions/personalities')
-	if Clazz::typeName?
-		exports[name] =
-		exports.personalities[Clazz::typeName] = Clazz
+	Clazz::typeName ?= (require './util').dasherize name
+
+	exports[name] =
+	exports.personalities[Clazz::typeName] = Clazz

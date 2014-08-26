@@ -12,8 +12,9 @@ class exports.Species
 		# we can just save the type name directly
 		@typeName
 
-exports.species = {}
+exports.species = species = {}
 for name, Clazz of (require './definitions/creature-species')
-	if Clazz::typeName?
-		exports[name] =
-		exports.species[Clazz::typeName] = Clazz
+	Clazz::typeName ?= (require './util').dasherize name
+
+	exports[name] =
+	exports.species[Clazz::typeName] = Clazz

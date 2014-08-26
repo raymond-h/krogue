@@ -7,14 +7,10 @@ vectorMath = require '../vector-math'
 {Item} = require '../items'
 
 class exports.PeculiarObject extends Item
-	typeName: 'peculiar-object'
-
 	name: 'peculiar object'
 	symbol: 'O'
 
 class exports.Gun extends Item
-	typeName: 'gun'
-
 	name: 'gun'
 	symbol: '/'
 

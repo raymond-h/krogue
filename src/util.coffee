@@ -64,7 +64,7 @@ exports.distanceSq = (o0, o1) ->
 exports.distance = (o0, o1) ->
 	Math.sqrt exports.distanceSq o0, o1
 
-# exports.dasherize = (className) ->
-# 	className
-# 	.replace /(\w)(?=[A-Z])/g, '$1-'
-# 	.toLowerCase()
+exports.dasherize = (className) ->
+	className
+	.replace /(\w)(?=[A-Z])/g, '$1-'
+	.toLowerCase()

@@ -15,8 +15,9 @@ class exports.Item
 		json.typeName = @typeName
 		json
 
-exports.items = {}
+exports.items = items = {}
 for name, Clazz of (require './definitions/items')
-	if Clazz::typeName?
-		exports[name] =
-		exports.items[Clazz::typeName] = Clazz
+	Clazz::typeName ?= (require './util').dasherize name
+
+	exports[name] =
+	exports.items[Clazz::typeName] = Clazz

@@ -1,14 +1,10 @@
 {Species} = require '../creature-species'
 
 class exports.StrangeGoo extends Species
-	typeName: 'strange-goo'
-
 	name: 'strange goo'
 	symbol: 'g'
 
 class exports.Human extends Species
-	typeName: 'human'
-
 	name: 'human'
 	symbol: '@'
 	equipSlots: [
@@ -17,13 +13,9 @@ class exports.Human extends Species
 	]
 
 class exports.ViolentDonkey extends Species
-	typeName: 'violent-donkey'
-
 	name: 'violent donkey'
 	symbol: 'h'
 
 class exports.TinyAlien extends Species
-	typeName: 'tiny-alien'
-
 	name: 'tiny alien'
 	symbol: 'i'
