@@ -176,10 +176,15 @@ module.exports = class Creature extends Entity
 
 		visible
 
-	raytraceUntilBlocked: (to, cb) ->
+	raytraceUntilBlocked: (to, opts = {}, cb) ->
+		if _.isFunction opts then [opts, cb] = [{}, opts]
+		opts.range ?= Infinity
+
 		found = { type: 'none' }
 
 		bresenhamLine @, to, (x, y) =>
+			return no if (@distanceSqTo {x, y}) > (opts.range * opts.range)
+
 			return if x is @x and y is @y
 
 			if @map.collidable x, y

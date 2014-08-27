@@ -37,15 +37,9 @@ class exports.Gun extends Item
 			if _.isString offset
 				offset = direction.parse offset
 
-			{x, y} = offset
-			angle = Math.atan2 -y, x
-			offset =
-				x: Math.round Math.cos(angle) * @range
-				y: -Math.round Math.sin(angle) * @range
-
 			endPos = vectorMath.add creature, offset
 
-			found = creature.raytraceUntilBlocked endPos
+			found = creature.raytraceUntilBlocked endPos, {@range}
 
 			switch found.type
 				when 'none'
