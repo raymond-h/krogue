@@ -43,8 +43,8 @@ exports.generateTinyAlien = (x, y) ->
 		new personality.Kicker
 	]...
 
-	if game.random.chance 0.5
-		c.equipment['right hand'] = itemGen.generateGun()
+	if game.random.chance 1#0.5
+		c.equipment['right hand'] = itemGen.generateGun 'shotgun'
 
 		c.personalities.push (new personality.Gunman).withMultiplier 2
 

@@ -78,6 +78,7 @@ class exports.Gun extends Item
 			targets = creature.map.listEntities (e) =>
 				# we don't want to hit ourselves
 				return no if e is creature
+				return if e.type isnt 'creature'
 
 				diff = vectorMath.sub e, creature
 				a = Math.atan2 -diff.y, diff.x
