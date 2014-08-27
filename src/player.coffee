@@ -200,6 +200,11 @@ module.exports = class Player
 					{target: {map, position}} = stairs
 					game.goTo map, position
 
+			when 'line-effect'
+				target = @creature.findNearest null, (-> yes)
+
+				game.renderer.effectLine @creature, target, time: 500, symbol: '*'
+
 	loadFromJSON: (json) ->
 		if @creature? then @creature.loadFromJSON json.creature
 		else (require './entities').fromJSON json.creature

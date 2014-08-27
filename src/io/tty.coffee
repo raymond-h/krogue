@@ -5,6 +5,8 @@ wordwrap = require 'wordwrap'
 _ = require 'lodash'
 
 winston = require 'winston'
+Q = require 'q'
+{whilst, bresenhamLine, arrayRemove} = require '../util'
 
 program.fillArea = (x, y, w, h, c) ->
 	str = (new Array w+1).join c
@@ -43,6 +45,8 @@ class TtyRenderer
 		.on 'log.add', (str) => @pendingLogs.push str
 
 		@wrap = wordwrap.hard @logWidth
+
+		@effects = []
 
 	hasMoreLogs: ->
 		@logs.length > 1
@@ -140,6 +144,7 @@ class TtyRenderer
 			entityLayer[a.type] - entityLayer[b.type]
 
 		@renderEntities x, y, entities
+		@renderEffects x, y
 
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
@@ -176,6 +181,39 @@ class TtyRenderer
 		program.write repeat '=', currentWidth
 		program.write repeat ' ', restWidth
 		program.write ']'
+
+	renderEffects: (x, y) ->
+		c = @game.camera
+		[ox, oy] = [x - c.x, y - c.y]
+
+		for e in @effects
+			if e.type is 'line'
+				{x, y} = e.current
+				program.move x+ox, y+oy
+				program.write e.symbol
+
+	effectLine: (start, end, {symbol, time, delay}) ->
+		@effects.push data = {
+			symbol, time
+			type: 'line'
+			start, end
+		}
+
+		points = bresenhamLine start, end
+		
+		if time? and not delay?
+			delay = time / points.length
+
+		whilst (-> points.length > 0),
+			=>
+				Q.fcall =>
+					data.current = points.shift()
+					@invalidate()
+
+				.delay delay
+
+		.then =>
+			arrayRemove @effects, data
 
 module.exports =
 	initialize: initialize

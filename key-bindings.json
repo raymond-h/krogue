@@ -30,5 +30,6 @@
 
   "t": "test-dir",
   "r": "test-yn",
-  "m": "test-multi"
+  "m": "test-multi",
+  "l": "line-effect"
 }
