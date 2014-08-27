@@ -73,10 +73,6 @@ class exports.AttackAllButSpecies extends Personality
 	tick: (creature) ->
 		target = @locateTarget creature
 
-		winston = require 'winston'
-		winston.info "Metroid #{creature.x},#{creature.y} attacking #{target}"
-		winston.info "-- #{target.species.name} #{target.x},#{target.y}"
-
 		creature.moveTo target
 
 		if Math.abs(creature.x - target.x) <= 1 and
