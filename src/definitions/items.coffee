@@ -35,7 +35,7 @@ class exports.Gun extends Item
 			game.emit 'game.creature.fire', creature, @, offset
 
 			if _.isString offset
-				offset = direction.parse offset
+				offset = vectorMath.mult (direction.parse offset), @range
 
 			endPos = vectorMath.add creature, offset
 
