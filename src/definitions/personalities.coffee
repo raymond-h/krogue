@@ -93,7 +93,7 @@ class exports.FleeIfWeak extends Personality
 	tick: (creature) ->
 		enemy = creature.findNearest 10, (e) -> e.type is 'creature'
 
-		creature.moveAwayFrom enemy
+		creature.moveAwayFrom enemy if enemy?
 
 		12
 
