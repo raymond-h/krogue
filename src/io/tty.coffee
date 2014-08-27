@@ -123,7 +123,11 @@ class TtyRenderer
 			
 			# to only get the part that's on-screen
 			# we slice from left to right edge of viewport
-			row = row[c.x ... c.x+c.viewport.w]
+			# row = row[c.x ... c.x+c.viewport.w]
+			row = for t, tx in row[c.x ... c.x+c.viewport.w]
+				if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
+					t
+				else ' '
 
 			program.write row.join ''
 
@@ -140,7 +144,7 @@ class TtyRenderer
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
 
-		for e in entities
+		for e in entities when c.target.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
 				program.pos (e.y - c.y + y), (e.x - c.x + x)
 				program.write _.result e, 'symbol'
