@@ -1,7 +1,8 @@
 game = require '../game'
 
 {Personality} = require '../personality'
-direction = (require '../direction')
+direction = require '../direction'
+vectorMath = require '../vector-math'
 
 class exports.FleeFromPlayer extends Personality
 	constructor: (@safeDist) ->
@@ -109,11 +110,12 @@ class exports.Gunman extends Personality
 		target = creature.findNearest 30,
 			(e) -> e.type is 'creature'
 
-		if target? and (creature.distanceSqTo target) > range*range
-			creature.moveTo target
+		if target?
+			if (creature.distanceSqTo target) > range*range
+				creature.moveTo target
 
-		else
-			gun.fire creature, creature.directionTo target
+			else
+				gun.fire creature, vectorMath.sub target, creature
 
 		6
 
