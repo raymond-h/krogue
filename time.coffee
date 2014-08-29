@@ -14,12 +14,13 @@ class TimeManager
 		(t.scheduledTick += add) for t in @targets
 
 	tick: ->
+		# console.log @targets
 		target = @targets.pop()
 
 		nextTick = target.tick() / (_.result target, 'tickRate')
-		@adjustScheduledTicks -nextTick
 
-		target.scheduledTick += nextTick
+		@adjustScheduledTicks -target.scheduledTick
+		target.scheduledTick = nextTick
 		@add target
 
 time = new TimeManager
@@ -30,14 +31,14 @@ add = (name, rate = 12) ->
 		name: name
 		tickRate: rate
 		tick: ->
-			console.log name
+			# console.log name
 			totals[name] = (totals[name] ? 0) + 1
 			10
 
-add 'a', 1
-add 'b', 2
-add 'c', 1
+add 'a', 9*20
+add 'b', 8*20
+add 'c', 1*20
 
-for i in [1..32] then time.tick()
+for i in [1..251*5] then time.tick()
 
 console.log 'Totals:', totals
