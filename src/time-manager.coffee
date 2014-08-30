@@ -27,26 +27,26 @@ module.exports = class TimeManager
 
 	tick: (callback) ->
 		if @targets.length > 0
-			target = @targets.pop()
+			[..., target] = @targets
 
-			winston.silly "begin tick '#{target.name} #{target.constructor.name}'"
+			winston.silly "begin tick '#{target.name} #{target.constructor.name}' #{target.x},#{target.y}"
 
 			Q.fcall -> target.tick()
 			.then (cost = 0) =>
-				nextTick = cost / (_.result target, 'tickRate')
+				rate = _.result target, 'tickRate'
 
-				# finite nextTick means this target should be scheduled again
-				if _.isFinite nextTick
+				# rate > 0 means this target should be scheduled again
+				if rate > 0
 					@adjustNextTicks -target.nextTick
-					target.nextTick = nextTick
+					target.nextTick = cost / rate
 
-				# otherwise, if infinite, it should never be scheduled
-				# logically, this means an infinite amount of time until next schedule
+				# otherwise, if 0, it should never be scheduled
+				# AKA an infinite amount of time until next schedule
 				else target.nextTick = Infinity
 
-				@add target
+				@add @targets.pop() if rate is 0 or cost isnt 0
 
-			.then -> winston.silly "end tick '#{target.name} #{target.constructor.name}'"
+			.then -> winston.silly "end tick '#{target.name} #{target.constructor.name}' #{target.x},#{target.y}"
 
 			.nodeify callback
 
