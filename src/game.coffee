@@ -5,7 +5,6 @@ winston = require 'winston'
 Q = require 'q'
 _ = require 'lodash'
 
-saveData = require './save-data'
 {arrayRemove} = require './util'
 
 class Game extends EventEmitter2
@@ -130,9 +129,11 @@ class Game extends EventEmitter2
 		@renderer.invalidate()
 
 	save: (filename) ->
+		saveData = require './save-data'
 		saveData.save @, filename
 
 	load: (filename) ->
+		saveData = require './save-data'
 		saveData.load @, filename
 
 	goState: (state) ->
@@ -169,23 +170,26 @@ class Game extends EventEmitter2
 			json.generationManager.connections
 
 		@logs = json.logs
-		@player.loadFromJSON json.player
+
+		@timeManager.remove @player.creature
+		@camera.target = null
+
+		@player.creature = json.player.creature
+
+		@timeManager.add @player.creature
+		@camera.target = @player.creature
 
 		@camera.x = json.camera.x
 		@camera.y = json.camera.y
 
-		{Map} = require './map'
-		for id, map of json.maps
-			@maps[id] = Map.fromJSON map
+		@maps = json.maps
 
 		@transitionToMap @maps[json.currentMap]
 
-		# puts player last in targets list
-		@timeManager.targets.rotate()
-
 	saveToJSON: ->
 		{
-			player: @player
+			player:
+				creature: @player.creature
 			camera:
 				x: @camera.x
 				y: @camera.y

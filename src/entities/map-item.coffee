@@ -7,12 +7,3 @@ module.exports = class MapItem extends Entity
 
 	constructor: (m, x, y, @item) ->
 		super
-
-	loadFromJSON: ->
-		super
-
-		items = require '../items'
-
-		@item = items.fromJSON @item
-
-		@

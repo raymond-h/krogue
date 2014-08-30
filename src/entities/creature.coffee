@@ -225,7 +225,7 @@ module.exports = class Creature extends Entity
 		# shouldn't even be considered
 		groups = _.omit (
 			_.groupBy @personalities,
-				(p) => (p.weight this) * p.weightMultiplier
+				(p) => (p.weight this) * (p.weightMultiplier ? 1)
 		), '0'
 
 		weights = _.keys groups
@@ -242,26 +242,9 @@ module.exports = class Creature extends Entity
 
 		choices[0].tick this
 
-	loadFromJSON: ->
+	loadFromJSON: (json) ->
 		super
 
-		personality = require '../personality'
-		creatureSpecies = require '../creature-species'
-		items = require '../items'
-		# because of how loadFromJSON() works in Entity,
-		# fields with class instances will be assigned their JSON reps.
-
-		@health = new RangedValue @health
-
-		@species = creatureSpecies.fromJSON @species
-		@personalities =
-			personality.fromJSON p for p in @personalities
-		@inventory =
-			items.fromJSON i for i in @inventory
-
-		@equipment =
-			_.zipObject (
-				[s, items.fromJSON i] for s,i of @equipment
-			)
+		@health = new RangedValue json.health
 
 		@

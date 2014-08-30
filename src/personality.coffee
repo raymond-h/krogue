@@ -1,12 +1,5 @@
 _ = require 'lodash'
 
-exports.fromJSON = (json) ->
-	if personalities[json.typeName]?
-		_.assign (new personalities[json.typeName]),
-			_.omit json, 'typeName'
-
-	else null
-
 class exports.Personality
 	constructor: ->
 		@weightMultiplier = 1
@@ -17,14 +10,4 @@ class exports.Personality
 
 	tick: (creature) -> 0
 
-	toJSON: ->
-		json = _.pick @, (v, k, o) -> _.has o, k
-		json.typeName = @typeName
-		json
-
-exports.personalities = personalities = {}
-for name, Clazz of (require './definitions/personalities')
-	Clazz::typeName ?= (require './util').dasherize name
-
-	exports[name] =
-	exports.personalities[Clazz::typeName] = Clazz
+_.assign exports, require './definitions/personalities'

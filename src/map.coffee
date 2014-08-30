@@ -50,15 +50,8 @@ class exports.Map
 		
 		not @collidable x, y # temporary
 
-	@fromJSON = (json) ->
-		map = new exports.Map json.w, json.h, json.data
-		map.id = json.id
-		map.positions = json.positions
-
-		for e in json.entities
-			map.addEntity (require './entities').fromJSON e
-
-		map
+	loadFromJSON: ({@id, @w, @h, @data, @positions, entities}) ->
+		@addEntity entities...
 
 	toJSON: ->
 		{
