@@ -31,7 +31,7 @@ module.exports = class TimeManager
 
 			winston.silly "begin tick '#{target.name} #{target.constructor.name}' #{target.x},#{target.y}"
 
-			Q.fcall -> target.tick()
+			Q target.tick()
 			.then (cost = 0) =>
 				rate = _.result target, 'tickRate'
 
