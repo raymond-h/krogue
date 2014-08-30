@@ -1,4 +1,5 @@
-{Species} = require '../creature-species'
+Species = class exports.Species
+	equipSlots: []
 
 class exports.StrangeGoo extends Species
 	name: 'strange goo'

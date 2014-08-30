@@ -4,7 +4,8 @@ game = require '../game'
 direction = require '../direction'
 vectorMath = require '../vector-math'
 
-{Item} = require '../items'
+Item = class exports.Item
+	symbol: 'I'
 
 class exports.PeculiarObject extends Item
 	name: 'peculiar object'

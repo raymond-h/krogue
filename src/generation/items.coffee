@@ -1,5 +1,5 @@
 game = require '../game'
-items = require '../items'
+items = require '../definitions/items'
 
 exports.generatePeculiarObject = ->
 	new items.PeculiarObject

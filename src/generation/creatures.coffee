@@ -1,7 +1,7 @@
 game = require '../game'
-personality = require '../personality'
+personality = require '../definitions/personalities'
+species = require '../definitions/creature-species'
 {Creature} = require '../entities'
-species = require '../creature-species'
 
 itemGen = require './items'
 

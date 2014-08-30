@@ -19,7 +19,8 @@ module.exports = class Creature extends Entity
 
 		@health = new RangedValue max: 30
 
-		@species ?= new (require '../creature-species').StrangeGoo
+		species = require '../definitions/creature-species'
+		@species ?= new species.StrangeGoo
 		@personalities = []
 
 		@inventory = []

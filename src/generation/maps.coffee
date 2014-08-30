@@ -64,8 +64,6 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	map.data = exports.createMapData map.w, map.h, tileCb
 
 	# 'generate' entities to inhabit the map
-	{items} = require '../items'
-
 	creatures = for i in [1..5]
 		{x, y} = generatePos map
 		creatureGen.generateStrangeGoo x, y

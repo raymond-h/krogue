@@ -1,8 +1,17 @@
 game = require '../game'
 
-{Personality} = require '../personality'
 direction = require '../direction'
 vectorMath = require '../vector-math'
+
+Personality = class exports.Personality
+	constructor: ->
+		@weightMultiplier = 1
+
+	withMultiplier: (@weightMultiplier) -> this
+
+	weight: (creature) -> 0
+
+	tick: (creature) -> 0
 
 class exports.FleeFromPlayer extends Personality
 	constructor: (@safeDist) ->
