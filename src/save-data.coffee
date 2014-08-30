@@ -35,18 +35,12 @@ classManager.add {
 	Map
 }
 
-ownProps = (obj) ->
-	r = {}
-	for own k, v of obj
-		r[k] = v
-	r
-
 toJSON = (obj) ->
-	traverse(obj).map (x) ->
-		if x? and (not _.isPlainObject x) and x._type?
-			json = x.toJSON?() ? ownProps x
-			json._type = x._type
-			@update json
+	json = obj.toJSON?() ?
+		_.pick obj, (v,k,o) -> _.has o,k
+
+	json._type = obj._type
+	json
 
 loadFromJSON = (obj, json) ->
 	defLoad = ->
@@ -59,16 +53,19 @@ loadFromJSON = (obj, json) ->
 
 exports.save = (game, filename) ->
 	filename = path.join 'saves', filename
-
 	mkdirp.sync 'saves'
-	fs.writeFileSync filename, JSON.stringify toJSON game.saveToJSON()
+
+	transform = (obj) ->
+		traverse(obj).map (x) ->
+			if x? and (not _.isPlainObject x) and x._type?
+				@update toJSON x
+
+	fs.writeFileSync filename, JSON.stringify transform game.saveToJSON()
 
 exports.load = (game, filename) ->
 	filename = path.join 'saves', filename
 
 	reviver = (k, v) ->
-		return v if k is ''
-
 		if (_.isPlainObject v) and v._type?
 			Clazz = classManager.get v._type
 
