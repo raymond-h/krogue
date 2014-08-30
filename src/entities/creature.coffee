@@ -242,8 +242,8 @@ module.exports = class Creature extends Entity
 
 		choices[0].tick this
 
-	loadFromJSON: (json) ->
-		super
+	loadFromJSON: (json, defLoad) ->
+		defLoad()
 
 		@health = new RangedValue json.health
 

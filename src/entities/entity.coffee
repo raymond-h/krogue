@@ -29,9 +29,6 @@ class exports.Entity
 
 	tick: ->
 
-	loadFromJSON: (json) ->
-		_.assign @, json
-
 	toJSON: ->
 		_.pick @, (v, k, o) ->
 			(_.has o, k) and not (k in ['map'])
