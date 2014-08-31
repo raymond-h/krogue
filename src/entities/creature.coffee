@@ -5,6 +5,8 @@ game = require '../game'
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
+creatureSpecies = require '../definitions/creature-species'
+calc = require '../calc'
 
 {Entity} = require './entity'
 MapItem = require './map-item'
@@ -14,20 +16,38 @@ module.exports = class Creature extends Entity
 	type: 'creature'
 	blocking: yes
 
-	constructor: (m, x, y, @species = null) ->
+	constructor: (m, x, y, @species, data = {}) ->
 		super
 
-		@health = new RangedValue max: 30
+		{
+			@health, @personalities
+			@inventory, @equipment, stats
+		} = data
 
-		species = require '../definitions/creature-species'
-		@species ?= new species.StrangeGoo
-		@personalities = []
+		@species ?= new creatureSpecies.StrangeGoo
 
-		@inventory = []
-		@equipment = {}
+		@health ?= new RangedValue max: 30
+		if @health? and not (@health instanceof RangedValue)
+			@health = new RangedValue @health
+
+		_.defaults @, (stats ? {}),
+			strength: 3
+			defense: 1
+
+		@personalities ?= []
+
+		@inventory ?= []
+		@equipment ?= {}
 
 	isPlayer: ->
 		@ is game.player.creature
+
+	calc: (what, params) ->
+		switch what
+			when 'melee damage'
+				calc.meleeDamage @,
+					params.item,
+					params.target
 
 	damage: (dmg, cause) ->
 		game.emit 'game.creature.hurt', @, dmg, cause
@@ -136,7 +156,12 @@ module.exports = class Creature extends Entity
 			if creatures.length > 0
 				target = creatures[0]
 				game.emit 'game.creature.kick.creature', @, dir, target
-				target.damage 2, @
+
+				dmg = calc.meleeDamage {
+					attacker: @
+					target
+				}
+				target.damage dmg, @
 				yes
 
 			else
