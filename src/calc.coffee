@@ -1,20 +1,40 @@
 _ = require 'lodash'
 
-meleeDamage = (attacker, item, target) ->
-	attack(attacker, item) - defense(target)
+meleeDamage = (subject, item, target) ->
+	(subject.calc 'attack', item) - (target.calc 'defense')
 
-attack = (attacker, item) ->
-	attacker.strength + (item?.damage ? 0)
+## Stat calculations
+health = (subject) ->
+	subject.calc 'endurance'
 
-defense = (defender) ->
+attack = (subject, {damage} = {}) ->
+	(subject.calc 'strength') + (damage ? 0)
+
+defense = (subject) ->
 	totalArmor =
-		_.chain defender.equipment
+		_.chain subject.equipment
 		.pluck 'armor'
 		.reduce ( (sum, v) -> sum + (v ? 0) ), 0
 		.value()
 
-	defender.defense + totalArmor
+	(subject.calc 'endurance') / 3 + totalArmor
+
+speed = (subject) ->
+	(subject.calc 'agility') - excessWeight subject
+
+accuracy = (subject, {accuracy} = {}) ->
+	((subject.calc 'strength') + (subject.calc 'agility')) * (accuracy ? 1)
+
+maxWeight = (subject) ->
+	subject.calc 'strength'
+
+## Intermediate calculations
+weight = (subject) ->
+	0
+
+excessWeight = (subject) ->
+	Math.max 0, (subject.calc 'weight') - (subject.calc 'maxWeight')
 
 module.exports = {
-	meleeDamage, attack, defense
+	meleeDamage, speed
 }

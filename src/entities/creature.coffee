@@ -20,8 +20,9 @@ module.exports = class Creature extends Entity
 		super
 
 		{
-			@health, @personalities
-			@inventory, @equipment, stats
+			@personalities
+			@inventory, @equipment
+			@stats
 		} = data
 
 		@species ?= new creatureSpecies.StrangeGoo
@@ -30,24 +31,41 @@ module.exports = class Creature extends Entity
 		if @health? and not (@health instanceof RangedValue)
 			@health = new RangedValue @health
 
-		_.defaults @, (stats ? {}),
-			strength: 3
-			defense: 1
+		@stats ?= {}
+		_.defaults @stats,
+			endurance: 0
+			strength: 0
+			agility: 0
 
 		@personalities ?= []
 
 		@inventory ?= []
 		@equipment ?= {}
 
+		@recalculateStats()
+
 	isPlayer: ->
 		@ is game.player.creature
 
-	calc: (what, params) ->
-		switch what
-			when 'melee damage'
-				calc.meleeDamage @,
-					params.item,
-					params.target
+	baseStat: (stat, params...) ->
+		if stat in ['strength', 'endurance', 'agility']
+			@stats[stat]
+
+		else if stat in [
+			'health', 'attack', 'defense'
+			'speed', 'accuracy'
+			'weight', 'maxWeight'
+		]
+			calc[stat] @, params...
+
+	stat: (stat, params...) -> baseStat stat, params...
+
+	@::calc = @::stat
+
+	recalculateStats: ->
+		percent = @health.percent
+		@health.max = @stat 'health'
+		@health.percent = percent
 
 	damage: (dmg, cause) ->
 		game.emit 'game.creature.hurt', @, dmg, cause
@@ -157,10 +175,7 @@ module.exports = class Creature extends Entity
 				target = creatures[0]
 				game.emit 'game.creature.kick.creature', @, dir, target
 
-				dmg = calc.meleeDamage {
-					attacker: @
-					target
-				}
+				dmg = calc.meleeDamage @, null, target
 				target.damage dmg, @
 				yes
 
@@ -234,7 +249,7 @@ module.exports = class Creature extends Entity
 	collidable: (x, y) ->
 		(@map.collidable x, y) or (@map.hasBlockingEntities x, y)
 
-	tickRate: -> @speed ? 12
+	tickRate: -> @calc 'speed'
 
 	tick: (a...) ->
 		# check if this creature is controlled by player
