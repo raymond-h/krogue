@@ -65,20 +65,7 @@ class Game extends EventEmitter2
 		@timeManager.add creature
 		@camera.target = creature
 
-		# @transitionToMap (MapGenerator.generateBigRoom 80, 25), 'entrance'
 		@goTo 'main-1', 'entrance'
-
-		# @on 'key.z', =>
-		# 	newMap = (MapGenerator.generateCellularAutomata 80, 21)
-		# 	[startX, startY] = []
-
-		# 	for row, y in newMap.data
-		# 		for tile, x in row
-		# 			if tile is '.'
-		# 				[startX, startY] = [x, y]
-		# 				break
-
-		# 	@transitionToMap newMap, startX, startY
 
 	createPlayerCreature: ->
 		{Creature} = require './entities'
