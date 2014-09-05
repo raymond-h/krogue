@@ -29,7 +29,10 @@ module.exports = class TimeManager
 		if @targets.length > 0
 			[..., target] = @targets
 
-			winston.silly "begin tick '#{target.name} #{target.constructor.name}' #{target.x},#{target.y}"
+			winston.silly "
+				begin tick '#{target.name} #{target.constructor.name}'
+				#{target.x},#{target.y}
+			"
 
 			Q target.tick()
 			.then (cost = 0) =>
@@ -46,7 +49,11 @@ module.exports = class TimeManager
 
 				@add @targets.pop() if rate is 0 or cost isnt 0
 
-			.then -> winston.silly "end tick '#{target.name} #{target.constructor.name}' #{target.x},#{target.y}"
+			.then ->
+				winston.silly "
+					end tick '#{target.name} #{target.constructor.name}'
+					#{target.x},#{target.y}
+				"
 
 			.nodeify callback
 

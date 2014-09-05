@@ -112,7 +112,9 @@ module.exports = class Player
 						3
 
 					else
-						prompts.multichoiceList 'Pick up which item?', ("#{i.item.name}" for i in items)
+						prompts.multichoiceList 'Pick up which item?',
+							("#{i.item.name}" for i in items)
+						
 						.then (choices) =>
 							return game.message 'Never mind.' if not choices?
 							
