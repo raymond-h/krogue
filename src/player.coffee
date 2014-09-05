@@ -50,9 +50,15 @@ module.exports = class Player
 						game.message "Loaded."
 
 			when 'possess'
-				entities = @creature.map.entities
-				entities.push entities.shift()
-				@creature = entities[0]
+				nextEntity = (map) ->
+					entities = map.entities
+					entities.push entities.shift()
+
+					if (entities[0].type is 'creature') then entities[0]
+					else nextEntity map
+
+				@creature = nextEntity @creature.map
+				game.camera.target = @creature
 				game.camera.update()
 
 			when 'inventory'
