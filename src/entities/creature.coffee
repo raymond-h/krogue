@@ -33,9 +33,9 @@ module.exports = class Creature extends Entity
 
 		@stats ?= {}
 		_.defaults @stats,
-			endurance: 0
-			strength: 0
-			agility: 0
+			endurance: 20
+			strength: 20
+			agility: 20
 
 		@personalities ?= []
 
@@ -58,7 +58,7 @@ module.exports = class Creature extends Entity
 		]
 			calc[stat] @, params...
 
-	stat: (stat, params...) -> baseStat stat, params...
+	stat: (stat, params...) -> @baseStat stat, params...
 
 	@::calc = @::stat
 

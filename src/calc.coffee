@@ -1,7 +1,7 @@
 _ = require 'lodash'
 
 meleeDamage = (subject, item, target) ->
-	(subject.calc 'attack', item) - (target.calc 'defense')
+	Math.floor (subject.calc 'attack', item) - (target.calc 'defense')
 
 ## Stat calculations
 health = (subject) ->
@@ -36,5 +36,8 @@ excessWeight = (subject) ->
 	Math.max 0, (subject.calc 'weight') - (subject.calc 'maxWeight')
 
 module.exports = {
-	meleeDamage, speed
+	meleeDamage
+
+	health, attack, defense, speed
+	accuracy, weight, maxWeight, excessWeight
 }
