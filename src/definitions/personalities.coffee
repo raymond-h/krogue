@@ -132,11 +132,12 @@ class exports.Kicker extends Personality
 		target = creature.findNearest 30,
 			(e) -> e.type is 'creature'
 
-		if Math.abs(creature.x - target.x) <= 1 and
-				Math.abs(creature.y - target.y) <= 1
+		if target?
+			if Math.abs(creature.x - target.x) <= 1 and
+					Math.abs(creature.y - target.y) <= 1
 
-			creature.kick creature.directionTo target
+				creature.kick creature.directionTo target
 
-		else creature.moveTo target
+			else creature.moveTo target
 
 		12
