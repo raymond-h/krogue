@@ -6,11 +6,14 @@ Clone from this repo.
 
 ## Setting up and running
 ### Global dependencies
-`npm install -g grunt-cli`
-`npm install -g coffee-script` (optional)
+```sh
+npm install -g grunt-cli
+
+npm install -g coffee-script # (optional)
+```
 
 ### Game itself
-```
+```sh
 npm install
 grunt
 node .
