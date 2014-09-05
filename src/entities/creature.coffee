@@ -74,11 +74,14 @@ module.exports = class Creature extends Entity
 		@die cause if @health.empty()
 
 	die: (cause) ->
+		drop = (item) =>
+			mapItem = new MapItem @map, @x, @y, item
+			@map.addEntity mapItem
+			game.timeManager.add mapItem
+
 		if not @isPlayer()
-			for item in @inventory
-				mapItem = new MapItem @map, @x, @y, item
-				@map.addEntity mapItem
-				game.timeManager.add mapItem
+			drop item for item in @inventory
+			drop item for slot, item of @equipment
 
 			@map.removeEntity @
 			game.timeManager.remove @
