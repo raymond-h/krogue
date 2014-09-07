@@ -66,7 +66,7 @@ class exports.Gun extends Item
 					endPos = found
 
 			game.renderer.effectLine creature, endPos,
-				time: 200
+				delay: 20
 				symbol: '*'
 
 		'spread': (creature, offset) ->
