@@ -180,15 +180,19 @@ module.exports = class Creature extends Entity
 
 	throw: (item, offset) ->
 		if _.isString offset
-			offset = vectorMath.mult (direction.parse offset), 5
+			offset = vectorMath.mult (direction.parse offset), 15
 
 		endPos = vectorMath.add @, offset
 
-		found = @raytraceUntilBlocked endPos, range: 5
+		found = @raytraceUntilBlocked endPos, range: 15
 		if found.type is 'creature'
 			target = found.creature
 			target.damage 5, @
 			endPos = found
+
+			item.onHit? @map, endPos, target
+
+		else item.onLand? @map, endPos
 
 		arrayRemove @inventory, item
 		mapItem = new MapItem @map, endPos.x, endPos.y, item

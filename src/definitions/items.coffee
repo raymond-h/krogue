@@ -21,6 +21,38 @@ class exports.Corpse extends Item
 				name = @creature.name ? @creature.species.name
 				"corpse of #{name}"
 
+class exports.PokeBall extends Item
+	name: 'poké ball'
+	symbol: '*'
+
+	constructor: (@creature = null) ->
+		Object.defineProperty @, 'name',
+			get: =>
+				if @creature?
+					name = @creature.name ? @creature.species.name
+					"#{PokeBall::name} w/ #{name}"
+
+				else PokeBall::name
+
+	onHit: (map, pos, target) ->
+		if not @creature?
+			map.removeEntity target
+			game.timeManager.remove target
+			@creature = target
+
+			game.message "Gotcha! #{target.name ? 'The ' + target.species.name} was caught!"
+
+	onLand: (map, pos) ->
+		if @creature?
+			map.addEntity @creature
+			@creature.setPos pos
+			game.timeManager.add @creature
+
+			lines = ['Go', 'This is your chance! Go', 'The opponent is weak, finish them! Go']
+			game.message "#{game.random.sample lines} #{@creature.name ? @creature.species.name}!"
+
+			@creature = null
+
 class exports.Gun extends Item
 	name: 'gun'
 	symbol: '/'
