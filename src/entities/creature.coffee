@@ -117,7 +117,7 @@ module.exports = class Creature extends Entity
 			game.timeManager.remove @
 
 		game.emit 'game.creature.dead', @, cause
-		cause.level++
+		cause.level++ if cause.isPlayer()
 
 	pickup: (item) ->
 		if item instanceof MapItem
@@ -294,7 +294,7 @@ module.exports = class Creature extends Entity
 		)
 		.then (cost) ->
 			game.renderer.doEffects()
-			
+
 			.thenResolve cost
 
 	aiTick: ->
