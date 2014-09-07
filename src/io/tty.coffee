@@ -192,12 +192,22 @@ class TtyRenderer
 				program.move x+ox, y+oy
 				program.write e.symbol
 
-	effectLine: (start, end, {symbol, time, delay}) ->
-		@effects.push data = {
-			symbol, time
-			type: 'line'
+	effectLine: (start, end, {time, delay, symbol}) ->
+		@effects.push {
 			start, end
+			time, delay, symbol
+			type: 'line'
 		}
+
+	doEffects: ->
+		Q.all (@effects.map (e) => @doEffectLine e)
+
+	doEffect: (data) ->
+		switch data.type
+			when 'line' then doEffectLine data
+
+	doEffectLine: (data) ->
+		{start, end, time, delay} = data
 
 		points = bresenhamLine start, end
 		
@@ -214,6 +224,7 @@ class TtyRenderer
 
 		.then =>
 			arrayRemove @effects, data
+			@invalidate()
 
 module.exports =
 	initialize: initialize

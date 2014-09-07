@@ -1,5 +1,6 @@
 _ = require 'lodash'
 winston = require 'winston'
+Q = require 'q'
 
 game = require '../game'
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
@@ -285,10 +286,16 @@ module.exports = class Creature extends Entity
 	tickRate: -> @calc 'speed'
 
 	tick: (a...) ->
-		# check if this creature is controlled by player
-		if @isPlayer() then game.player.tick a...
+		Q(
+			# check if this creature is controlled by player
+			if @isPlayer() then game.player.tick a...
 
-		else @aiTick a...
+			else @aiTick a...
+		)
+		.then (cost) ->
+			game.renderer.doEffects()
+			
+			.thenResolve cost
 
 	aiTick: ->
 		# no personalities => brainless
