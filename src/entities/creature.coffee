@@ -22,7 +22,7 @@ module.exports = class Creature extends Entity
 		{
 			@personalities
 			@inventory, @equipment
-			@xp
+			@xp, level
 		} = data
 
 		@species ?= new creatureSpecies.StrangeGoo
@@ -31,6 +31,9 @@ module.exports = class Creature extends Entity
 		if @health? and not (@health instanceof RangedValue)
 			@health = new RangedValue @health
 
+		if level? and not @xp?
+			@xp = calc.xpForLevel level
+			
 		@xp ?= 0
 
 		Object.defineProperty @, 'level',
