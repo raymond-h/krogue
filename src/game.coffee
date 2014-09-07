@@ -78,7 +78,8 @@ class Game extends EventEmitter2
 		creature.equipment['right hand'] = gun
 
 		items = require './definitions/items'
-		creature.inventory = (new items.PokeBall for i in [1..5])
+		creature.inventory = for i in [1..5]
+			new items.PokeBall @random.sample ['normal', 'great', 'ultra', 'master']
 
 		creature
 

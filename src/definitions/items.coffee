@@ -25,22 +25,63 @@ class exports.PokeBall extends Item
 	name: 'poké ball'
 	symbol: '*'
 
-	constructor: (@creature = null) ->
+	rates:
+		'normal': 1
+		'great': 1.5
+		'ultra': 2
+		'master': 255
+
+	names:
+		'normal': 'poké ball'
+		'great': 'great ball'
+		'ultra': 'ultra ball'
+		'master': 'master ball'
+
+	constructor: (@type = null, @creature = null) ->
 		Object.defineProperty @, 'name',
 			get: =>
 				if @creature?
 					name = @creature.name ? @creature.species.name
-					"#{PokeBall::name} w/ #{name}"
+					"#{@names[@type ? 'normal']} w/ #{name}"
 
-				else PokeBall::name
+				else @names[@type ? 'normal']
+
+	calcRate: (target) ->
+		190 * @rates[@type ? 'normal']
+
+	catchRate: (target) ->
+		{max: maxHp, current: currHp} = target.health
+
+		(3*maxHp - 2*currHp) / (3*maxHp) * @calcRate target
+
+	catchProb: (target) ->
+		return 1 if @type is 'master'
+
+		a = @catchRate target
+		return 1 if a >= 255
+
+		b = 1048560 / Math.sqrt Math.sqrt 16711680 / a
+		Math.pow ((b + 1) / (1<<16)), 4
 
 	onHit: (map, pos, target) ->
 		if not @creature?
-			map.removeEntity target
-			game.timeManager.remove target
-			@creature = target
+			catchProb = @catchProb target
 
-			game.message "Gotcha! #{target.name ? 'The ' + target.species.name} was caught!"
+			if game.random.chance catchProb
+				map.removeEntity target
+				game.timeManager.remove target
+				@creature = target
+
+				game.message "Gotcha! #{target.name ? 'The ' + target.species.name} was caught!"
+
+			else
+				lines = [
+					'Oh, no! The creature broke free!'
+					'Aww! It appeared to be caught!'
+					'Aargh! Almost had it!'
+					'Shoot! It was so close, too!'
+				]
+				game.message game.random.sample lines
 
 	onLand: (map, pos) ->
 		if @creature?
