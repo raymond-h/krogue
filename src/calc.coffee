@@ -5,11 +5,12 @@ meleeDamage = (subject, item, target) ->
 	Math.floor (subject.calc 'attack', item) - (target.calc 'defense')
 
 xpForLevel = (level) ->
-	level * 100
+	(level-1) * 100
 
 levelFromXp = _.memoize (xp) ->
 	level = 1
-	level++ while (xp -= xpForLevel level) >= 0
+	while (xpForLevel level+1) <= xp
+		level++
 	level
 
 creatureStat = (creature, stat) ->
