@@ -105,7 +105,7 @@ class exports.FleeIfWeak extends Personality
 
 class exports.Gunman extends Personality
 	weight: (creature) ->
-		if creature.equipment['right hand'] instanceof items.Gun
+		if creature.equipment['right hand']?.fire?
 			100
 		else 0
 
