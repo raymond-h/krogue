@@ -1,5 +1,6 @@
 game = require '../game'
 
+items = require './items'
 direction = require '../direction'
 vectorMath = require '../vector-math'
 
@@ -104,7 +105,7 @@ class exports.FleeIfWeak extends Personality
 
 class exports.Gunman extends Personality
 	weight: (creature) ->
-		if creature.equipment['right hand']?.typeName is 'gun'
+		if creature.equipment['right hand'] instanceof items.Gun
 			100
 		else 0
 
