@@ -6,6 +6,7 @@ game = require '../game'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
 creatureSpecies = require '../definitions/creature-species'
+items = require '../definitions/items'
 calc = require '../calc'
 
 {Entity} = require './entity'
@@ -107,6 +108,9 @@ module.exports = class Creature extends Entity
 		if not @isPlayer()
 			drop item for item in @inventory
 			drop item for slot, item of @equipment
+
+			corpse = new items.Corpse @species
+			drop corpse
 
 			@map.removeEntity @
 			game.timeManager.remove @

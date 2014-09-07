@@ -11,6 +11,13 @@ class exports.PeculiarObject extends Item
 	name: 'peculiar object'
 	symbol: 'O'
 
+class exports.Corpse extends Item
+	name: 'unknown corpse'
+	symbol: '%'
+
+	constructor: (@species) ->
+		@name = "#{@species.name} corpse" if @species?
+
 class exports.Gun extends Item
 	name: 'gun'
 	symbol: '/'
