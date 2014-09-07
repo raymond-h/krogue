@@ -52,6 +52,20 @@ module.exports = class Creature extends Entity
 	isPlayer: ->
 		@ is game.player.creature
 
+	setXp: (xp) ->
+		oldLvl = @level
+		@xp = xp
+		newLvl = @level
+
+		if newLvl isnt oldLvl
+			dlvl = newLvl - oldLvl
+
+			@recalculateStats()
+			game.emit 'game.creature.level-change', @, newLvl, oldLvl
+
+	addXp: (dxp) ->
+		@setXp @xp + dxp
+
 	baseStat: (stat, params...) ->
 		if stat in ['strength', 'endurance', 'agility']
 			calc.creatureStat @, stat
