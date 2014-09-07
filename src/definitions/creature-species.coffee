@@ -5,6 +5,9 @@ class exports.StrangeGoo extends Species
 	name: 'strange goo'
 	symbol: 'g'
 
+	modifyStat: (stat, statName) ->
+		stat / 3 if statName is 'agility'
+
 class exports.Human extends Species
 	name: 'human'
 	symbol: '@'
@@ -12,6 +15,9 @@ class exports.Human extends Species
 		'head'
 		'right hand', 'left hand'
 	]
+
+	# modifyStat: (stat, statName) ->
+	# 	stat * 100 if statName is 'strength'
 
 class exports.ViolentDonkey extends Species
 	name: 'violent donkey'

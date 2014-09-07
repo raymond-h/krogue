@@ -60,7 +60,14 @@ module.exports = class Creature extends Entity
 		]
 			calc.stat[stat] @, params...
 
-	stat: (stat, params...) -> @baseStat stat, params...
+	stat: (stat, params...) ->
+		val = @baseStat stat, params...
+
+		val = (@species.modifyStat? val, stat, params...) ? val
+		for slot,item of @equipment
+			val = (item.modifyStat? val, stat, slot, params...) ? val
+
+		val
 
 	@::calc = @::stat
 
