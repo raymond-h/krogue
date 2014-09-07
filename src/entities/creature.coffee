@@ -3,9 +3,12 @@ winston = require 'winston'
 Q = require 'q'
 
 game = require '../game'
+
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
+vectorMath = require '../vector-math'
+
 creatureSpecies = require '../definitions/creature-species'
 items = require '../definitions/items'
 calc = require '../calc'
@@ -174,6 +177,27 @@ module.exports = class Creature extends Entity
 			@inventory.push item
 			game.emit 'game.creature.unequip', @, slot, item
 			yes
+
+	throw: (item, offset) ->
+		if _.isString offset
+			offset = vectorMath.mult (direction.parse offset), 5
+
+		endPos = vectorMath.add @, offset
+
+		found = @raytraceUntilBlocked endPos, range: 5
+		if found.type is 'creature'
+			target = found.creature
+			target.damage 5, @
+			endPos = found
+
+		arrayRemove @inventory, item
+		mapItem = new MapItem @map, endPos.x, endPos.y, item
+		@map.addEntity mapItem
+		game.timeManager.add mapItem
+
+		game.renderer.effectLine @, endPos,
+			delay: 50
+			symbol: _.result item, 'symbol'
 
 	setPos: ->
 		super

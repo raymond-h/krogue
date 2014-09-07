@@ -164,6 +164,20 @@ module.exports = class Player
 
 					12
 
+			when 'throw'
+				prompts.list 'Throw which item?', @creature.inventory
+				.then (choice) =>
+					return game.message 'Never mind.' if not choice?
+
+					{value: item} = choice
+
+					prompts.direction 'Throw in what direction?'
+					.then (dir) =>
+						return game.message 'Never mind.' if not dir?
+
+						@creature.throw item, dir
+						6
+
 			when 'test-dir'
 				prompts.direction 'Pick a direction!', cancelable: yes
 

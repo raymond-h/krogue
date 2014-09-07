@@ -27,8 +27,9 @@
   "d": "drop",
   "f": "fire",
   "k": "kick",
+  "t": "throw",
 
-  "t": "test-dir",
+  "y": "test-dir",
   "r": "test-yn",
   "m": "test-multi",
   "l": "line-effect"
