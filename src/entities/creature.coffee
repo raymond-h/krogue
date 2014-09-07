@@ -110,7 +110,7 @@ module.exports = class Creature extends Entity
 			drop item for item in @inventory
 			drop item for slot, item of @equipment
 
-			corpse = new items.Corpse @species
+			corpse = new items.Corpse @
 			drop corpse
 
 			@map.removeEntity @
