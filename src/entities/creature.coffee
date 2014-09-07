@@ -33,14 +33,13 @@ module.exports = class Creature extends Entity
 
 		if level? and not @xp?
 			@xp = calc.xpForLevel level
-			
+
 		@xp ?= 0
 
 		Object.defineProperty @, 'level',
 			get: => calc.levelFromXp @xp
 			set: (level) =>
-				@xp = calc.xpForLevel level
-				@recalculateStats()
+				@setXp calc.xpForLevel level
 
 		@personalities ?= []
 
