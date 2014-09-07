@@ -37,7 +37,7 @@ class TtyRenderer
 		@logs = []
 		@pendingLogs = []
 
-		@logWidth = 60 - TtyRenderer.strMore.length
+		@logWidth = 80 - TtyRenderer.strMore.length
 
 		@game
 		.on 'turn.player', => @showMoreLogs()
@@ -86,7 +86,7 @@ class TtyRenderer
 			else null
 
 	renderLog: (x, y) ->
-		program.fillArea x, y, 60, 1, ' '
+		program.fillArea x, y, 80, 1, ' '
 
 		if @logs.length > 0
 			program.move x, y
