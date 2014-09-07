@@ -22,7 +22,7 @@ module.exports = class Creature extends Entity
 		{
 			@personalities
 			@inventory, @equipment
-			@stats
+			@xp
 		} = data
 
 		@species ?= new creatureSpecies.StrangeGoo
@@ -31,11 +31,13 @@ module.exports = class Creature extends Entity
 		if @health? and not (@health instanceof RangedValue)
 			@health = new RangedValue @health
 
-		@stats ?= {}
-		_.defaults @stats,
-			endurance: 20
-			strength: 20
-			agility: 20
+		@xp ?= 0
+
+		Object.defineProperty @, 'level',
+			get: => calc.levelFromXp @xp
+			set: (level) =>
+				@xp = calc.xpForLevel level
+				@recalculateStats()
 
 		@personalities ?= []
 
@@ -49,7 +51,7 @@ module.exports = class Creature extends Entity
 
 	baseStat: (stat, params...) ->
 		if stat in ['strength', 'endurance', 'agility']
-			@stats[stat]
+			calc.creatureStat @, stat
 
 		else if stat in [
 			'health', 'attack', 'defense'
@@ -87,6 +89,7 @@ module.exports = class Creature extends Entity
 			game.timeManager.remove @
 
 		game.emit 'game.creature.dead', @, cause
+		cause.level++
 
 	pickup: (item) ->
 		if item instanceof MapItem
