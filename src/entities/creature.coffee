@@ -108,7 +108,10 @@ module.exports = class Creature extends Entity
 
 		if not @isPlayer()
 			drop item for item in @inventory
+			@inventory = []
+
 			drop item for slot, item of @equipment
+			@equipment = {}
 
 			corpse = new items.Corpse @
 			drop corpse
