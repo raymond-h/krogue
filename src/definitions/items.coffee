@@ -16,7 +16,8 @@ class exports.Corpse extends Item
 	symbol: '%'
 
 	constructor: (@species) ->
-		@name = "#{@species.name} corpse" if @species?
+		Object.defineProperty @, 'name',
+			get: => "corpse of #{@species.name}"
 
 class exports.Gun extends Item
 	name: 'gun'
