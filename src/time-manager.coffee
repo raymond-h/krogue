@@ -1,5 +1,4 @@
 winston = require 'winston'
-async = require 'async'
 _ = require 'lodash'
 Q = require 'q'
 
