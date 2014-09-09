@@ -2,7 +2,7 @@ fs = require 'fs'
 path = require 'path'
 mkdirp = require 'mkdirp'
 
-serialization = require './serialization'
+serialization = require '../serialization'
 
 exports.save = (game, filename) ->
 	filename = path.join 'saves', filename

@@ -48,6 +48,8 @@ class TtyRenderer
 
 		@effects = []
 
+		@saveData = require './tty-save-data'
+
 	hasMoreLogs: ->
 		@logs.length > 1
 

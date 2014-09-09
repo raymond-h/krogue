@@ -120,12 +120,10 @@ class Game extends EventEmitter2
 		@renderer.invalidate()
 
 	save: (filename) ->
-		saveData = require './save-data'
-		saveData.save @, filename
+		@renderer.saveData.save @, filename
 
 	load: (filename) ->
-		saveData = require './save-data'
-		saveData.load @, filename
+		@renderer.saveData.load @, filename
 
 	goState: (state) ->
 		@emit "state.exit.#{@state}", 'exit', @state
