@@ -198,6 +198,7 @@ module.exports = class Creature extends Entity
 			symbol: _.result item, 'symbol'
 
 		.then =>
+			hit = no
 			if found.type is 'creature'
 				target = found.creature
 
@@ -207,12 +208,13 @@ module.exports = class Creature extends Entity
 				r = item.onHit? @map, endPos, target, dealDamage
 				if r isnt no # if 'no' was returned, damage shouldn't be dealt 
 					dealDamage()
-
-			else item.onLand? @map, endPos
+				hit = yes
 
 			mapItem = new MapItem @map, endPos.x, endPos.y, item
 			@map.addEntity mapItem
 			game.timeManager.add mapItem
+			
+			item.onLand? @map, endPos, hit
 
 	setPos: ->
 		super

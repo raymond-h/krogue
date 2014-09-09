@@ -85,8 +85,8 @@ class exports.PokeBall extends Item
 
 			no
 
-	onLand: (map, pos) ->
-		if @creature?
+	onLand: (map, pos, hit) ->
+		if @creature? and not hit
 			map.addEntity @creature
 			@creature.setPos pos
 			game.timeManager.add @creature
