@@ -195,18 +195,19 @@ class TtyRenderer
 				program.write e.symbol
 
 	effectLine: (start, end, {time, delay, symbol}) ->
-		@effects.push {
+		@effects.push data = {
 			start, end
 			time, delay, symbol
 			type: 'line'
 		}
+		@doEffect data
 
 	doEffects: ->
-		Q.all (@effects.map (e) => @doEffectLine e)
+		Q.all (@effects.map (e) => @doEffect e)
 
 	doEffect: (data) ->
 		switch data.type
-			when 'line' then doEffectLine data
+			when 'line' then @doEffectLine data
 
 	doEffectLine: (data) ->
 		{start, end, time, delay} = data

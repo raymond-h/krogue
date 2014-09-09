@@ -187,24 +187,28 @@ module.exports = class Creature extends Entity
 
 		endPos = vectorMath.add @, offset
 
-		found = @raytraceUntilBlocked endPos, range: 15
-		if found.type is 'creature'
-			target = found.creature
-			target.damage 5, @
-			endPos = found
-
-			item.onHit? @map, endPos, target
-
-		else item.onLand? @map, endPos
-
 		arrayRemove @inventory, item
-		mapItem = new MapItem @map, endPos.x, endPos.y, item
-		@map.addEntity mapItem
-		game.timeManager.add mapItem
+
+		found = @raytraceUntilBlocked endPos, range: 15
+
+		endPos = found if found.type is 'creature'
 
 		game.renderer.effectLine @, endPos,
 			delay: 50
 			symbol: _.result item, 'symbol'
+
+		.then =>
+			if found.type is 'creature'
+				target = found.creature
+				target.damage 5, @
+
+				item.onHit? @map, endPos, target
+
+			else item.onLand? @map, endPos
+
+			mapItem = new MapItem @map, endPos.x, endPos.y, item
+			@map.addEntity mapItem
+			game.timeManager.add mapItem
 
 	setPos: ->
 		super
@@ -326,10 +330,10 @@ module.exports = class Creature extends Entity
 
 			else @aiTick a...
 		)
-		.then (cost) ->
-			game.renderer.doEffects()
+		# .then (cost) ->
+		# 	game.renderer.doEffects()
 
-			.thenResolve cost
+		# 	.thenResolve cost
 
 	aiTick: ->
 		# no personalities => brainless

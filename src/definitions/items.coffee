@@ -124,26 +124,26 @@ class exports.Gun extends Item
 			endPos = vectorMath.add creature, offset
 
 			found = creature.raytraceUntilBlocked endPos, {@range}
-
-			switch found.type
-				when 'none'
-					game.emit 'game.creature.fire.hit.none', creature, @, offset
-
-				when 'wall'
-					game.emit 'game.creature.fire.hit.wall',
-						creature, @, offset, found
-					endPos = found
-
-				when 'creature'
-					target = found.creature
-
-					game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
-					target.damage 10, creature
-					endPos = found
+			endPos = found if found.type in ['wall', 'creature']
 
 			game.renderer.effectLine creature, endPos,
 				delay: 20
 				symbol: '*'
+
+			.then ->
+				switch found.type
+					when 'none'
+						game.emit 'game.creature.fire.hit.none', creature, @, offset
+
+					when 'wall'
+						game.emit 'game.creature.fire.hit.wall',
+							creature, @, offset, found
+
+					when 'creature'
+						target = found.creature
+
+						game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
+						target.damage 10, creature
 
 		'spread': (creature, offset) ->
 			game.emit 'game.creature.fire', creature, @, offset

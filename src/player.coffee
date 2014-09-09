@@ -153,8 +153,8 @@ module.exports = class Player
 						"
 						2
 					else
-						item.fire @creature, dir
-						6
+						Q item.fire @creature, dir
+						.thenResolve 6
 
 			when 'kick'
 				prompts.direction 'Kick in what direction?'
@@ -175,8 +175,8 @@ module.exports = class Player
 					.then (dir) =>
 						return game.message 'Never mind.' if not dir?
 
-						@creature.throw item, dir
-						6
+						Q @creature.throw item, dir
+						.thenResolve 6
 
 			when 'test-dir'
 				prompts.direction 'Pick a direction!', cancelable: yes

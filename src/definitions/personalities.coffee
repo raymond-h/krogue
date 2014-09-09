@@ -1,3 +1,5 @@
+Q = require 'q'
+
 game = require '../game'
 
 items = require './items'
@@ -119,11 +121,13 @@ class exports.Gunman extends Personality
 		if target?
 			if (creature.distanceSqTo target) > range*range
 				creature.moveTo target
+				12
 
 			else
-				gun.fire creature, vectorMath.sub target, creature
+				Q gun.fire creature, vectorMath.sub target, creature
+				.thenResolve 6
 
-		6
+		else 12
 
 class exports.Kicker extends Personality
 	weight: (creature) ->
