@@ -44,7 +44,15 @@ stat =
 
 	## Intermediate calculations
 	weight: (subject) ->
-		0
+		weightOf = (i) -> i.weight ? 0
+
+		invWeight = subject.inventory
+			.map (item) -> weightOf item
+			.reduce ((p, c) -> p+c), 0
+
+		eqpWeight = (weightOf item for slot,item of subject.equipment)
+
+		(weightOf subject) + invWeight + eqpWeight
 
 	excessWeight: (subject) ->
 		Math.max 0, (subject.calc 'weight') - (subject.calc 'maxWeight')
