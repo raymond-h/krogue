@@ -1,6 +1,5 @@
 module.exports = class Random
 	constructor: (@mersenneTwister) ->
-		@mt = @mersenneTwister
 
 	bool: ->
 		(@mersenneTwister.int31() % 2) is 0
