@@ -200,9 +200,13 @@ module.exports = class Creature extends Entity
 		.then =>
 			if found.type is 'creature'
 				target = found.creature
-				target.damage 5, @
 
-				item.onHit? @map, endPos, target
+				dealDamage = =>
+					target.damage 5, @
+
+				r = item.onHit? @map, endPos, target, dealDamage
+				if r isnt no # if 'no' was returned, damage shouldn't be dealt 
+					dealDamage()
 
 			else item.onLand? @map, endPos
 

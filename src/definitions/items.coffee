@@ -83,6 +83,8 @@ class exports.PokeBall extends Item
 				]
 				game.message game.random.sample lines
 
+			no
+
 	onLand: (map, pos) ->
 		if @creature?
 			map.addEntity @creature
