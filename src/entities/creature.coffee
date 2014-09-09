@@ -97,6 +97,9 @@ module.exports = class Creature extends Entity
 		@health.max = @stat 'health'
 		@health.percent = percent
 
+	overburdened: ->
+		(calc.excessWeight this) > 0
+
 	damage: (dmg, cause) ->
 		game.emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
