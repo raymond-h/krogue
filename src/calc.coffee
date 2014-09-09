@@ -50,7 +50,9 @@ stat =
 			.map (item) -> weightOf item
 			.reduce ((p, c) -> p+c), 0
 
-		eqpWeight = (weightOf item for slot,item of subject.equipment)
+		eqpWeight =
+			(weightOf item for slot,item of subject.equipment)
+			.reduce ((p, c) -> p+c), 0
 
 		(weightOf subject) + invWeight + eqpWeight
 
