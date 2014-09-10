@@ -43,21 +43,35 @@ stat =
 		subject.calc 'strength'
 
 	## Intermediate calculations
-	weight: (subject) ->
+	weight: (subject, include = {}) ->
+		_.defaults include,
+			{ itself: yes, inventory: yes, equips: yes }
+
+		{itself, inventory, equips} = include
+
 		weightOf = (i) -> i.weight ? 0
 
-		invWeight = subject.inventory
-			.map (item) -> weightOf item
-			.reduce ((p, c) -> p+c), 0
+		invWeight =
+			if inventory
+				subject.inventory
+				.map (item) -> weightOf item
+				.reduce ((p, c) -> p+c), 0
+
+			else 0
 
 		eqpWeight =
-			(weightOf item for slot,item of subject.equipment)
-			.reduce ((p, c) -> p+c), 0
+			if equips
+				(weightOf item for slot,item of subject.equipment)
+				.reduce ((p, c) -> p+c), 0
 
-		(weightOf subject) + invWeight + eqpWeight
+			else 0
+
+		subjWeight = if itself then weightOf subject else 0
+
+		subjWeight + eqpWeight + invWeight
 
 	excessWeight: (subject) ->
-		Math.max 0, (subject.calc 'weight') - (subject.calc 'maxWeight')
+		Math.max 0, (subject.calc 'weight', itself: no) - (subject.calc 'maxWeight')
 
 module.exports = {
 	meleeDamage
