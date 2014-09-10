@@ -34,7 +34,7 @@ stat =
 		(subject.calc 'endurance') / 3 + totalArmor
 
 	speed: (subject) ->
-		(subject.calc 'agility') / 3 - stat.excessWeight subject
+		Math.max 1, (subject.calc 'agility') / 3 - stat.excessWeight subject
 
 	accuracy: (subject, {accuracy} = {}) ->
 		((subject.calc 'strength') + (subject.calc 'agility')) * (accuracy ? 1)
