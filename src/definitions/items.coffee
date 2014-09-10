@@ -16,10 +16,14 @@ class exports.Corpse extends Item
 	symbol: '%'
 
 	constructor: (@creature) ->
-		Object.defineProperty @, 'name',
-			get: =>
-				name = @creature.name ? @creature.species.name
-				"corpse of #{name}"
+		Object.defineProperties @,
+			name:
+				get: =>
+					name = @creature.name ? @creature.species.name
+					"corpse of #{name}"
+
+			weight:
+				get: => @creature.calc 'weight'
 
 class exports.PokeBall extends Item
 	name: 'poké ball'
