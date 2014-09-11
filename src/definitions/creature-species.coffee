@@ -30,3 +30,15 @@ class exports.TinyAlien extends Species
 		'head'
 		'right hand', 'left hand'
 	]
+
+class exports.SpaceAnemone extends Species
+	name: 'space anemone'
+	symbol: 'm'
+
+	modifyStat: (creature, val, stat) ->
+		switch stat
+			when 'strength' then val * 4.5
+
+			when 'agility' then val / 2.0
+
+			else val

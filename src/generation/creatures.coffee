@@ -45,3 +45,13 @@ exports.generateTinyAlien = (x, y) ->
 		c.personalities.push (new personality.Gunman).withMultiplier 2
 
 	c
+
+exports.generateSpaceAnemone = (x, y) ->
+	c = new Creature null, x, y, new species.SpaceAnemone
+
+	c.personalities.push [
+		new personality.RandomWalk
+		(new personality.Kicker 6).withMultiplier 2
+	]...
+
+	c

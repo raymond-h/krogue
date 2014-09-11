@@ -71,6 +71,10 @@ class exports.GenerationManager
 		# 	{x, y} = MapGen.generatePos map
 		# 	map.addEntity CreatureGen.generateTinyAlien x, y
 
+		for i in [1..3]
+			{x, y} = MapGen.generatePos map
+			map.addEntity CreatureGen.generateSpaceAnemone x, y
+
 		## Items
 		for i in [1..3]
 			{x, y} = MapGen.generatePos map
