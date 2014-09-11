@@ -130,11 +130,16 @@ class exports.Gunman extends Personality
 		else 12
 
 class exports.Kicker extends Personality
+	constructor: (@range = 30) ->
+
 	weight: (creature) ->
-		100
+		target = creature.findNearest @range,
+			(e) -> e.type is 'creature'
+
+		if target? then 100 else 0
 
 	tick: (creature) ->
-		target = creature.findNearest 30,
+		target = creature.findNearest @range,
 			(e) -> e.type is 'creature'
 
 		if target?
