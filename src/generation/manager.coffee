@@ -42,10 +42,10 @@ class exports.GenerationManager
 		connections = @getConnections id
 
 		if level is 1
-			@generateStart path, level, connections
+			@generateStart path, 1, connections
 
 		else if level > 1
-			@generateCave path, level, connections
+			@generateCave path, (level - 1), connections
 
 	generateStart: (path, level, connections) ->
 		MapGen.generateBigRoom path, level, connections, 80, 21
@@ -55,7 +55,7 @@ class exports.GenerationManager
 
 	handleCreatures: (map, path, level) ->
 		if level > 1
-			@generateCaveCreatures map, path, level
+			@generateCaveCreatures map, path, (level - 1)
 
 	generateCaveCreatures: (map, path, level) ->
 		creatures = for i in [1..15]
