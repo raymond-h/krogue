@@ -59,7 +59,7 @@ class exports.GenerationManager
 
 	generateCaveEntities: (map, path, level) ->
 		## Creatures
-		for i in [1..15]
+		for i in [1..20]
 			{x, y} = MapGen.generatePos map
 			map.addEntity CreatureGen.generateStrangeGoo x, y
 
@@ -67,9 +67,9 @@ class exports.GenerationManager
 			{x, y} = MapGen.generatePos map
 			map.addEntity CreatureGen.generateViolentDonkey x, y
 
-		for i in [1..1]
-			{x, y} = MapGen.generatePos map
-			map.addEntity CreatureGen.generateTinyAlien x, y
+		# for i in [1..1]
+		# 	{x, y} = MapGen.generatePos map
+		# 	map.addEntity CreatureGen.generateTinyAlien x, y
 
 		## Items
 		for i in [1..3]
