@@ -55,32 +55,29 @@ class exports.GenerationManager
 
 	handleCreatures: (map, path, level) ->
 		if level > 1
-			@generateCaveCreatures map, path, (level - 1)
+			@generateCaveEntities map, path, (level - 1)
 
-	generateCaveCreatures: (map, path, level) ->
-		creatures = for i in [1..15]
+	generateCaveEntities: (map, path, level) ->
+		## Creatures
+		for i in [1..15]
 			{x, y} = MapGen.generatePos map
-			CreatureGen.generateStrangeGoo x, y
+			map.addEntity CreatureGen.generateStrangeGoo x, y
 
-		creatures.push (
-			for i in [1..3]
-				{x, y} = MapGen.generatePos map
-				CreatureGen.generateViolentDonkey x, y
-		)...
-
-		mapItems = for i in [1..3]
+		for i in [1..3]
 			{x, y} = MapGen.generatePos map
-
-			ItemGen.asMapItem x, y, ItemGen.generatePeculiarObject()
-
-		{x, y} = MapGen.generatePos map
-		mapItems.push (
-			ItemGen.asMapItem x, y, ItemGen.generateGun()
-		)
-
-		map.addEntity creatures...
-		map.addEntity mapItems...
+			map.addEntity CreatureGen.generateViolentDonkey x, y
 
 		for i in [1..1]
 			{x, y} = MapGen.generatePos map
-			map.addEntity (CreatureGen.generateTinyAlien x, y)
+			map.addEntity CreatureGen.generateTinyAlien x, y
+
+		## Items
+		for i in [1..3]
+			{x, y} = MapGen.generatePos map
+
+			map.addEntity ItemGen.asMapItem x, y,
+				ItemGen.generatePeculiarObject()
+
+		{x, y} = MapGen.generatePos map
+		map.addEntity ItemGen.asMapItem x, y,
+			ItemGen.generateGun()
