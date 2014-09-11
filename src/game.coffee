@@ -155,8 +155,7 @@ class Game extends EventEmitter2
 				@quit()
 
 	loadFromJSON: (json) ->
-		@generationManager.connections =
-			json.generationManager.connections
+		@generationManager[k] = v for k,v of json.generationManager
 
 		@logs = json.logs
 
