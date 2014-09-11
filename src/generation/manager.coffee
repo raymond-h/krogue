@@ -1,6 +1,8 @@
 _ = require 'lodash'
 
-MapGenerator = require './maps'
+MapGen = require './maps'
+CreatureGen = require './creatures'
+ItemGen = require './items'
 
 class exports.GenerationManager
 	constructor: (@connections = {}) ->
@@ -18,10 +20,13 @@ class exports.GenerationManager
 
 	generateMap: (id) ->
 		[path, level] = id.split '-'
+		level = Number level
 
-		map = @handleMap id, path, (Number level)
+		map = @handleMap id, path, level
 
 		map.id = id
+
+		@handleCreatures map, path, level
 
 		map
 
@@ -32,9 +37,9 @@ class exports.GenerationManager
 		for name, [map, target] of exits
 			@addConnection thisMap, name, map, target
 
-	handleMap: (map, path, level) ->
-		@generateConnections map, path, level
-		connections = @getConnections map
+	handleMap: (id, path, level) ->
+		@generateConnections id, path, level
+		connections = @getConnections id
 
 		if level is 1
 			@generateStart path, level, connections
@@ -43,7 +48,39 @@ class exports.GenerationManager
 			@generateCave path, level, connections
 
 	generateStart: (path, level, connections) ->
-		MapGenerator.generateBigRoom path, level, connections, 80, 21
+		MapGen.generateBigRoom path, level, connections, 80, 21
 
 	generateCave: (path, level, connections) ->
-		MapGenerator.generateCellularAutomata path, level, connections, 100, 50
+		MapGen.generateCellularAutomata path, level, connections, 100, 50
+
+	handleCreatures: (map, path, level) ->
+		if level > 1
+			@generateCaveCreatures map, path, level
+
+	generateCaveCreatures: (map, path, level) ->
+		creatures = for i in [1..15]
+			{x, y} = MapGen.generatePos map
+			CreatureGen.generateStrangeGoo x, y
+
+		creatures.push (
+			for i in [1..3]
+				{x, y} = MapGen.generatePos map
+				CreatureGen.generateViolentDonkey x, y
+		)...
+
+		mapItems = for i in [1..3]
+			{x, y} = MapGen.generatePos map
+
+			ItemGen.asMapItem x, y, ItemGen.generatePeculiarObject()
+
+		{x, y} = MapGen.generatePos map
+		mapItems.push (
+			ItemGen.asMapItem x, y, ItemGen.generateGun()
+		)
+
+		map.addEntity creatures...
+		map.addEntity mapItems...
+
+		for i in [1..1]
+			{x, y} = MapGen.generatePos map
+			map.addEntity (CreatureGen.generateTinyAlien x, y)

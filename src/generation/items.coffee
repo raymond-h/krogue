@@ -1,6 +1,11 @@
 game = require '../game'
 items = require '../definitions/items'
 
+{MapItem} = require '../entities'
+
+exports.asMapItem = (x, y, item) ->
+	new MapItem null, x, y, item
+
 exports.generatePeculiarObject = ->
 	new items.PeculiarObject
 

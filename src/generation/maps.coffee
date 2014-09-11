@@ -3,15 +3,12 @@ winston = require 'winston'
 
 game = require '../game'
 {Map} = require '../map'
-{MapItem, Stairs} = require '../entities'
+{Stairs} = require '../entities'
 {repeat} = require '../util'
-
-creatureGen = require './creatures'
-itemGen = require './items'
 
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
-generatePos = (w, h, data) ->
+exports.generatePos = generatePos = (w, h, data) ->
 	if not h? then {w, h, data} = w
 
 	loop
@@ -53,40 +50,7 @@ exports.createMapData = (w, h, tileCb) ->
 ###
 Generation functions
 ###
-exports.generateBigRoom = (path, level, connections, w, h) ->
-	{border} = exports.mapGen
-
-	map = new Map w, h
-
-	# generate map itself ('.' everywhere, '#' surrounding entire room)
-	tileCb = (a...) -> (border a...) ? '.'
-	
-	map.data = exports.createMapData map.w, map.h, tileCb
-
-	# 'generate' entities to inhabit the map
-	creatures = for i in [1..5]
-		{x, y} = generatePos map
-		creatureGen.generateStrangeGoo x, y
-
-	# creatures.push (
-	# 	for i in [1..3]
-	# 		{x, y} = generatePos map
-	# 		creatureGen.generateViolentDonkey x, y
-	# )...
-
-	mapItems = for i in [1..3]
-		{x, y} = generatePos map
-
-		new MapItem null, x, y,
-			itemGen.generatePeculiarObject()
-
-	map.addEntity creatures...
-	map.addEntity mapItems...
-
-	for i in [1..1]
-		{x, y} = generatePos map
-		map.addEntity (creatureGen.generateTinyAlien x, y)
-
+exports.generateExits = (map, path, level, connections) ->
 	# exits and entrances (incl. stairs)
 	map.positions =
 		'entrance': generatePos map
@@ -100,6 +64,18 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 		stairs.down = (name is 'exit')
 		
 		map.addEntity stairs
+
+exports.generateBigRoom = (path, level, connections, w, h) ->
+	{border} = exports.mapGen
+
+	map = new Map w, h
+
+	# generate map itself ('.' everywhere, '#' surrounding entire room)
+	tileCb = (a...) -> (border a...) ? '.'
+	
+	map.data = exports.createMapData map.w, map.h, tileCb
+
+	exports.generateExits map, path, level, connections
 
 	map
 
@@ -123,18 +99,6 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 	for rule in rules
 		map.data = generation map.data, w, h, rule
 
-	# exits and entrances (incl. stairs)
-	map.positions =
-		'entrance': generatePos map
-		'exit': generatePos map
-
-	for name, [targetMap, position] of connections
-		{x, y} = map.positions[name] ? generatePos map
-
-		stairs = new Stairs map, x, y
-		stairs.target = {map: targetMap, position}
-		stairs.down = (name is 'exit')
-
-		map.addEntity stairs
+	exports.generateExits map, path, level, connections
 
 	map
