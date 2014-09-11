@@ -191,7 +191,11 @@ module.exports = class Creature extends Entity
 
 		found = @raytraceUntilBlocked endPos, range: 15
 
-		endPos = found if found.type is 'creature'
+		if found.type is 'creature'
+			endPos = found
+
+		else if found.type is 'wall'
+			endPos = found.checked[1]
 
 		game.renderer.effectLine @, endPos,
 			delay: 50
@@ -299,11 +303,14 @@ module.exports = class Creature extends Entity
 		if _.isFunction opts then [opts, cb] = [{}, opts]
 		opts.range ?= Infinity
 
+		checked = []
+
 		found = { type: 'none' }
 
 		bresenhamLine @, to, (x, y) =>
 			return no if (@distanceSqTo {x, y}) > (opts.range * opts.range)
 
+			checked.unshift {x, y}
 			return if x is @x and y is @y
 
 			if @map.collidable x, y
@@ -321,6 +328,8 @@ module.exports = class Creature extends Entity
 					x, y
 				}
 				return no
+
+		found.checked = checked
 
 		found
 
