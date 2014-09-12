@@ -9,7 +9,6 @@ Q = require 'q'
 
 # Initialize log
 log = require '../log'
-log.initialize require './tty-log'
 
 program.fillArea = (x, y, w, h, c) ->
 	str = (new Array w+1).join c

@@ -28,7 +28,7 @@ module.exports = class TimeManager
 		if @targets.length > 0
 			[..., target] = @targets
 
-			log "
+			log.silly "
 				begin tick '#{target.name} #{target.constructor.name}'
 				#{target.x},#{target.y}
 			"
@@ -49,7 +49,7 @@ module.exports = class TimeManager
 				@add @targets.pop() if rate is 0 or cost isnt 0
 
 			.then ->
-				log "
+				log.silly "
 					end tick '#{target.name} #{target.constructor.name}'
 					#{target.x},#{target.y}
 				"

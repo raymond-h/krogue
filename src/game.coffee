@@ -17,7 +17,7 @@ class Game extends EventEmitter2
 		@state = 'main-menu'
 
 		@onAny (a...) ->
-			log "Event: '#{@event}'; ", a
+			log.silly "Event: '#{@event}'; ", a
 
 		(require './key-handling')(this)
 

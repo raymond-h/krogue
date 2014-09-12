@@ -3,8 +3,10 @@ argv = (require 'yargs').argv
 
 log = require './log'
 
-log.level = argv.log ? 'info'
-log "Using log level #{argv.log ? 'info'}"
+logLevel = argv.log ? 'info'
+log.initialize logLevel, require './io/tty-log'
+
+log "Using log level #{logLevel}"
 
 process.on 'uncaughtException', (err) ->
 	log.error 'Uncaught exception:', err.stack
