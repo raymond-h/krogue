@@ -43,12 +43,11 @@ module.exports = (grunt) ->
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
 				tasks: ['lint']
 
-	grunt.registerTask 'default', ['build']
-
-	grunt.registerTask 'build', ['coffee:build']
+	grunt.registerTask 'default', ['lint', 'test', 'build']
 
 	grunt.registerTask 'lint', ['coffeelint:build']
 	grunt.registerTask 'test', ['mochaTest:test']
+	grunt.registerTask 'build', ['coffee:build']
 
 	grunt.registerTask 'dev', ['lint', 'test']
 
