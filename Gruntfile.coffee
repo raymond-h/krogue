@@ -30,6 +30,11 @@ module.exports = (grunt) ->
 
 				src: ['test/**/*.test.{js,coffee}']
 
+		browserify:
+			main:
+				files:
+					'public/lib/main.js': ['./lib/web-client/index.js']
+
 		watch:
 			dev:
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
@@ -43,11 +48,13 @@ module.exports = (grunt) ->
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
 				tasks: ['lint']
 
-	grunt.registerTask 'default', ['lint', 'test', 'build']
+	grunt.registerTask 'default', ['lint', 'test', 'build', 'build-web']
 
 	grunt.registerTask 'lint', ['coffeelint:build']
 	grunt.registerTask 'test', ['mochaTest:test']
 	grunt.registerTask 'build', ['coffee:build']
+
+	grunt.registerTask 'build-web', ['browserify:main']
 
 	grunt.registerTask 'dev', ['lint', 'test']
 
