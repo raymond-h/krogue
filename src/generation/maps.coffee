@@ -1,5 +1,4 @@
 _ = require 'lodash'
-winston = require 'winston'
 
 game = require '../game'
 {Map} = require '../map'

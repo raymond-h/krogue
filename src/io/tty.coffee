@@ -4,9 +4,12 @@ program = blessed.program()
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
 
-winston = require 'winston'
 Q = require 'q'
 {whilst, bresenhamLine, arrayRemove} = require '../util'
+
+# Initialize log
+log = require '../log'
+log.initialize require './tty-log'
 
 program.fillArea = (x, y, w, h, c) ->
 	str = (new Array w+1).join c

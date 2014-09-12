@@ -1,9 +1,10 @@
 async = require 'async'
 {EventEmitter2} = require 'eventemitter2'
 MersenneTwister = require 'mersennetwister'
-winston = require 'winston'
 Q = require 'q'
 _ = require 'lodash'
+
+log = require './log'
 
 {arrayRemove} = require './util'
 
@@ -16,7 +17,7 @@ class Game extends EventEmitter2
 		@state = 'main-menu'
 
 		@onAny (a...) ->
-			winston.silly "Event: '#{@event}'; ", a
+			log "Event: '#{@event}'; ", a
 
 		(require './key-handling')(this)
 
@@ -29,7 +30,7 @@ class Game extends EventEmitter2
 		"map-#{@mapIdCounter++}"
 
 	initialize: (@io) ->
-		winston.info '*** Starting game...'
+		log '*** Starting game...'
 
 		@io.initialize @
 		@io.initialized = yes
@@ -41,13 +42,13 @@ class Game extends EventEmitter2
 			@quit() if key.ctrl
 
 		.on 'log.add', (str) ->
-			winston.info "<GAME> #{str}"
+			log "<GAME> #{str}"
 
 		.on 'state.enter.game', =>
 			@initGame()
 
 	initGame: ->
-		winston.silly "Init game"
+		log "Init game"
 
 		Player = require './player'
 		{GenerationManager} = require './generation/manager'
@@ -151,7 +152,7 @@ class Game extends EventEmitter2
 						@timeManager.tick next
 
 			(err) =>
-				winston.error err.stack if err?
+				log.error err.stack if err?
 				@quit()
 
 	loadFromJSON: (json) ->

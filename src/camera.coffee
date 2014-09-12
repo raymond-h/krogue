@@ -1,6 +1,6 @@
-winston = require 'winston'
 _ = require 'lodash'
 
+log = require './log'
 {edge, snapToRange} = require './util'
 
 module.exports = class Camera
@@ -32,4 +32,4 @@ module.exports = class Camera
 		@x = snapToRange (edge wb, 'left'), @x, (edge wb, 'right')-@viewport.w
 		@y = snapToRange (edge wb, 'up'), @y, (edge wb, 'down')-@viewport.h
 
-		winston.silly "Updating camera pos to #{@x},#{@y}"
+		log "Updating camera pos to #{@x},#{@y}"

@@ -1,5 +1,4 @@
 _ = require 'lodash'
-winston = require 'winston'
 
 meleeDamage = (subject, item, target) ->
 	Math.floor (subject.calc 'attack', item) - (target.calc 'defense')

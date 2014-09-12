@@ -1,6 +1,5 @@
 Q = require 'q'
 _ = require 'lodash'
-winston = require 'winston'
 
 game = require './game'
 

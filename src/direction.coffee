@@ -1,4 +1,3 @@
-winston = require 'winston'
 _ = require 'lodash'
 
 directions = exports.directions =

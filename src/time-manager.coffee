@@ -1,7 +1,7 @@
-winston = require 'winston'
 _ = require 'lodash'
 Q = require 'q'
 
+log = require './log'
 {whilst, arrayRemove} = require './util'
 
 module.exports = class TimeManager
@@ -28,7 +28,7 @@ module.exports = class TimeManager
 		if @targets.length > 0
 			[..., target] = @targets
 
-			winston.silly "
+			log "
 				begin tick '#{target.name} #{target.constructor.name}'
 				#{target.x},#{target.y}
 			"
@@ -49,7 +49,7 @@ module.exports = class TimeManager
 				@add @targets.pop() if rate is 0 or cost isnt 0
 
 			.then ->
-				winston.silly "
+				log "
 					end tick '#{target.name} #{target.constructor.name}'
 					#{target.x},#{target.y}
 				"

@@ -1,7 +1,7 @@
 _ = require 'lodash'
-winston = require 'winston'
 Q = require 'q'
 
+log = require '../log'
 game = require '../game'
 
 {bresenhamLine, arrayRemove, distanceSq} = require '../util'

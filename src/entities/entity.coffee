@@ -1,6 +1,6 @@
 _ = require 'lodash'
-winston = require 'winston'
 
+log = require '../log'
 game = require '../game'
 direction = require '../direction'
 
