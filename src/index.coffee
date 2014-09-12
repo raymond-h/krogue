@@ -1,20 +1,14 @@
 (require 'q').longStackSupport = yes
 argv = (require 'yargs').argv
 
-winston = require 'winston'
+log = require './log'
 
-winston
-	.remove winston.transports.Console
-	.add winston.transports.File,
-		level: argv.log ? 'info'
-		filename: 'output.log'
-		json: no
+log.level = argv.log ? 'info'
+log "Using log level #{argv.log ? 'info'}"
 
 process.on 'uncaughtException', (err) ->
-	winston.error 'Uncaught exception:', err.stack
+	log.error 'Uncaught exception:', err.stack
 	(require 'q').delay(100).then -> process.exit 1
-
-winston.info "Using log level #{argv.log ? 'info'}"
 
 game = require './game'
 

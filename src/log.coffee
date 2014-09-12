@@ -10,3 +10,5 @@ exports.e = exports.error = (out...) ->
 	logImpl.error out...
 
 exports.initialize = initialize
+
+exports.level = 'info'
