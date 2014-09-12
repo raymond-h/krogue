@@ -1,7 +1,7 @@
 log = require '../log'
 
 logLevel = 'silly'
-# log.initialize logLevel, require '../io/tty-log'
+log.initialize logLevel, require '../io/web-log'
 
 log "Using log level #{logLevel}"
 

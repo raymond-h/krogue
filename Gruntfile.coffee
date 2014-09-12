@@ -35,6 +35,10 @@ module.exports = (grunt) ->
 				files:
 					'public/lib/main.js': ['./lib/web-client/index.js']
 
+				options:
+					browserifyOptions:
+						debug: yes
+
 		watch:
 			dev:
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
