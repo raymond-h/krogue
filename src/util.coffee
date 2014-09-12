@@ -68,3 +68,6 @@ exports.dasherize = (className) ->
 	className
 	.replace /(\w)(?=[A-Z])/g, '$1-'
 	.toLowerCase()
+
+exports.repeat = (str, n) ->
+	(new Array n+1).join str

@@ -1,19 +1,19 @@
 blessed = require 'blessed'
 program = blessed.program()
 
+program.fillArea = (x, y, w, h, c) ->
+	str = repeat c, w
+	program.move x, y
+	(program.write str; program.down()) while h-- > 0
+
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
-
 Q = require 'q'
-{whilst, bresenhamLine, arrayRemove} = require '../util'
+
+{whilst, bresenhamLine, arrayRemove, repeat} = require '../util'
 
 # Initialize log
 log = require '../log'
-
-program.fillArea = (x, y, w, h, c) ->
-	str = (new Array w+1).join c
-	program.move x, y
-	(program.write str; program.down()) while h-- > 0
 
 initialize = (game) ->
 	program.reset()
@@ -25,8 +25,6 @@ initialize = (game) ->
 deinitialize = (game) ->
 	program.clear()
 	program.normalBuffer()
-
-repeat = (str, n) -> (new Array n+1).join str
 
 class TtyRenderer
 	@strMore = ' [more]'
