@@ -76,7 +76,9 @@ class exports.PokeBall extends Item
 				game.timeManager.remove target
 				@creature = target
 
-				game.message "Gotcha! #{target.name ? 'The ' + target.species.name} was caught!"
+				name = target.name ? 'The ' + target.species.name
+
+				game.message "Gotcha! #{name} was caught!"
 
 			else
 				lines = [
@@ -95,8 +97,15 @@ class exports.PokeBall extends Item
 			@creature.setPos pos
 			game.timeManager.add @creature
 
-			lines = ['Go', 'This is your chance! Go', 'The opponent is weak, finish them! Go']
-			game.message "#{game.random.sample lines} #{@creature.name ? @creature.species.name}!"
+			lines = [
+				'Go'
+				'This is your chance! Go'
+				'The opponent is weak, finish them! Go'
+			]
+
+			game.message "
+				#{game.random.sample lines} #{@creature.name ? @creature.species.name}!
+			"
 
 			@creature = null
 

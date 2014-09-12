@@ -143,8 +143,10 @@ class exports.Kicker extends Personality
 			(e) -> e.type is 'creature'
 
 		if target?
-			if Math.abs(creature.x - target.x) <= 1 and
-					Math.abs(creature.y - target.y) <= 1
+			if (
+				Math.abs(creature.x - target.x) <= 1 and
+				Math.abs(creature.y - target.y) <= 1
+			)
 
 				creature.kick creature.directionTo target
 

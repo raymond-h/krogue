@@ -214,8 +214,11 @@ module.exports = class Creature extends Entity
 					target.damage 5, @
 
 				r = item.onHit? @map, endPos, target, dealDamage
-				if r isnt no # if 'no' was returned, damage shouldn't be dealt 
+
+				# if 'no' was returned, damage shouldn't be dealt
+				if r isnt no
 					dealDamage()
+				
 				hit = yes
 
 			mapItem = new MapItem @map, endPos.x, endPos.y, item
