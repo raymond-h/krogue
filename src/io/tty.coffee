@@ -10,7 +10,8 @@ wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
 
-{whilst, bresenhamLine, arrayRemove, repeat} = require '../util'
+graphics = require './graphics-ascii'
+{whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
 # Initialize log
 log = require '../log'
