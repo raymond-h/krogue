@@ -79,7 +79,7 @@ class WebRenderer
 
 	render: ->
 		viewport.fillStyle = '#000000'
-		viewport.fillRect(0, 0, 80*8, 25*8)
+		viewport.fillRect(0, 0, 80*8, 21*8)
 
 		switch @game.state
 			when 'game'
@@ -111,11 +111,11 @@ class WebRenderer
 
 		for cx in [0...map.w]
 			for cy in [0...map.h]
-				viewport.fillStyle =
-					if map.data[cy][cx] is '#' then '#00ff00'
-					else '#333'
-				viewport.fillRect x + cx * 8, y + cy * 8, 8, 8
-				
+				viewport.fillStyle = 'white'
+				viewport.fillText map.data[cy][cx],
+					x + (cx) * 8,
+					y + (cy + 1) * 8
+
 		log 'Done rendering!!'
 
 module.exports =
