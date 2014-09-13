@@ -4,58 +4,67 @@ log = require '../log'
 
 viewport = null
 
-mapKey = (event) ->
-	keyIdent = event.key ? event.keyIdentifier
-	key = null
+mapKey = (keyIdent) ->
+	switch keyIdent
+		when 'Up', 'ArrowUp'
+			'up'
 
-	log keyIdent
-	if keyIdent? and not /U+\d{4}/.test keyIdent
-		key =
-			switch keyIdent
-				when 'Up', 'ArrowUp'
-					'up'
+		when 'Down', 'ArrowDown'
+			'down'
 
-				when 'Down', 'ArrowDown'
-					'down'
+		when 'Left', 'ArrowLeft'
+			'left'
 
-				when 'Left', 'ArrowLeft'
-					'left'
+		when 'Right', 'ArrowRight'
+			'right'
 
-				when 'Right', 'ArrowRight'
-					'right'
+		when 'Enter'
+			'enter'
 
-				when 'Enter'
-					'enter'
+handleKey = (game, events) ->
+	[downEvent, pressEvent] = events
+	log.silly 'Key events:', events
 
-	key ?= String.fromCharCode event.keyCode
+	ch = undefined
+	name = mapKey (downEvent.key ? downEvent.keyIdentifier)
 
-	key
+	if pressEvent?
+		ch = pressEvent.char ? String.fromCharCode pressEvent.charCode
+		name ?= ch
+
+	key =
+		ch: ch
+		name: name
+
+		ctrl: downEvent.ctrlKey
+		shift: downEvent.shiftKey
+		alt: downEvent.altKey
+		meta: downEvent.metaKey
+
+	key.full =
+		(if key.ctrl then 'C-' else '') +
+		(if key.meta then 'M-' else '') +
+		(if key.shift then 'S-' else '') +
+		(key.name ? key.ch)
+
+	game.emit "key.#{key.name}", key.ch, key
 
 initialize = (game) ->
 	canvas = document.getElementById 'viewport'
 	viewport = canvas.getContext '2d'
 
-	document.addEventListener 'keydown', (event) ->
-		log "Keydown:", event
+	events = []
 
-		key =
-			ch: (event.char ? String.fromCharCode event.which).toLowerCase()
-			ctrl: event.ctrlKey
-			shift: event.shiftKey
-			alt: event.altKey
-			meta: event.metaKey
+	handle = (event) ->
+		events.push event
 
-		key.name =
-			mapKey event
-			.toLowerCase()
+		if events.length is 1
+			process.nextTick ->
+				handleKey game, events
+				events = []
 
-		key.full =
-			(if key.ctrl then 'C-' else '') +
-			(if key.meta then 'M-' else '') +
-			(if key.shift then 'S-' else '') +
-			(key.name ? key.ch)
-
-		game.emit "key.#{key.name}", key.ch, key
+	document.addEventListener 'keypress', handle
+	document.addEventListener 'keydown', handle
 
 deinitialize = (game) ->
 	viewport = null
