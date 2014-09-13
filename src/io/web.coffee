@@ -94,20 +94,7 @@ class WebRenderer
 			else null
 
 	renderMap: (x, y) ->
-		# c = @game.camera
 		map = @game.currentMap
-
-		# for cy in [0...c.viewport.h]
-		# 	sy = c.y + cy
-		# 	row = map.data[sy]
-			
-			# to only get the part that's on-screen
-			# we slice from left to right edge of viewport
-			# row = row[c.x ... c.x+c.viewport.w]
-			# row = for t, tx in row[c.x ... c.x+c.viewport.w]
-			# 	if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
-			# 		t
-			# 	else ' '
 
 		log 'Hello world! Render time!'
 
