@@ -73,6 +73,10 @@ class WebRenderer
 
 				@render()
 
+	hasMoreLogs: -> no
+
+	showMoreLogs: ->
+
 	render: ->
 		viewport.fillStyle = '#000000'
 		viewport.fillRect(0, 0, 80*8, 25*8)
