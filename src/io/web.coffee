@@ -133,7 +133,7 @@ class WebRenderer
 		c = @game.camera
 
 		@renderSymbol(
-			(x * 12 - c.x), (y * 12 - c.y),
+			(x - c.x) * 12, (y - c.y) * 12,
 			symbol, color
 		)
 
