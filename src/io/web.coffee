@@ -124,13 +124,13 @@ class WebRenderer
 		log 'Done rendering!!'
 
 	renderEntities: (x, y, entities) ->
-		c = @game.camera
+		# c = @game.camera
 
 		for e in entities
 			@renderSymbolAtSlot e.x, e.y, (_.result e, 'symbol')
 
 	renderSymbolAtSlot: (x, y, symbol, color) ->
-		c = @game.camera
+		# c = @game.camera
 
 		@renderSymbol(
 			(x - c.x) * 12, (y - c.y) * 12,

@@ -10,6 +10,7 @@ wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
 
+Camera = require '../camera'
 {whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
 # Initialize log
@@ -47,6 +48,7 @@ class TtyRenderer
 		@wrap = wordwrap.hard @logWidth
 
 		@effects = []
+		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
 		@saveData = require './tty-save-data'
 
@@ -119,9 +121,11 @@ class TtyRenderer
 			program.write '|'
 
 	renderMap: (x, y) ->
-		c = @game.camera
+		c = @camera
 		map = @game.currentMap
 
+		c.target = @game.player.creature
+		c.bounds map
 		c.update()
 
 		for cy in [0...c.viewport.h]
@@ -151,7 +155,7 @@ class TtyRenderer
 		@renderEffects x, y
 
 	renderEntities: (x, y, entities) ->
-		c = @game.camera
+		c = @camera
 
 		for e in entities when c.target.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
@@ -187,7 +191,7 @@ class TtyRenderer
 		program.write ']'
 
 	renderEffects: (x, y) ->
-		c = @game.camera
+		c = @camera
 		[ox, oy] = [x - c.x, y - c.y]
 
 		for e in @effects

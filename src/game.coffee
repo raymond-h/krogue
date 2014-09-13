@@ -53,18 +53,15 @@ class Game extends EventEmitter2
 		Player = require './player'
 		{GenerationManager} = require './generation/manager'
 		TimeManager = require './time-manager'
-		Camera = require './camera'
 		Random = require './random'
 
 		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager
-		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 		@generationManager = new GenerationManager
 
 		creature = @createPlayerCreature()
 		@player = new Player creature
 		@timeManager.add creature
-		@camera.target = creature
 
 		@goTo 'main-1', 'entrance'
 
@@ -104,7 +101,6 @@ class Game extends EventEmitter2
 		@maps[map.id] = map
 
 		@currentMap = map
-		@camera.bounds map
 
 		@timeManager.add map.entities...
 		map.addEntity @player.creature
@@ -158,15 +154,10 @@ class Game extends EventEmitter2
 		@logs = json.logs
 
 		@timeManager.remove @player.creature
-		@camera.target = null
 
 		@player.creature = json.player.creature
 
 		@timeManager.add @player.creature
-		@camera.target = @player.creature
-
-		@camera.x = json.camera.x
-		@camera.y = json.camera.y
 
 		@maps = json.maps
 
@@ -176,9 +167,6 @@ class Game extends EventEmitter2
 		{
 			player:
 				creature: @player.creature
-			camera:
-				x: @camera.x
-				y: @camera.y
 			@logs
 			@generationManager
 			currentMap: @currentMap.id

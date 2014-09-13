@@ -57,7 +57,6 @@ module.exports = class Player
 					else nextEntity map
 
 				@creature = nextEntity @creature.map
-				game.camera.target = @creature
 				game.renderer.invalidate()
 
 			when 'inventory'
