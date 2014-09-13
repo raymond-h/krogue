@@ -111,8 +111,11 @@ class WebRenderer
 
 		for cx in [0...map.w]
 			for cy in [0...map.h]
-				viewport.fillStyle = '#ff0000'
+				viewport.fillStyle =
+					if map.data[cy][cx] is '#' then '#00ff00'
+					else '#333'
 				viewport.fillRect x + cx * 8, y + cy * 8, 8, 8
+				
 		log 'Done rendering!!'
 
 module.exports =
