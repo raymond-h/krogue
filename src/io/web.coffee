@@ -50,6 +50,10 @@ handleKey = (game, events) ->
 
 	game.emit "key.#{key.name}", key.ch, key
 
+updateSize = ->
+	viewport.canvas.width = window.innerWidth
+	viewport.canvas.height = window.innerHeight
+
 initialize = (game) ->
 	canvas = document.getElementById 'viewport'
 	viewport = canvas.getContext '2d'
@@ -66,6 +70,14 @@ initialize = (game) ->
 
 	document.addEventListener 'keypress', handle
 	document.addEventListener 'keydown', handle
+
+	window.onresize = _.debounce ->
+		updateSize()
+		game.renderer.invalidate()
+
+	, 300
+
+	updateSize()
 
 deinitialize = (game) ->
 	viewport = null
@@ -95,7 +107,7 @@ class WebRenderer
 
 	render: ->
 		viewport.fillStyle = '#000000'
-		viewport.fillRect(0, 0, 80*12, 21*12)
+		viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
 
 		switch @game.state
 			when 'game'
