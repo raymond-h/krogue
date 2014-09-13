@@ -2,9 +2,58 @@ log = require '../log'
 
 viewport = null
 
+mapKey = (event) ->
+	keyIdent = event.key ? event.keyIdentifier
+	key = null
+
+	log keyIdent
+	if keyIdent? and not /U+\d{4}/.test keyIdent
+		key =
+			switch keyIdent
+				when 'Up', 'ArrowUp'
+					'up'
+
+				when 'Down', 'ArrowDown'
+					'down'
+
+				when 'Left', 'ArrowLeft'
+					'left'
+
+				when 'Right', 'ArrowRight'
+					'right'
+
+				when 'Enter'
+					'enter'
+
+	key ?= String.fromCharCode event.keyCode
+
+	key
+
 initialize = (game) ->
 	canvas = document.getElementById 'viewport'
 	viewport = canvas.getContext '2d'
+
+	document.addEventListener 'keydown', (event) ->
+		log "Keydown:", event
+
+		key =
+			ch: (event.char ? String.fromCharCode event.which).toLowerCase()
+			ctrl: event.ctrlKey
+			shift: event.shiftKey
+			alt: event.altKey
+			meta: event.metaKey
+
+		key.name =
+			mapKey event
+			.toLowerCase()
+
+		key.full =
+			(if key.ctrl then 'C-' else '') +
+			(if key.meta then 'M-' else '') +
+			(if key.shift then 'S-' else '') +
+			(key.name ? key.ch)
+
+		game.emit "key.#{key.name}", key.ch, key
 
 deinitialize = (game) ->
 	viewport = null
