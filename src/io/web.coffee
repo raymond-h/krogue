@@ -1,6 +1,7 @@
 _ = require 'lodash'
 
 log = require '../log'
+vectorMath = require '../vector-math'
 
 viewport = null
 
@@ -75,6 +76,10 @@ class WebRenderer
 
 		@invalidate() # initial render
 
+		@camera =
+			x: 0
+			y: 0
+
 	invalidate: ->
 		if not @invalidated
 			@invalidated = yes
@@ -103,7 +108,12 @@ class WebRenderer
 			else null
 
 	renderMap: (x, y) ->
+		canvasSize = {x: viewport.canvas.width, y: viewport.canvas.height}
+		playerScreenPos = vectorMath.mult @game.player.creature, 12
+
 		map = @game.currentMap
+		center = vectorMath.add playerScreenPos, {x: 6, y: 6}
+		@camera = vectorMath.sub center, vectorMath.div canvasSize, 2
 
 		log 'Hello world! Render time!'
 
@@ -130,10 +140,10 @@ class WebRenderer
 			@renderSymbolAtSlot e.x, e.y, (_.result e, 'symbol')
 
 	renderSymbolAtSlot: (x, y, symbol, color) ->
-		# c = @game.camera
+		c = @camera
 
 		@renderSymbol(
-			(x - c.x) * 12, (y - c.y) * 12,
+			x * 12 - c.x, y * 12 - c.y,
 			symbol, color
 		)
 
