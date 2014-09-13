@@ -154,8 +154,15 @@ class TtyRenderer
 
 		for e in entities when c.target.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
+				graphicId = _.result e, 'symbol'
+				graphic = graphics.get graphicId
+
+				attrs = []
+				if graphic.color?
+					attrs.push "#{graphic.color} fg"
+
 				program.pos (e.y - c.y + y), (e.x - c.x + x)
-				program.write _.result e, 'symbol'
+				program.write program.text graphic.symbol, attrs.join ', '
 
 	renderHealth: (x, y) ->
 		program.fillArea x, y, 40, 2, ' '
