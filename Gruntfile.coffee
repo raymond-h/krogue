@@ -44,6 +44,8 @@ module.exports = (grunt) ->
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
 				tasks: ['lint', 'test', 'build', 'build-web']
 
+				options: livereload: yes
+
 			test:
 				files: ['src/**/*.{js,coffee}', 'test/**/*.{js,coffee}']
 				tasks: ['test']
