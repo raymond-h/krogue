@@ -114,9 +114,6 @@ class Game extends EventEmitter2
 
 		if x? and y?
 			@player.creature.setPos x, y
-			
-		else
-			@camera.update()
 
 		@renderer.invalidate()
 

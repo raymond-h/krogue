@@ -122,6 +122,8 @@ class TtyRenderer
 		c = @game.camera
 		map = @game.currentMap
 
+		c.update()
+
 		for cy in [0...c.viewport.h]
 			program.move x, y+cy
 			sy = c.y + cy

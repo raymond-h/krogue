@@ -58,7 +58,7 @@ module.exports = class Player
 
 				@creature = nextEntity @creature.map
 				game.camera.target = @creature
-				game.camera.update()
+				game.renderer.invalidate()
 
 			when 'inventory'
 				choices = [

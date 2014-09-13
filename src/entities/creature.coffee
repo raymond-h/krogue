@@ -227,10 +227,6 @@ module.exports = class Creature extends Entity
 			
 			item.onLand? @map, endPos, hit
 
-	setPos: ->
-		super
-		game.camera.update() if @ is game.player.creature
-
 	move: (x, y) ->
 		if _.isString x then x = direction.parse x
 		if _.isObject x then {x, y} = x
