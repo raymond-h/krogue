@@ -11,7 +11,7 @@ _ = require 'lodash'
 Q = require 'q'
 
 graphics = require './graphics-ascii'
-{whilst, bresenhamLine, arrayRemove, repeat} = require '../util'
+{whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
 # Initialize log
 log = require '../log'
