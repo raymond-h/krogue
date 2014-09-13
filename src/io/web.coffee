@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 log = require '../log'
 
 viewport = null
@@ -79,7 +81,7 @@ class WebRenderer
 
 	render: ->
 		viewport.fillStyle = '#000000'
-		viewport.fillRect(0, 0, 80*8, 21*8)
+		viewport.fillRect(0, 0, 80*12, 21*12)
 
 		switch @game.state
 			when 'game'
@@ -92,7 +94,7 @@ class WebRenderer
 			else null
 
 	renderMap: (x, y) ->
-		c = @game.camera
+		# c = @game.camera
 		map = @game.currentMap
 
 		# for cy in [0...c.viewport.h]
@@ -111,12 +113,41 @@ class WebRenderer
 
 		for cx in [0...map.w]
 			for cy in [0...map.h]
-				viewport.fillStyle = 'white'
-				viewport.fillText map.data[cy][cx],
-					x + (cx) * 8,
-					y + (cy + 1) * 8
+				@renderSymbolAtSlot cx, cy, map.data[cy][cx]
+
+		entityLayer =
+			'creature': 3
+			'item': 2
+			'stairs': 1
+
+		entities = map.entities[..].sort (a, b) ->
+			entityLayer[a.type] - entityLayer[b.type]
+
+		@renderEntities x, y, entities
 
 		log 'Done rendering!!'
+
+	renderEntities: (x, y, entities) ->
+		c = @game.camera
+
+		for e in entities
+			@renderSymbolAtSlot e.x, e.y, (_.result e, 'symbol')
+
+	renderSymbolAtSlot: (x, y, symbol, color) ->
+		c = @game.camera
+
+		@renderSymbol(
+			(x * 12 - c.x), (y * 12 - c.y),
+			symbol, color
+		)
+
+	renderSymbol: (x, y, symbol, color = 'white') ->
+		viewport.fillStyle = 'black'
+		viewport.fillRect(x, y, 12, 12)
+
+		viewport.font = '12pt monospace'
+		viewport.fillStyle = color
+		viewport.fillText symbol, x, y + 12
 
 module.exports =
 	initialize: initialize
