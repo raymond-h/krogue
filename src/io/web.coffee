@@ -3,6 +3,8 @@ _ = require 'lodash'
 log = require '../log'
 vectorMath = require '../vector-math'
 
+graphics = require './graphics-ascii'
+
 viewport = null
 
 mapKey = (keyIdent) ->
@@ -126,12 +128,25 @@ class WebRenderer
 		map = @game.currentMap
 		center = vectorMath.add playerScreenPos, {x: 6, y: 6}
 		@camera = vectorMath.sub center, vectorMath.div canvasSize, 2
+		@camera.target = @game.player.creature
 
 		log 'Hello world! Render time!'
 
+		mapSymbols =
+			'#': graphics.get 'wall'
+			'.': graphics.get 'floor'
+
+		graphicAt = (x, y) =>
+			if @camera.target.canSee {x, y}
+				t = map.data[y][x]
+				mapSymbols[t]
+
+			else ' '
+
 		for cx in [0...map.w]
 			for cy in [0...map.h]
-				@renderSymbolAtSlot cx, cy, map.data[cy][cx]
+				graphic = graphicAt cx, cy
+				@renderGraphicAtSlot cx, cy, graphic
 
 		entityLayer =
 			'creature': 3
@@ -146,10 +161,16 @@ class WebRenderer
 		log 'Done rendering!!'
 
 	renderEntities: (x, y, entities) ->
-		# c = @game.camera
+		for e in entities when @camera.target.canSee e
+			
+			graphic = graphics.get _.result e, 'symbol'
+			@renderGraphicAtSlot e.x, e.y, graphic
 
-		for e in entities
-			@renderSymbolAtSlot e.x, e.y, (_.result e, 'symbol')
+	renderGraphicAtSlot: (x, y, graphic) ->
+		if _.isString graphic
+			graphic = symbol: graphic
+
+		@renderSymbolAtSlot x, y, graphic.symbol, graphic.color
 
 	renderSymbolAtSlot: (x, y, symbol, color) ->
 		c = @camera
