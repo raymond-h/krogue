@@ -173,22 +173,6 @@ class TtyRenderer
 			str = "|#{row}#{repeat ' ', (width - row.length - 2)}|"
 			@write x, y+i, str
 
-		# for cy in [0...c.viewport.h]
-		# 	program.move x, y+cy
-		# 	sy = c.y + cy
-		# 	row = map.data[sy]
-			
-		# 	# to only get the part that's on-screen
-		# 	# we slice from left to right edge of viewport
-		# 	# row = row[c.x ... c.x+c.viewport.w]
-
-		# 	row = for t, tx in row[c.x ... c.x+c.viewport.w]
-		# 		@bufferPut tx, cy,
-		# 			if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
-		# 				mapSymbols[t]
-
-		# 			else ' '
-
 	renderMap: (x, y) ->
 		c = @camera
 		map = @game.currentMap
