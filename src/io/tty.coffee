@@ -6,14 +6,22 @@ program.fillArea = (x, y, w, h, c) ->
 	program.move x, y
 	(program.write str; program.down()) while h-- > 0
 
+parseAttrs = (graphic) ->
+	attrs = []
+
+	if graphic.color?
+		attrs.push "#{graphic.color} fg"
+
+	attrs
+
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
 
 Camera = require '../camera'
+graphics = require './graphics-ascii'
 {whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
-# Initialize log
 log = require '../log'
 
 initialize = (game) ->
@@ -33,6 +41,11 @@ class TtyRenderer
 	constructor: (@game) ->
 		@invalidated = no
 
+		blank = {symbol: ' '}
+		@buffer =
+			for i in [0...80*25]
+				blank
+
 		@invalidate() # initial render
 
 		@logs = []
@@ -51,6 +64,48 @@ class TtyRenderer
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
 		@saveData = require './tty-save-data'
+
+	bufferPut: (x, y, graphic) ->
+		if _.isString graphic
+			graphic = symbol: graphic
+
+		@buffer[y*80 + x] = graphic
+
+	write: (x, y, str) ->
+		for c,i in str
+			@bufferPut x+i, y, c
+
+	fillArea: (x, y, w, h, c) ->
+		c = symbol: c
+
+		for i in [0...w]
+			for j in [0...h]
+				@bufferPut x+i, y+j, c
+
+	bufferToString: ->
+		out = ''
+
+		currentGraphic = {}
+		lastAttrs = []
+		for g,i in @buffer
+			if currentGraphic isnt g and not _.isEqual currentGraphic, g
+				currentGraphic = g
+
+				out += program._attr lastAttrs, false
+				lastAttrs = parseAttrs g
+				out += program._attr lastAttrs, true
+
+			out += g.symbol
+			if (i % 80) is 79
+				out += '\n'
+
+		out
+
+	flipBuffer: ->
+		program.move 0, 0
+		# program.clear()
+
+		program.write @bufferToString()
 
 	hasMoreLogs: ->
 		@logs.length > 1
@@ -77,8 +132,6 @@ class TtyRenderer
 		@invalidate()
 
 	render: ->
-		# program.clear()
-
 		switch @game.state
 			when 'game'
 				@renderLog 0, 0
@@ -89,15 +142,18 @@ class TtyRenderer
 
 			else null
 
+		@flipBuffer()
+
 	renderLog: (x, y) ->
-		program.fillArea x, y, 80, 1, ' '
+		@fillArea x, y, 80, 1, ' '
 
 		if @logs.length > 0
-			program.move x, y
-			program.write @logs[0]
+			str = @logs[0]
 
 			if @hasMoreLogs()
-				program.write TtyRenderer.strMore
+				str += TtyRenderer.strMore
+
+			@write x, y, str
 
 	renderMenu: (menu) ->
 		x = menu.x ? 0
@@ -114,11 +170,24 @@ class TtyRenderer
 		height = menu.height ? rows.length
 
 		for row, i in rows
-			program.move x, y+i
-			program.write '|'
-			program.write row
-			program.write repeat ' ', (width - row.length - 2)
-			program.write '|'
+			str = "|#{row}#{repeat ' ', (width - row.length - 2)}|"
+			@write x, y+i, str
+
+		# for cy in [0...c.viewport.h]
+		# 	program.move x, y+cy
+		# 	sy = c.y + cy
+		# 	row = map.data[sy]
+			
+		# 	# to only get the part that's on-screen
+		# 	# we slice from left to right edge of viewport
+		# 	# row = row[c.x ... c.x+c.viewport.w]
+
+		# 	row = for t, tx in row[c.x ... c.x+c.viewport.w]
+		# 		@bufferPut tx, cy,
+		# 			if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
+		# 				mapSymbols[t]
+
+		# 			else ' '
 
 	renderMap: (x, y) ->
 		c = @camera
@@ -128,20 +197,20 @@ class TtyRenderer
 		c.bounds map
 		c.update()
 
-		for cy in [0...c.viewport.h]
-			program.move x, y+cy
-			sy = c.y + cy
-			row = map.data[sy]
-			
-			# to only get the part that's on-screen
-			# we slice from left to right edge of viewport
-			# row = row[c.x ... c.x+c.viewport.w]
-			row = for t, tx in row[c.x ... c.x+c.viewport.w]
-				if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
-					t
-				else ' '
+		mapSymbols =
+			'#': graphics.get 'wall'
+			'.': graphics.get 'floor'
 
-			program.write row.join ''
+		graphicAt = (x, y) ->
+			if c.target.canSee {x, y}
+				t = map.data[y][x]
+				mapSymbols[t]
+
+			else ' '
+
+		for sx in [0...c.viewport.w]
+			for sy in [0...c.viewport.h]
+				@bufferPut sx+x, sy+y, graphicAt c.x+sx, c.y+sy
 
 		entityLayer =
 			'creature': 3
@@ -159,11 +228,13 @@ class TtyRenderer
 
 		for e in entities when c.target.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
-				program.pos (e.y - c.y + y), (e.x - c.x + x)
-				program.write _.result e, 'symbol'
+				graphicId = _.result e, 'symbol'
+				graphic = graphics.get graphicId
+
+				@bufferPut (e.x - c.x + x), (e.y - c.y + y), graphic
 
 	renderHealth: (x, y) ->
-		program.fillArea x, y, 40, 2, ' '
+		@fillArea x, y, 40, 2, ' '
 		health = @game.player.creature.health
 
 		@renderRatio x, y, health, ' health'
@@ -172,11 +243,13 @@ class TtyRenderer
 	renderRatio: (x, y, {min, current, max}, suffix = '') ->
 		min ?= 0
 
-		program.move x, y
-		if min is 0
-			program.write "#{current} / #{max}#{suffix}"
-		else
-			program.write "#{min} <= #{current} <= #{max}#{suffix}"
+		str =
+			if min is 0
+				"#{current} / #{max}#{suffix}"
+			else
+				"#{min} <= #{current} <= #{max}#{suffix}"
+
+		@write x, y, str
 
 	renderBar: (x, y, w, {min, current, max}) ->
 		min ?= 0
@@ -184,11 +257,7 @@ class TtyRenderer
 		currentWidth = Math.floor (current - min) / (max - min) * fullWidth
 		restWidth = fullWidth - currentWidth
 
-		program.move x, y
-		program.write '['
-		program.write repeat '=', currentWidth
-		program.write repeat ' ', restWidth
-		program.write ']'
+		@write x, y, "[#{repeat '=', currentWidth}#{repeat ' ', restWidth}]"
 
 	renderEffects: (x, y) ->
 		c = @camera
@@ -197,8 +266,7 @@ class TtyRenderer
 		for e in @effects
 			if e.type is 'line'
 				{x, y} = e.current
-				program.move x+ox, y+oy
-				program.write e.symbol
+				@bufferPut x+ox, y+oy, graphics.get e.symbol
 
 	effectLine: (start, end, {time, delay, symbol}) ->
 		@effects.push data = {

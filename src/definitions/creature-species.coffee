@@ -3,14 +3,14 @@ Species = class exports.Species
 
 class exports.StrangeGoo extends Species
 	name: 'strange goo'
-	symbol: 'g'
+	symbol: 'strangeGoo'
 
 	modifyStat: (creature, stat, name) ->
 		stat / 3 if name is 'agility'
 
 class exports.Human extends Species
 	name: 'human'
-	symbol: '@'
+	symbol: 'human'
 	weight: 60 # kg
 
 	equipSlots: [
@@ -23,12 +23,12 @@ class exports.Human extends Species
 
 class exports.ViolentDonkey extends Species
 	name: 'violent donkey'
-	symbol: 'h'
+	symbol: 'violentDonkey'
 	weight: 120
 
 class exports.TinyAlien extends Species
 	name: 'tiny alien'
-	symbol: 'i'
+	symbol: 'tinyAlien'
 	weight: 20
 
 	equipSlots: [
@@ -38,7 +38,7 @@ class exports.TinyAlien extends Species
 
 class exports.SpaceAnemone extends Species
 	name: 'space anemone'
-	symbol: 'm'
+	symbol: 'spaceAnemone'
 	weight: 300
 
 	modifyStat: (creature, stat, name) ->
