@@ -3,8 +3,14 @@ _ = require 'lodash'
 exports.graphics = graphics =
 	wall:
 		symbol: '#'
-		color: 'blue'
-	floor: '.'
+		# color: '#BE5F00'
+		color: '#00ff00'
+		# color: 'light green'
+	floor:
+		symbol: '.'
+		color: '#00cd00'
+		# color: 'green'
+		# color: '#603000'
 
 	stairsDown: '>'
 	stairsUp: '<'
