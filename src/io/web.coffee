@@ -154,6 +154,8 @@ class WebRenderer
 		viewport.fillStyle = '#000000'
 		viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
 
+		# viewport.drawImage @asciiCanvas, 0, 0
+
 		switch @game.state
 			when 'game'
 				# @renderLog 0, 0
@@ -231,9 +233,11 @@ class WebRenderer
 		ctx.fillStyle = 'black'
 		ctx.fillRect(x, y, 12, 12)
 
-		ctx.font = '12pt monospace'
+		ctx.font = '10pt monospace'
 		ctx.fillStyle = color
-		ctx.fillText symbol, x, y + 12
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'ideographic'
+		ctx.fillText symbol, x + 5, y + 12
 
 module.exports =
 	initialize: initialize
