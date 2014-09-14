@@ -8,7 +8,7 @@ Q.longStackSupport = yes
 process.on 'uncaughtException', (err) ->
 	log.error 'Uncaught exception:', err.stack
 
-	process.nextTick ->
+	Q.delay(100).then ->
 		process.exit 1
 
 logLevel = argv.log ? 'info'
