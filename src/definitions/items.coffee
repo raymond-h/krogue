@@ -5,15 +5,15 @@ direction = require '../direction'
 vectorMath = require '../vector-math'
 
 Item = class exports.Item
-	symbol: 'I'
+	symbol: 'geneticItem'
 
 class exports.PeculiarObject extends Item
 	name: 'peculiar object'
-	symbol: 'O'
+	symbol: 'peculiarObject'
 
 class exports.Corpse extends Item
 	name: 'unknown corpse'
-	symbol: '%'
+	symbol: 'corpse'
 
 	constructor: (@creature) ->
 		Object.defineProperties @,
@@ -27,7 +27,7 @@ class exports.Corpse extends Item
 
 class exports.PokeBall extends Item
 	name: 'poké ball'
-	symbol: '*'
+	symbol: 'pokeBall'
 
 	rates:
 		'normal': 1
@@ -111,7 +111,7 @@ class exports.PokeBall extends Item
 
 class exports.Gun extends Item
 	name: 'gun'
-	symbol: '/'
+	symbol: 'gun'
 
 	fire: (a...) ->
 		fn = @fireHandlers[@fireType()]

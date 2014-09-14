@@ -4,12 +4,16 @@ exports.graphics = graphics =
 	wall: '#'
 	floor: '.'
 
+	stairsDown: '>'
+	stairsUp: '<'
+
 	strangeGoo: 'g'
 	human: '@'
 	tinyAlien: 'i'
 	spaceAnemone: 'm'
 	violentDonkey: 'h'
 
+	corpse: '%'
 	gun: '/'
 	peculiarObject: 'O'
 	pokeBall: '*'

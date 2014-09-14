@@ -6,6 +6,16 @@ program.fillArea = (x, y, w, h, c) ->
 	program.move x, y
 	(program.write str; program.down()) while h-- > 0
 
+program.graphicToString = (graphic) ->
+	attrs = []
+	if graphic.color?
+		attrs.push "#{graphic.color} fg"
+
+	program.text graphic.symbol, attrs.join ', '
+
+program.writeGraphic = (graphic) ->
+	program.write program.graphicToString graphic
+
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
@@ -13,7 +23,6 @@ Q = require 'q'
 graphics = require './graphics-ascii'
 {whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
-# Initialize log
 log = require '../log'
 
 initialize = (game) ->
@@ -123,6 +132,10 @@ class TtyRenderer
 		c = @game.camera
 		map = @game.currentMap
 
+		mapSymbols =
+			'#': program.graphicToString graphics.get 'wall'
+			'.': program.graphicToString graphics.get 'floor'
+
 		for cy in [0...c.viewport.h]
 			program.move x, y+cy
 			sy = c.y + cy
@@ -131,9 +144,11 @@ class TtyRenderer
 			# to only get the part that's on-screen
 			# we slice from left to right edge of viewport
 			# row = row[c.x ... c.x+c.viewport.w]
+
 			row = for t, tx in row[c.x ... c.x+c.viewport.w]
 				if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
-					t
+					mapSymbols[t]
+
 				else ' '
 
 			program.write row.join ''
@@ -157,12 +172,8 @@ class TtyRenderer
 				graphicId = _.result e, 'symbol'
 				graphic = graphics.get graphicId
 
-				attrs = []
-				if graphic.color?
-					attrs.push "#{graphic.color} fg"
-
 				program.pos (e.y - c.y + y), (e.x - c.x + x)
-				program.write program.text graphic.symbol, attrs.join ', '
+				program.writeGraphic graphic
 
 	renderHealth: (x, y) ->
 		program.fillArea x, y, 40, 2, ' '
