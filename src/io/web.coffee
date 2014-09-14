@@ -60,6 +60,24 @@ initialize = (game) ->
 	canvas = document.getElementById 'viewport'
 	viewport = canvas.getContext '2d'
 
+	window.onerror = (errMsg, url, lineNumber) ->
+		viewport.fillStyle = '#000000'
+		viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
+
+		viewport.font = '30pt monospace'
+		viewport.fillStyle = 'red'
+		viewport.fillText "Craaaash!", 5, 5+30
+
+		viewport.font = '20pt monospace'
+		viewport.fillStyle = 'red'
+		viewport.fillText errMsg, 5, 5+30+20+7
+
+		viewport.font = '15pt monospace'
+		viewport.fillStyle = 'red'
+		viewport.fillText "...at #{url}, line ##{lineNumber}", 5, 5+30+20+7+15+7
+
+		false
+
 	events = []
 
 	handle = (event) ->
