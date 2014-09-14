@@ -142,8 +142,8 @@ class exports.Gun extends Item
 			endPos = found if found.type in ['wall', 'creature']
 
 			game.renderer.effectLine creature, endPos,
-				delay: 20
-				symbol: '*'
+				delay: 50
+				symbol: 'bullet'
 
 			.then ->
 				switch found.type

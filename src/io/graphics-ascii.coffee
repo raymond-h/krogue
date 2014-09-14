@@ -26,6 +26,8 @@ exports.graphics = graphics =
 	peculiarObject: 'O'
 	pokeBall: '*'
 
+	bullet: '*'
+
 	_default:
 		symbol: '§'
 		color: 'red'

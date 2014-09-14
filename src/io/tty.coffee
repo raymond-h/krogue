@@ -260,9 +260,6 @@ class TtyRenderer
 		}
 		@doEffect data
 
-	doEffects: ->
-		Q.all (@effects.map (e) => @doEffect e)
-
 	doEffect: (data) ->
 		switch data.type
 			when 'line' then @doEffectLine data

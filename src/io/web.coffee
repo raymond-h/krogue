@@ -1,7 +1,9 @@
 _ = require 'lodash'
+Q = require 'q'
 
 log = require '../log'
 vectorMath = require '../vector-math'
+{bresenhamLine, whilst, arrayRemove} = require '../util'
 
 graphics = require './graphics-ascii'
 
@@ -121,6 +123,8 @@ class WebRenderer
 		@graphics = @preRenderAscii()
 		log @graphics
 
+		@effects = []
+
 	invalidate: ->
 		if not @invalidated
 			@invalidated = yes
@@ -205,6 +209,7 @@ class WebRenderer
 			entityLayer[a.type] - entityLayer[b.type]
 
 		@renderEntities x, y, entities
+		@renderEffects x, y
 
 		log 'Done rendering!!'
 
@@ -217,7 +222,7 @@ class WebRenderer
 	renderGraphicAtSlot: (x, y, graphicId) ->
 		c = @camera
 
-		{x: sourceX, y: sourceY} = @graphics[graphicId]
+		{x: sourceX, y: sourceY} = (@graphics[graphicId] ? @graphics._default)
 		viewport.drawImage(
 			@asciiCanvas,
 			sourceX*@tileSize, sourceY*@tileSize, @tileSize, @tileSize,
@@ -240,6 +245,44 @@ class WebRenderer
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'ideographic'
 		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
+
+	renderEffects: (ox, oy) ->
+		for e in @effects
+			if e.type is 'line'
+				{x, y} = e.current
+				@renderGraphicAtSlot x+ox, y+oy, e.symbol
+
+	effectLine: (start, end, {time, delay, symbol}) ->
+		@effects.push data = {
+			start, end
+			time, delay, symbol
+			type: 'line'
+		}
+		@doEffect data
+
+	doEffect: (data) ->
+		switch data.type
+			when 'line' then @doEffectLine data
+
+	doEffectLine: (data) ->
+		{start, end, time, delay} = data
+
+		points = bresenhamLine start, end
+		
+		if time? and not delay?
+			delay = time / points.length
+
+		whilst (-> points.length > 0),
+			=>
+				Q.fcall =>
+					data.current = points.shift()
+					@invalidate()
+
+				.delay delay
+
+		.then =>
+			arrayRemove @effects, data
+			@invalidate()
 
 module.exports =
 	initialize: initialize
