@@ -73,6 +73,13 @@ class TtyRenderer
 		for c,i in str
 			@bufferPut x+i, y, c
 
+	fillArea: (x, y, w, h, c) ->
+		c = symbol: c
+
+		for i in [0...w]
+			for j in [0...h]
+				@bufferPut x+i, y+j, c
+
 	bufferToString: ->
 		out = ''
 
@@ -125,25 +132,26 @@ class TtyRenderer
 	render: ->
 		switch @game.state
 			when 'game'
-				# @renderLog 0, 0
+				@renderLog 0, 0
 				@renderMap 0, 1
-				# @renderMenu @menu if @menu?
+				@renderMenu @menu if @menu?
 
-				# @renderHealth 0, 22
+				@renderHealth 0, 22
 
 			else null
 
 		@flipBuffer()
 
 	renderLog: (x, y) ->
-		program.fillArea x, y, 80, 1, ' '
+		@fillArea x, y, 80, 1, ' '
 
 		if @logs.length > 0
-			program.move x, y
-			program.write @logs[0]
+			str = @logs[0]
 
 			if @hasMoreLogs()
-				program.write TtyRenderer.strMore
+				str += TtyRenderer.strMore
+
+			@write x, y, str
 
 	renderMenu: (menu) ->
 		x = menu.x ? 0
@@ -160,11 +168,8 @@ class TtyRenderer
 		height = menu.height ? rows.length
 
 		for row, i in rows
-			program.move x, y+i
-			program.write '|'
-			program.write row
-			program.write repeat ' ', (width - row.length - 2)
-			program.write '|'
+			str = "|#{row}#{repeat ' ', (width - row.length - 2)}|"
+			@write x, y+i, str
 
 		# for cy in [0...c.viewport.h]
 		# 	program.move x, y+cy
@@ -210,7 +215,7 @@ class TtyRenderer
 			entityLayer[a.type] - entityLayer[b.type]
 
 		@renderEntities x, y, entities
-		# @renderEffects x, y
+		@renderEffects x, y
 
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
@@ -223,7 +228,7 @@ class TtyRenderer
 				@bufferPut (e.x - c.x + x), (e.y - c.y + y), graphic
 
 	renderHealth: (x, y) ->
-		program.fillArea x, y, 40, 2, ' '
+		@fillArea x, y, 40, 2, ' '
 		health = @game.player.creature.health
 
 		@renderRatio x, y, health, ' health'
@@ -232,11 +237,13 @@ class TtyRenderer
 	renderRatio: (x, y, {min, current, max}, suffix = '') ->
 		min ?= 0
 
-		program.move x, y
-		if min is 0
-			program.write "#{current} / #{max}#{suffix}"
-		else
-			program.write "#{min} <= #{current} <= #{max}#{suffix}"
+		str =
+			if min is 0
+				"#{current} / #{max}#{suffix}"
+			else
+				"#{min} <= #{current} <= #{max}#{suffix}"
+
+		@write x, y, str
 
 	renderBar: (x, y, w, {min, current, max}) ->
 		min ?= 0
@@ -244,11 +251,7 @@ class TtyRenderer
 		currentWidth = Math.floor (current - min) / (max - min) * fullWidth
 		restWidth = fullWidth - currentWidth
 
-		program.move x, y
-		program.write '['
-		program.write repeat '=', currentWidth
-		program.write repeat ' ', restWidth
-		program.write ']'
+		@write x, y, "[#{repeat '=', currentWidth}#{repeat ' ', restWidth}]"
 
 	renderEffects: (x, y) ->
 		c = @game.camera
@@ -257,8 +260,7 @@ class TtyRenderer
 		for e in @effects
 			if e.type is 'line'
 				{x, y} = e.current
-				program.move x+ox, y+oy
-				program.write e.symbol
+				@bufferPut x+ox, y+oy, graphics.get e.symbol
 
 	effectLine: (start, end, {time, delay, symbol}) ->
 		@effects.push data = {
