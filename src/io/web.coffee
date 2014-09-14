@@ -112,8 +112,10 @@ class WebRenderer
 			x: 0
 			y: 0
 
+		@tileSize = 32
+
 		@asciiCanvas = document.createElement 'canvas'
-		[@asciiCanvas.width, @asciiCanvas.height] = [12*4, 12*8]
+		[@asciiCanvas.width, @asciiCanvas.height] = [@tileSize*4, @tileSize*8]
 		@asciiCtx = @asciiCanvas.getContext '2d'
 
 		@graphics = @preRenderAscii()
@@ -168,10 +170,10 @@ class WebRenderer
 
 	renderMap: (x, y) ->
 		canvasSize = {x: viewport.canvas.width, y: viewport.canvas.height}
-		playerScreenPos = vectorMath.mult @game.player.creature, 12
+		playerScreenPos = vectorMath.mult @game.player.creature, @tileSize
 
 		map = @game.currentMap
-		center = vectorMath.add playerScreenPos, {x: 6, y: 6}
+		center = vectorMath.add playerScreenPos, {x: @tileSize/2, y: @tileSize/2}
 		@camera = vectorMath.sub center, vectorMath.div canvasSize, 2
 		@camera.target = @game.player.creature
 
@@ -218,26 +220,26 @@ class WebRenderer
 		{x: sourceX, y: sourceY} = @graphics[graphicId]
 		viewport.drawImage(
 			@asciiCanvas,
-			sourceX*12, sourceY*12, 12, 12,
-			x*12 - c.x, y*12 - c.y, 12, 12
+			sourceX*@tileSize, sourceY*@tileSize, @tileSize, @tileSize,
+			x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
 		)
 
 	renderSymbolAtSlot: (ctx, x, y, symbol, color) ->
 		@renderSymbol(
 			ctx,
-			x * 12, y * 12,
+			x * @tileSize, y * @tileSize,
 			symbol, color
 		)
 
 	renderSymbol: (ctx, x, y, symbol, color = 'white') ->
 		ctx.fillStyle = 'black'
-		ctx.fillRect(x, y, 12, 12)
+		ctx.fillRect x, y, @tileSize, @tileSize
 
-		ctx.font = '10pt monospace'
+		ctx.font = "#{@tileSize}px monospace"
 		ctx.fillStyle = color
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'ideographic'
-		ctx.fillText symbol, x + 5, y + 12
+		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
 
 module.exports =
 	initialize: initialize
