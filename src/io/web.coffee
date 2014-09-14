@@ -112,6 +112,13 @@ class WebRenderer
 			x: 0
 			y: 0
 
+		@asciiCanvas = document.createElement 'canvas'
+		[@asciiCanvas.width, @asciiCanvas.height] = [12*4, 12*8]
+		@asciiCtx = @asciiCanvas.getContext '2d'
+
+		@graphics = @preRenderAscii()
+		log @graphics
+
 	invalidate: ->
 		if not @invalidated
 			@invalidated = yes
@@ -124,6 +131,24 @@ class WebRenderer
 	hasMoreLogs: -> no
 
 	showMoreLogs: ->
+
+	preRenderAscii: ->
+		dim =
+			x: 4
+			y: 8
+
+		i = 0
+
+		_.zipObject (
+			for name of graphics.graphics
+				g = graphics.get name
+				[x, y] = [i % dim.x, i // dim.x]
+				i++
+				# render to @asciiCtx
+				@renderSymbolAtSlot @asciiCtx, x, y, g.symbol, g.color
+				# assemble [name, {x, y}]
+				[name, {x, y, graphics: g}]
+		)
 
 	render: ->
 		viewport.fillStyle = '#000000'
@@ -148,23 +173,24 @@ class WebRenderer
 		@camera = vectorMath.sub center, vectorMath.div canvasSize, 2
 		@camera.target = @game.player.creature
 
+		@camera.x //= 1
+		@camera.y //= 1
+
 		log 'Hello world! Render time!'
 
 		mapSymbols =
-			'#': graphics.get 'wall'
-			'.': graphics.get 'floor'
+			'#': 'wall'
+			'.': 'floor'
 
 		graphicAt = (x, y) =>
 			if @camera.target.canSee {x, y}
 				t = map.data[y][x]
 				mapSymbols[t]
 
-			else ' '
-
 		for cx in [0...map.w]
 			for cy in [0...map.h]
 				graphic = graphicAt cx, cy
-				@renderGraphicAtSlot cx, cy, graphic
+				@renderGraphicAtSlot cx, cy, graphic if graphic?
 
 		entityLayer =
 			'creature': 3
@@ -181,30 +207,33 @@ class WebRenderer
 	renderEntities: (x, y, entities) ->
 		for e in entities when @camera.target.canSee e
 			
-			graphic = graphics.get _.result e, 'symbol'
-			@renderGraphicAtSlot e.x, e.y, graphic
+			# graphic = graphics.get _.result e, 'symbol'
+			@renderGraphicAtSlot e.x, e.y, _.result e, 'symbol'
 
-	renderGraphicAtSlot: (x, y, graphic) ->
-		if _.isString graphic
-			graphic = symbol: graphic
-
-		@renderSymbolAtSlot x, y, graphic.symbol, graphic.color
-
-	renderSymbolAtSlot: (x, y, symbol, color) ->
+	renderGraphicAtSlot: (x, y, graphicId) ->
 		c = @camera
 
+		{x: sourceX, y: sourceY} = @graphics[graphicId]
+		viewport.drawImage(
+			@asciiCanvas,
+			sourceX*12, sourceY*12, 12, 12,
+			x*12 - c.x, y*12 - c.y, 12, 12
+		)
+
+	renderSymbolAtSlot: (ctx, x, y, symbol, color) ->
 		@renderSymbol(
-			x * 12 - c.x, y * 12 - c.y,
+			ctx,
+			x * 12, y * 12,
 			symbol, color
 		)
 
-	renderSymbol: (x, y, symbol, color = 'white') ->
-		viewport.fillStyle = 'black'
-		viewport.fillRect(x, y, 12, 12)
+	renderSymbol: (ctx, x, y, symbol, color = 'white') ->
+		ctx.fillStyle = 'black'
+		ctx.fillRect(x, y, 12, 12)
 
-		viewport.font = '12pt monospace'
-		viewport.fillStyle = color
-		viewport.fillText symbol, x, y + 12
+		ctx.font = '12pt monospace'
+		ctx.fillStyle = color
+		ctx.fillText symbol, x, y + 12
 
 module.exports =
 	initialize: initialize
