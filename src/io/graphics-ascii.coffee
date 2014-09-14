@@ -1,7 +1,9 @@
 _ = require 'lodash'
 
 exports.graphics = graphics =
-	wall: '#'
+	wall:
+		symbol: '#'
+		color: 'blue'
 	floor: '.'
 
 	stairsDown: '>'

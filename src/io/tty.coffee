@@ -6,22 +6,20 @@ program.fillArea = (x, y, w, h, c) ->
 	program.move x, y
 	(program.write str; program.down()) while h-- > 0
 
-program.graphicToString = (graphic) ->
+parseAttrs = (graphic) ->
 	attrs = []
+
 	if graphic.color?
 		attrs.push "#{graphic.color} fg"
 
-	program.text graphic.symbol, attrs.join ', '
-
-program.writeGraphic = (graphic) ->
-	program.write program.graphicToString graphic
+	attrs
 
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
 
 graphics = require './graphics-ascii'
-{whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
+{whilst, bresenhamLine, arrayRemove, repeatStr: repeat, repeat: repeatArray} = require '../util'
 
 log = require '../log'
 
@@ -42,6 +40,11 @@ class TtyRenderer
 	constructor: (@game) ->
 		@invalidated = no
 
+		blank = {symbol: ' '}
+		@buffer =
+			for i in [0...80*25]
+				blank
+
 		@invalidate() # initial render
 
 		@logs = []
@@ -59,6 +62,41 @@ class TtyRenderer
 		@effects = []
 
 		@saveData = require './tty-save-data'
+
+	bufferPut: (x, y, graphic) ->
+		if _.isString graphic
+			graphic = symbol: graphic
+
+		@buffer[y*80 + x] = graphic
+
+	write: (x, y, str) ->
+		for c,i in str
+			@bufferPut x+i, y, c
+
+	bufferToString: ->
+		out = ''
+
+		currentGraphic = {}
+		lastAttrs = []
+		for g,i in @buffer
+			if currentGraphic isnt g and not _.isEqual currentGraphic, g
+				currentGraphic = g
+
+				out += program._attr lastAttrs, false
+				lastAttrs = parseAttrs g
+				out += program._attr lastAttrs, true
+
+			out += g.symbol
+			if (i % 80) is 79
+				out += '\n'
+
+		out
+
+	flipBuffer: ->
+		program.move 0, 0
+		# program.clear()
+
+		program.write @bufferToString()
 
 	hasMoreLogs: ->
 		@logs.length > 1
@@ -85,17 +123,17 @@ class TtyRenderer
 		@invalidate()
 
 	render: ->
-		# program.clear()
-
 		switch @game.state
 			when 'game'
-				@renderLog 0, 0
+				# @renderLog 0, 0
 				@renderMap 0, 1
-				@renderMenu @menu if @menu?
+				# @renderMenu @menu if @menu?
 
-				@renderHealth 0, 22
+				# @renderHealth 0, 22
 
 			else null
+
+		@flipBuffer()
 
 	renderLog: (x, y) ->
 		program.fillArea x, y, 80, 1, ' '
@@ -128,30 +166,40 @@ class TtyRenderer
 			program.write repeat ' ', (width - row.length - 2)
 			program.write '|'
 
+		# for cy in [0...c.viewport.h]
+		# 	program.move x, y+cy
+		# 	sy = c.y + cy
+		# 	row = map.data[sy]
+			
+		# 	# to only get the part that's on-screen
+		# 	# we slice from left to right edge of viewport
+		# 	# row = row[c.x ... c.x+c.viewport.w]
+
+		# 	row = for t, tx in row[c.x ... c.x+c.viewport.w]
+		# 		@bufferPut tx, cy,
+		# 			if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
+		# 				mapSymbols[t]
+
+		# 			else ' '
+
 	renderMap: (x, y) ->
 		c = @game.camera
 		map = @game.currentMap
 
 		mapSymbols =
-			'#': program.graphicToString graphics.get 'wall'
-			'.': program.graphicToString graphics.get 'floor'
+			'#': graphics.get 'wall'
+			'.': graphics.get 'floor'
 
-		for cy in [0...c.viewport.h]
-			program.move x, y+cy
-			sy = c.y + cy
-			row = map.data[sy]
-			
-			# to only get the part that's on-screen
-			# we slice from left to right edge of viewport
-			# row = row[c.x ... c.x+c.viewport.w]
+		graphicAt = (x, y) ->
+			if c.target.canSee {x, y}
+				t = map.data[y][x]
+				mapSymbols[t]
 
-			row = for t, tx in row[c.x ... c.x+c.viewport.w]
-				if c.target.canSee {x: (c.x + tx), y: (c.y + cy)}
-					mapSymbols[t]
+			else ' '
 
-				else ' '
-
-			program.write row.join ''
+		for sx in [0...c.viewport.w]
+			for sy in [0...c.viewport.h]
+				@bufferPut sx+x, sy+y, graphicAt c.x+sx, c.y+sy
 
 		entityLayer =
 			'creature': 3
@@ -162,7 +210,7 @@ class TtyRenderer
 			entityLayer[a.type] - entityLayer[b.type]
 
 		@renderEntities x, y, entities
-		@renderEffects x, y
+		# @renderEffects x, y
 
 	renderEntities: (x, y, entities) ->
 		c = @game.camera
@@ -172,8 +220,7 @@ class TtyRenderer
 				graphicId = _.result e, 'symbol'
 				graphic = graphics.get graphicId
 
-				program.pos (e.y - c.y + y), (e.x - c.x + x)
-				program.writeGraphic graphic
+				@bufferPut (e.x - c.x + x), (e.y - c.y + y), graphic
 
 	renderHealth: (x, y) ->
 		program.fillArea x, y, 40, 2, ' '
