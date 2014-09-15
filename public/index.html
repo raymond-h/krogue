@@ -13,9 +13,27 @@
 		body {
 			overflow: hidden;
 		}
+
+		#log {
+			position: absolute;
+			bottom: 16px;
+			left: 16px;
+		}
+
+		.box {
+			background: white;
+			overflow: auto;
+			width: 500px;
+			height: 200px;
+		}
+
+		.bottomLock > p:first-child {
+			padding-top: 200px;
+		}
 	</style>
 </head>
 <body>
+	<div id="log" class="box bottomLock"></div>
 	<canvas id="viewport" width="960" height="252"></canvas>
 </body>
 </html>

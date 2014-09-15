@@ -64,6 +64,16 @@ class WebRenderer
 
 		@tileSize = 32
 
+		@logBox = document.getElementById 'log'
+
+		@game
+		.on 'log.add', (str) =>
+			p = document.createElement 'p'
+			p.appendChild document.createTextNode str
+			@logBox.appendChild p
+
+			@logBox.scrollTop = @logBox.scrollHeight
+
 		@asciiCanvas = document.createElement 'canvas'
 		[@asciiCanvas.width, @asciiCanvas.height] = [@tileSize*4, @tileSize*8]
 		@asciiCtx = @asciiCanvas.getContext '2d'
