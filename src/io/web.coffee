@@ -132,8 +132,6 @@ class WebRenderer
 		@camera.x //= 1
 		@camera.y //= 1
 
-		log 'Hello world! Render time!'
-
 		mapSymbols =
 			'#': 'wall'
 			'.': 'floor'
@@ -158,8 +156,6 @@ class WebRenderer
 
 		@renderEntities x, y, entities
 		@renderEffects x, y
-
-		log 'Done rendering!!'
 
 	renderEntities: (x, y, entities) ->
 		for e in entities when @camera.target.canSee e
