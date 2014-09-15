@@ -141,7 +141,9 @@ class exports.Gun extends Item
 			found = creature.raytraceUntilBlocked endPos, {@range}
 			endPos = found if found.type in ['wall', 'creature']
 
-			game.renderer.effectLine creature, endPos,
+			game.renderer.doEffect
+				type: 'line'
+				start: creature, end: endPos
 				delay: 50
 				symbol: 'bullet'
 

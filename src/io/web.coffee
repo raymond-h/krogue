@@ -200,17 +200,16 @@ class WebRenderer
 				{x, y} = e.current
 				@renderGraphicAtSlot x+ox, y+oy, e.symbol
 
-	effectLine: (start, end, {time, delay, symbol}) ->
-		@effects.push data = {
-			start, end
-			time, delay, symbol
-			type: 'line'
-		}
-		@doEffect data
-
 	doEffect: (data) ->
-		switch data.type
-			when 'line' then @doEffectLine data
+		Q @effects.push data
+
+		.then =>
+			switch data.type
+				when 'line' then @doEffectLine data
+
+		.then =>
+			arrayRemove @effects, data
+			@invalidate()
 
 	doEffectLine: (data) ->
 		{start, end, time, delay} = data
@@ -227,10 +226,6 @@ class WebRenderer
 					@invalidate()
 
 				.delay delay
-
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
 
 module.exports =
 	initialize: initialize
