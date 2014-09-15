@@ -1,11 +1,6 @@
 blessed = require 'blessed'
 program = blessed.program()
 
-program.fillArea = (x, y, w, h, c) ->
-	str = repeat c, w
-	program.move x, y
-	(program.write str; program.down()) while h-- > 0
-
 parseAttrs = (graphic) ->
 	attrs = []
 
