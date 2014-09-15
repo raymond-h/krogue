@@ -6,53 +6,9 @@ vectorMath = require '../vector-math'
 {bresenhamLine, whilst, arrayRemove} = require '../util'
 
 graphics = require './graphics-ascii'
+keyHandling = require './web-keyhandling'
 
 viewport = null
-
-mapKey = (keyIdent) ->
-	switch keyIdent
-		when 'Up', 'ArrowUp'
-			'up'
-
-		when 'Down', 'ArrowDown'
-			'down'
-
-		when 'Left', 'ArrowLeft'
-			'left'
-
-		when 'Right', 'ArrowRight'
-			'right'
-
-		when 'Enter'
-			'enter'
-
-handleKey = (game, events) ->
-	[downEvent, pressEvent] = events
-	log.silly 'Key events:', events
-
-	ch = undefined
-	name = mapKey (downEvent.key ? downEvent.keyIdentifier)
-
-	if pressEvent?
-		ch = pressEvent.char ? String.fromCharCode pressEvent.charCode
-		name ?= ch
-
-	key =
-		ch: ch
-		name: name
-
-		ctrl: downEvent.ctrlKey
-		shift: downEvent.shiftKey
-		alt: downEvent.altKey
-		meta: downEvent.metaKey
-
-	key.full =
-		(if key.ctrl then 'C-' else '') +
-		(if key.meta then 'M-' else '') +
-		(if key.shift then 'S-' else '') +
-		(key.name ? key.ch)
-
-	game.emit "key.#{key.name}", key.ch, key
 
 updateSize = ->
 	viewport.canvas.width = window.innerWidth
@@ -80,15 +36,7 @@ initialize = (game) ->
 
 		false
 
-	events = []
-
-	handle = (event) ->
-		events.push event
-
-		if events.length is 1
-			process.nextTick ->
-				handleKey game, events
-				events = []
+	handle = (a...) -> keyHandling.handleEvent game, a...
 
 	document.addEventListener 'keypress', handle
 	document.addEventListener 'keydown', handle
