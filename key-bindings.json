@@ -26,7 +26,8 @@
   ",": "pickup",
   "d": "drop",
   "f": "fire",
-  "k": "kick",
+  "k": "attack",
+  "S-f": "attack",
   "t": "throw",
 
   "y": "test-dir",

@@ -245,29 +245,29 @@ module.exports = class Creature extends Entity
 	moveAwayFrom: (p) ->
 		@move direction.opposite @directionTo p
 
-	kick: (dir) ->
+	attack: (dir) ->
 		{x, y} = direction.parse dir
 		x += @x; y += @y
 
 		if @map.collidable x, y
-			# kicking a wall
-			game.emit 'game.creature.kick.wall', @, dir
+			# attacking a wall
+			game.emit 'game.creature.attack.wall', @, dir
 
-			@damage 3, 'kicking a wall'
+			@damage 3, 'attacking a wall'
 			yes
 
 		else
 			creatures = @map.entitiesAt x, y, 'creature'
 			if creatures.length > 0
 				target = creatures[0]
-				game.emit 'game.creature.kick.creature', @, dir, target
+				game.emit 'game.creature.attack.creature', @, dir, target
 
 				dmg = calc.meleeDamage @, null, target
 				target.damage dmg, @
 				yes
 
 			else
-				game.emit 'game.creature.kick.none', @, dir
+				game.emit 'game.creature.attack.none', @, dir
 				no
 
 	distanceSqTo: (to) ->

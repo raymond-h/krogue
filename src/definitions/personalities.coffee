@@ -90,7 +90,7 @@ class exports.AttackAllButSpecies extends Personality
 		if Math.abs(creature.x - target.x) <= 1 and
 				Math.abs(creature.y - target.y) <= 1
 
-			creature.kick creature.directionTo target
+			creature.attack creature.directionTo target
 
 		12
 
@@ -129,7 +129,7 @@ class exports.Gunman extends Personality
 
 		else 12
 
-class exports.Kicker extends Personality
+class exports.Attacker extends Personality
 	constructor: (@range = 30) ->
 
 	weight: (creature) ->
@@ -148,7 +148,7 @@ class exports.Kicker extends Personality
 				Math.abs(creature.y - target.y) <= 1
 			)
 
-				creature.kick creature.directionTo target
+				creature.attack creature.directionTo target
 
 			else creature.moveTo target
 

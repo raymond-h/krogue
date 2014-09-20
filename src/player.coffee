@@ -154,11 +154,11 @@ module.exports = class Player
 						Q item.fire @creature, dir
 						.thenResolve 6
 
-			when 'kick'
-				prompts.direction 'Kick in what direction?'
+			when 'attack'
+				prompts.direction 'Attack in what direction?'
 
 				.then (dir) =>
-					@creature.kick dir
+					@creature.attack dir
 
 					12
 

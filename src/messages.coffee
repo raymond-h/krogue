@@ -33,26 +33,26 @@ module.exports = (game) ->
 
 		msg "#{It_has} been killed by #{the cause}!"
 
-	.on 'game.creature.kick.none', (kicker, dir) ->
+	.on 'game.creature.attack.none', (attacker, dir) ->
 		It_does =
-			if kicker.isPlayer() then 'You do'
-			else "The #{kicker.species.name} does"
+			if attacker.isPlayer() then 'You do'
+			else "The #{attacker.species.name} does"
 
-		msg "#{It_does} a cool kick without hitting anything!"
+		msg "#{It_does} a cool attack without hitting anything!"
 
-	.on 'game.creature.kick.wall', (kicker, dir) ->
-		It_kicks =
-			if kicker.isPlayer() then 'You kick'
-			else "The #{kicker.species.name} kicks"
+	.on 'game.creature.attack.wall', (attacker, dir) ->
+		It_attacks =
+			if attacker.isPlayer() then 'You attack'
+			else "The #{attacker.species.name} attacks"
 
-		msg "#{It_kicks} a wall!"
+		msg "#{It_attacks} a wall!"
 
-	.on 'game.creature.kick.creature', (kicker, dir, target) ->
-		It_kicks =
-			if kicker.isPlayer() then 'You kick'
-			else "The #{kicker.species.name} kicks"
+	.on 'game.creature.attack.creature', (attacker, dir, target) ->
+		It_attacks =
+			if attacker.isPlayer() then 'You attack'
+			else "The #{attacker.species.name} attacks"
 
-		msg "#{It_kicks} at #{the target}!"
+		msg "#{It_attacks} at #{the target}!"
 
 	.on 'game.creature.fire', (firer, item, dir) ->
 		msg 'BANG!'

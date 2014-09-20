@@ -36,7 +36,7 @@ exports.generateTinyAlien = (x, y) ->
 
 	c.personalities.push [
 		(new personality.FleeIfWeak).withMultiplier 10
-		new personality.Kicker
+		new personality.Attacker
 	]...
 
 	if game.random.chance 0.5
@@ -51,7 +51,7 @@ exports.generateSpaceAnemone = (x, y) ->
 
 	c.personalities.push [
 		new personality.RandomWalk
-		(new personality.Kicker 6).withMultiplier 2
+		(new personality.Attacker 6).withMultiplier 2
 	]...
 
 	c
