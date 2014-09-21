@@ -262,7 +262,9 @@ module.exports = class Creature extends Entity
 				target = creatures[0]
 				game.emit 'game.creature.attack.creature', @, dir, target
 
-				dmg = calc.meleeDamage @, null, target
+				item = @equipment['right hand']
+
+				dmg = calc.meleeDamage @, item, target
 				target.damage dmg, @
 				yes
 
