@@ -8,55 +8,19 @@ vectorMath = require '../vector-math'
 graphics = require './graphics-ascii'
 keyHandling = require './web-keyhandling'
 
-viewport = null
-
-updateSize = ->
-	viewport.canvas.width = window.innerWidth
-	viewport.canvas.height = window.innerHeight
-
 module.exports = class Web
 	constructor: (@game) ->
 
 	initialize: ->
-		canvas = document.getElementById 'viewport'
-		viewport = canvas.getContext '2d'
-
-		window.onerror = (errMsg, url, lineNumber) ->
-			viewport.fillStyle = '#000000'
-			viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
-
-			viewport.font = '30pt monospace'
-			viewport.fillStyle = 'red'
-			viewport.fillText "Craaaash!", 5, 5+30
-
-			viewport.font = '20pt monospace'
-			viewport.fillStyle = 'red'
-			viewport.fillText errMsg, 5, 5+30+20+7
-
-			viewport.font = '15pt monospace'
-			viewport.fillStyle = 'red'
-			viewport.fillText "...at #{url}, line ##{lineNumber}", 5, 5+30+20+7+15+7
-
-			false
-
 		handle = (a...) =>
 			keyHandling.handleEvent @game, a...
 
 		document.addEventListener 'keypress', handle
 		document.addEventListener 'keydown', handle
 
-		window.onresize = _.debounce =>
-			updateSize()
-			@game.renderer.invalidate()
-
-		, 300
-
 		@renderer = new WebRenderer @game
 
-		updateSize()
-
 	deinitialize: ->
-		viewport = null
 
 class WebRenderer
 	constructor: (@game) ->
@@ -80,6 +44,35 @@ class WebRenderer
 
 			@logBox.scrollTop = @logBox.scrollHeight
 
+		canvas = document.getElementById 'viewport'
+		@viewport = canvas.getContext '2d'
+
+		window.onerror = (errMsg, url, lineNumber) =>
+			@viewport.fillStyle = '#000000'
+			@viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
+
+			@viewport.font = '30pt monospace'
+			@viewport.fillStyle = 'red'
+			@viewport.fillText "Craaaash!", 5, 5+30
+
+			@viewport.font = '20pt monospace'
+			@viewport.fillStyle = 'red'
+			@viewport.fillText errMsg, 5, 5+30+20+7
+
+			@viewport.font = '15pt monospace'
+			@viewport.fillStyle = 'red'
+			@viewport.fillText "...at #{url}, line ##{lineNumber}", 5, 5+30+20+7+15+7
+
+			false
+
+		window.onresize = _.debounce =>
+			@updateSize()
+			@game.renderer.invalidate()
+
+		, 300
+
+		@updateSize()
+
 		@asciiCanvas = document.createElement 'canvas'
 		[@asciiCanvas.width, @asciiCanvas.height] = [@tileSize*4, @tileSize*8]
 		@asciiCtx = @asciiCanvas.getContext '2d'
@@ -88,6 +81,10 @@ class WebRenderer
 		log @graphics
 
 		@effects = []
+
+	updateSize: ->
+		@viewport.canvas.width = window.innerWidth
+		@viewport.canvas.height = window.innerHeight
 
 	invalidate: ->
 		if not @invalidated
@@ -121,10 +118,10 @@ class WebRenderer
 		)
 
 	render: ->
-		viewport.fillStyle = '#000000'
-		viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
+		@viewport.fillStyle = '#000000'
+		@viewport.fillRect 0, 0, @viewport.canvas.width, @viewport.canvas.height
 
-		# viewport.drawImage @asciiCanvas, 0, 0
+		# @viewport.drawImage @asciiCanvas, 0, 0
 
 		switch @game.state
 			when 'game'
@@ -137,7 +134,7 @@ class WebRenderer
 			else null
 
 	renderMap: (x, y) ->
-		canvasSize = {x: viewport.canvas.width, y: viewport.canvas.height}
+		canvasSize = {x: @viewport.canvas.width, y: @viewport.canvas.height}
 		playerScreenPos = vectorMath.mult @game.player.creature, @tileSize
 
 		map = @game.currentMap
@@ -183,7 +180,7 @@ class WebRenderer
 		c = @camera
 
 		{x: sourceX, y: sourceY} = (@graphics[graphicId] ? @graphics._default)
-		viewport.drawImage(
+		@viewport.drawImage(
 			@asciiCanvas,
 			sourceX*@tileSize, sourceY*@tileSize, @tileSize, @tileSize,
 			x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
