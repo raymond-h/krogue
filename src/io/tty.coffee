@@ -3,19 +3,19 @@ program = blessed.program()
 
 log = require '../log'
 
-initialize = (game) ->
-	program.reset()
-	program.alternateBuffer()
+module.exports = class Tty
+	constructor: (@game) ->
 
-	program.on 'keypress', (ch, key) ->
-		game.emit "key.#{key.name}", ch, key
+	initialize: ->
+		program.reset()
+		program.alternateBuffer()
 
-deinitialize = (game) ->
-	program.clear()
-	program.normalBuffer()
+		program.on 'keypress', (ch, key) =>
+			@game.emit "key.#{key.name}", ch, key
 
-module.exports =
-	initialize: initialize
-	deinitialize: deinitialize
+		Renderer = require './tty-renderer'
+		@renderer = new Renderer @game
 
-	Renderer: require './tty-renderer'
+	deinitialize: ->
+		program.clear()
+		program.normalBuffer()

@@ -16,7 +16,9 @@ log.initialize logLevel, require './io/tty-log'
 
 log "Using log level #{logLevel}"
 
+Tty = require './io/tty'
 game = require './game'
 
-game.initialize require './io/tty'
+tty = new Tty game
+game.initialize tty
 game.main()

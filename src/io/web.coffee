@@ -14,43 +14,49 @@ updateSize = ->
 	viewport.canvas.width = window.innerWidth
 	viewport.canvas.height = window.innerHeight
 
-initialize = (game) ->
-	canvas = document.getElementById 'viewport'
-	viewport = canvas.getContext '2d'
+module.exports = class Web
+	constructor: (@game) ->
 
-	window.onerror = (errMsg, url, lineNumber) ->
-		viewport.fillStyle = '#000000'
-		viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
+	initialize: ->
+		canvas = document.getElementById 'viewport'
+		viewport = canvas.getContext '2d'
 
-		viewport.font = '30pt monospace'
-		viewport.fillStyle = 'red'
-		viewport.fillText "Craaaash!", 5, 5+30
+		window.onerror = (errMsg, url, lineNumber) ->
+			viewport.fillStyle = '#000000'
+			viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
 
-		viewport.font = '20pt monospace'
-		viewport.fillStyle = 'red'
-		viewport.fillText errMsg, 5, 5+30+20+7
+			viewport.font = '30pt monospace'
+			viewport.fillStyle = 'red'
+			viewport.fillText "Craaaash!", 5, 5+30
 
-		viewport.font = '15pt monospace'
-		viewport.fillStyle = 'red'
-		viewport.fillText "...at #{url}, line ##{lineNumber}", 5, 5+30+20+7+15+7
+			viewport.font = '20pt monospace'
+			viewport.fillStyle = 'red'
+			viewport.fillText errMsg, 5, 5+30+20+7
 
-		false
+			viewport.font = '15pt monospace'
+			viewport.fillStyle = 'red'
+			viewport.fillText "...at #{url}, line ##{lineNumber}", 5, 5+30+20+7+15+7
 
-	handle = (a...) -> keyHandling.handleEvent game, a...
+			false
 
-	document.addEventListener 'keypress', handle
-	document.addEventListener 'keydown', handle
+		handle = (a...) =>
+			keyHandling.handleEvent @game, a...
 
-	window.onresize = _.debounce ->
+		document.addEventListener 'keypress', handle
+		document.addEventListener 'keydown', handle
+
+		window.onresize = _.debounce =>
+			updateSize()
+			@game.renderer.invalidate()
+
+		, 300
+
+		@renderer = new WebRenderer @game
+
 		updateSize()
-		game.renderer.invalidate()
 
-	, 300
-
-	updateSize()
-
-deinitialize = (game) ->
-	viewport = null
+	deinitialize: ->
+		viewport = null
 
 class WebRenderer
 	constructor: (@game) ->
@@ -233,8 +239,8 @@ class WebRenderer
 
 				.delay delay
 
-module.exports =
-	initialize: initialize
-	deinitialize: deinitialize
+# module.exports =
+# 	initialize: initialize
+# 	deinitialize: deinitialize
 
-	Renderer: WebRenderer
+# 	Renderer: WebRenderer

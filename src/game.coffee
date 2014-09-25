@@ -32,9 +32,10 @@ class Game extends EventEmitter2
 	initialize: (@io) ->
 		log '*** Starting game...'
 
-		@io.initialize @
+		@io.initialize()
 		@io.initialized = yes
-		@renderer = new @io.Renderer @
+		
+		@renderer = @io.renderer
 
 		(require './messages')(@)
 
