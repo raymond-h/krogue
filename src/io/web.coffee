@@ -16,9 +16,3 @@ module.exports = class Web
 		@renderer = new Renderer @game
 
 	deinitialize: ->
-
-# module.exports =
-# 	initialize: initialize
-# 	deinitialize: deinitialize
-
-# 	Renderer: WebRenderer
