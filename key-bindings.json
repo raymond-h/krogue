@@ -30,6 +30,8 @@
   "S-f": "attack",
   "t": "throw",
 
+  "g": "toggle-graphics",
+
   "y": "test-dir",
   "r": "test-yn",
   "m": "test-multi",

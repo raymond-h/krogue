@@ -77,6 +77,8 @@ module.exports = class WebRenderer
 		@viewport.oImageSmoothingEnabled = false
 		@viewport.imageSmoothingEnabled = false
 
+		@useTiles = no # ascii by default
+
 	updateSize: ->
 		@viewport.canvas.width = window.innerWidth
 		@viewport.canvas.height = window.innerHeight
@@ -173,9 +175,8 @@ module.exports = class WebRenderer
 
 	renderGraphicAtSlot: (x, y, graphicId) ->
 		c = @camera
-		useTiles = yes
 
-		if useTiles
+		if @useTiles
 			{x: sourceX, y: sourceY} = tileGraphics.get graphicId
 			@viewport.drawImage(
 				@tilesImg,
