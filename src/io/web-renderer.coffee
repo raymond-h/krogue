@@ -72,16 +72,16 @@ module.exports = class WebRenderer
 
 		@effects = []
 
-		@viewport.webkitImageSmoothingEnabled = false
-		@viewport.mozImageSmoothingEnabled = false
-		@viewport.oImageSmoothingEnabled = false
-		@viewport.imageSmoothingEnabled = false
-
 		@useTiles = no # ascii by default
 
 	updateSize: ->
 		@viewport.canvas.width = window.innerWidth
 		@viewport.canvas.height = window.innerHeight
+
+		@viewport.webkitImageSmoothingEnabled = false
+		@viewport.mozImageSmoothingEnabled = false
+		@viewport.oImageSmoothingEnabled = false
+		@viewport.imageSmoothingEnabled = false
 
 	invalidate: ->
 		if not @invalidated
