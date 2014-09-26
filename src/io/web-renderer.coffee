@@ -6,6 +6,7 @@ log = require '../log'
 vectorMath = require '../vector-math'
 {bresenhamLine, whilst, arrayRemove} = require '../util'
 
+tileGraphics = require './graphics-tiles'
 graphics = require './graphics-ascii'
 
 module.exports = class WebRenderer
@@ -53,6 +54,7 @@ module.exports = class WebRenderer
 
 		window.onresize = _.debounce =>
 			@updateSize()
+
 			@game.renderer.invalidate()
 
 		, 300
@@ -63,10 +65,17 @@ module.exports = class WebRenderer
 		[@asciiCanvas.width, @asciiCanvas.height] = [@tileSize*4, @tileSize*8]
 		@asciiCtx = @asciiCanvas.getContext '2d'
 
+		@tilesImg = document.getElementById 'tiles'
+
 		@graphics = @preRenderAscii()
 		log @graphics
 
 		@effects = []
+
+		@viewport.webkitImageSmoothingEnabled = false
+		@viewport.mozImageSmoothingEnabled = false
+		@viewport.oImageSmoothingEnabled = false
+		@viewport.imageSmoothingEnabled = false
 
 	updateSize: ->
 		@viewport.canvas.width = window.innerWidth
@@ -164,13 +173,23 @@ module.exports = class WebRenderer
 
 	renderGraphicAtSlot: (x, y, graphicId) ->
 		c = @camera
+		useTiles = yes
 
-		{x: sourceX, y: sourceY} = (@graphics[graphicId] ? @graphics._default)
-		@viewport.drawImage(
-			@asciiCanvas,
-			sourceX*@tileSize, sourceY*@tileSize, @tileSize, @tileSize,
-			x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
-		)
+		if useTiles
+			{x: sourceX, y: sourceY} = tileGraphics.get graphicId
+			@viewport.drawImage(
+				@tilesImg,
+				sourceX, sourceY, 16, 16,
+				x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
+			)
+
+		else
+			{x: sourceX, y: sourceY} = (@graphics[graphicId] ? @graphics._default)
+			@viewport.drawImage(
+				@asciiCanvas,
+				sourceX*@tileSize, sourceY*@tileSize, @tileSize, @tileSize,
+				x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
+			)
 
 	renderSymbolAtSlot: (ctx, x, y, symbol, color) ->
 		@renderSymbol(
