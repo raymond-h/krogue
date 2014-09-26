@@ -35,7 +35,7 @@ module.exports = class WebRenderer
 
 		window.onerror = (errMsg, url, lineNumber) =>
 			@viewport.fillStyle = '#000000'
-			@viewport.fillRect 0, 0, viewport.canvas.width, viewport.canvas.height
+			@viewport.fillRect 0, 0, @viewport.canvas.width, @viewport.canvas.height
 
 			@viewport.font = '30pt monospace'
 			@viewport.fillStyle = 'red'
