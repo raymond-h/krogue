@@ -1,13 +1,13 @@
 _ = require 'lodash'
-Q = require 'q'
 
 log = require '../log'
 
 vectorMath = require '../vector-math'
-{bresenhamLine, whilst, arrayRemove} = require '../util'
 
 tileGraphics = require './graphics-tiles'
 graphics = require './graphics-ascii'
+
+Effects = require './web-effects'
 
 module.exports = class WebRenderer
 	constructor: (@game) ->
@@ -70,7 +70,7 @@ module.exports = class WebRenderer
 		@graphics = @preRenderAscii()
 		log @graphics
 
-		@effects = []
+		@effects = new Effects @
 
 		@useTiles = no # ascii by default
 
@@ -210,34 +210,7 @@ module.exports = class WebRenderer
 		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
 
 	renderEffects: (ox, oy) ->
-		for e in @effects
-			if e.type is 'line'
-				{x, y} = e.current
-				@renderGraphicAtSlot x+ox, y+oy, e.symbol
+		@effects.renderEffects ox, oy
 
 	doEffect: (data) ->
-		Q @effects.push data
-
-		.then =>
-			switch data.type
-				when 'line' then @doEffectLine data
-
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
-
-	doEffectLine: (data) ->
-		{start, end, time, delay} = data
-
-		points = bresenhamLine start, end
-		
-		if time? and not delay?
-			delay = time / points.length
-
-		whilst (-> points.length > 0),
-			=>
-				Q.fcall =>
-					data.current = points.shift()
-					@invalidate()
-
-				.delay delay
+		@effects.doEffect data

@@ -9,6 +9,7 @@ log = require '../log'
 
 Camera = require '../camera'
 graphics = require './graphics-ascii'
+Effects = require './tty-effects'
 {whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
 
 parseAttrs = (graphic) ->
@@ -44,7 +45,7 @@ module.exports = class TtyRenderer
 
 		@wrap = wordwrap.hard @logWidth
 
-		@effects = []
+		@effects = new Effects @
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
 		@saveData = require './tty-save-data'
@@ -54,6 +55,9 @@ module.exports = class TtyRenderer
 			graphic = symbol: graphic
 
 		@buffer[y*80 + x] = graphic
+
+	putGraphic: (x, y, graphicId) ->
+		@bufferPut x, y, graphics.get graphicId
 
 	write: (x, y, str) ->
 		for c,i in str
@@ -227,38 +231,8 @@ module.exports = class TtyRenderer
 
 		@write x, y, "[#{repeat '=', currentWidth}#{repeat ' ', restWidth}]"
 
-	renderEffects: (x, y) ->
-		c = @camera
-		[ox, oy] = [x - c.x, y - c.y]
-
-		for e in @effects
-			if e.type is 'line'
-				{x, y} = e.current
-				@bufferPut x+ox, y+oy, graphics.get e.symbol
+	renderEffects: (ox, oy) ->
+		@effects.renderEffects ox, oy
 
 	doEffect: (data) ->
-		Q @effects.push data
-
-		.then =>
-			switch data.type
-				when 'line' then @doEffectLine data
-
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
-
-	doEffectLine: (data) ->
-		{start, end, time, delay} = data
-
-		points = bresenhamLine start, end
-		
-		if time? and not delay?
-			delay = time / points.length
-
-		whilst (-> points.length > 0),
-			=>
-				Q.fcall =>
-					data.current = points.shift()
-					@invalidate()
-
-				.delay delay
+		@effects.doEffect data
