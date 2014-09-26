@@ -25,13 +25,11 @@ module.exports = class WebRenderer
 
 		@game
 		.on 'log.add', (str) =>
-			p = document.createElement 'p'
-			p.appendChild document.createTextNode str
-			@logBox.appendChild p
+			$(@logBox).append "<p>#{str}</p>"
 
 			@logBox.scrollTop = @logBox.scrollHeight
 
-		canvas = document.getElementById 'viewport'
+		canvas = $('#viewport')[0]
 		@viewport = canvas.getContext '2d'
 
 		window.onerror = (errMsg, url, lineNumber) =>
@@ -61,7 +59,7 @@ module.exports = class WebRenderer
 
 		@updateSize()
 
-		@asciiCanvas = document.createElement 'canvas'
+		@asciiCanvas = $('<canvas>')[0]
 		[@asciiCanvas.width, @asciiCanvas.height] = [@tileSize*4, @tileSize*8]
 		@asciiCtx = @asciiCanvas.getContext '2d'
 

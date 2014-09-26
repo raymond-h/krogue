@@ -5,7 +5,7 @@ log.initialize logLevel, require '../io/web-log'
 
 log "Using log level #{logLevel}"
 
-document.addEventListener 'DOMContentLoaded', ->
+$ ->
 	Web = require '../io/web'
 	game = require '../game'
 

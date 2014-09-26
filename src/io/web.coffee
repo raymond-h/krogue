@@ -9,8 +9,8 @@ module.exports = class Web
 		handle = (a...) =>
 			keyHandling.handleEvent @game, a...
 
-		document.addEventListener 'keypress', handle
-		document.addEventListener 'keydown', handle
+		$(document).keypress handle
+		$(document).keydown handle
 
 		Renderer = require './web-renderer'
 		@renderer = new Renderer @game
