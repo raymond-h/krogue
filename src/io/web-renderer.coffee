@@ -202,10 +202,10 @@ module.exports = class WebRenderer
 		ctx.fillStyle = 'black'
 		ctx.fillRect x, y, @tileSize, @tileSize
 
-		ctx.font = "#{@tileSize}px monospace"
+		ctx.font = "#{@tileSize}px consolas"
 		ctx.fillStyle = color
 		ctx.textAlign = 'center'
-		ctx.textBaseline = 'ideographic'
+		ctx.textBaseline = 'bottom'
 		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
 
 	renderEffects: (ox, oy) ->
