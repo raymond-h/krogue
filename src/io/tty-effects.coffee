@@ -3,8 +3,6 @@ Q = require 'q'
 vectorMath = require '../vector-math'
 {bresenhamLine, whilst, arrayRemove} = require '../util'
 
-graphics = require './graphics-ascii'
-
 module.exports = class TtyEffects
 	constructor: (@renderer) ->
 		@effects = []
