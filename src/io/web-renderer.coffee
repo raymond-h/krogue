@@ -79,6 +79,7 @@ module.exports = class WebRenderer
 		@viewport.webkitImageSmoothingEnabled = false
 		@viewport.mozImageSmoothingEnabled = false
 		@viewport.oImageSmoothingEnabled = false
+		@viewport.msImageSmoothingEnabled = false
 		@viewport.imageSmoothingEnabled = false
 
 	invalidate: ->
