@@ -5,7 +5,7 @@ bindings = require '../key-bindings.json'
 
 module.exports = exports = (game) ->
 	game.on 'key.*', (ch, key) ->
-		action = bindings[key.name ? key.full]
+		action = bindings[key.full ? key.name]
 
 		if action?
 			parts = action.split('.')
