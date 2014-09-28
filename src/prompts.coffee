@@ -147,11 +147,11 @@ exports.multichoiceList = (header, choices, opts) ->
 	done = no
 	whilst (-> not done),
 		->
-			exports.keys null, ['escape', 'return', (_.keys mapDisplayed)...]
+			exports.keys null, ['escape', 'enter', (_.keys mapDisplayed)...]
 
 			.then (key) ->
 				switch key
-					when 'return' then done = yes
+					when 'enter' then done = yes
 					when 'escape' then done = 'cancel'
 
 					else
