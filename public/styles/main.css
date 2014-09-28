@@ -12,7 +12,7 @@ body {
 	left: 16px;
 
 	height: 200px;
-	width: 600px;
+	width: 450px;
 }
 
 #menu {
@@ -22,10 +22,10 @@ body {
 }
 
 .box {
-	background: rgb(30, 30, 30);
-	overflow: auto;
+	background: rgba(30, 30, 30, 0.4);
+	overflow: hidden;
 
-	border: 0.5cm solid rgb(30, 30, 30);
+	border: 0.5cm solid transparent;
 	border-radius: 5px;
 
 	color: white;
