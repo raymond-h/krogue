@@ -15,7 +15,7 @@ processEvents = (game, events) ->
 	log.silly 'Key events:', events
 
 	ch = undefined
-	name = mapKey (downEvent.key ? downEvent.keyIdentifier)
+	name = mapKey downEvent.which
 
 	if pressEvent?
 		ch = pressEvent.char ? String.fromCharCode pressEvent.charCode
@@ -38,22 +38,15 @@ processEvents = (game, events) ->
 
 	game.emit "key.#{key.name}", key.ch, key
 
-mapKey = (keyIdent) ->
-	switch keyIdent
-		when 'Up', 'ArrowUp'
-			'up'
+mapKey = (which) -> keys[which]
 
-		when 'Down', 'ArrowDown'
-			'down'
-
-		when 'Left', 'ArrowLeft'
-			'left'
-
-		when 'Right', 'ArrowRight'
-			'right'
-
-		when 'Enter'
-			'enter'
+keys =
+	13: 'enter'
+	27: 'escape'
+	37: 'left'
+	38: 'up'
+	39: 'right'
+	40: 'down'
 
 module.exports = {
 	handleEvent, processEvents, mapKey
