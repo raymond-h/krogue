@@ -72,6 +72,8 @@ module.exports = class WebRenderer
 
 		@useTiles = no # ascii by default
 
+		$('#menu').hide().html ''
+
 	updateSize: ->
 		@viewport.canvas.width = window.innerWidth
 		@viewport.canvas.height = window.innerHeight
@@ -94,6 +96,22 @@ module.exports = class WebRenderer
 	hasMoreLogs: -> no
 
 	showMoreLogs: ->
+
+	showList: (@menu) ->
+		if @menu?
+			$('#menu').show().html "
+				<h1 class=\"menu-title\">
+					#{@menu.header}
+				</h1>
+				<ul>
+					#{("<li>#{i}</li>" for i in @menu.items).join ''}
+				</ul>
+			"
+
+		else
+			$('#menu').hide().html ''
+
+		@invalidate()
 
 	preRenderAscii: ->
 		dim =
