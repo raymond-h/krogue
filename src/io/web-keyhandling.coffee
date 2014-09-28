@@ -19,7 +19,7 @@ processEvents = (game, events) ->
 
 	if pressEvent?
 		ch = pressEvent.char ? String.fromCharCode pressEvent.charCode
-		name ?= ch
+		name ?= ch.toLowerCase()
 
 	key =
 		ch: ch
