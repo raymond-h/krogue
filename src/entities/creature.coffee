@@ -130,7 +130,7 @@ module.exports = class Creature extends Entity
 			game.timeManager.remove @
 
 		game.emit 'game.creature.dead', @, cause
-		cause.level++ if cause.isPlayer()
+		cause.level++ if cause.isPlayer?()
 
 	pickup: (item) ->
 		if item instanceof MapItem
