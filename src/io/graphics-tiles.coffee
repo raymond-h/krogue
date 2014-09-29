@@ -9,6 +9,7 @@ exports.graphics = graphics =
 
 	human: x: 0, y: 16
 	strangeGoo: x: 16, y: 16
+	spaceAnemone: x: 32, y: 16
 
 	stairsDown: x: 32, y: 0
 	stairsUp: x: 48, y: 0
