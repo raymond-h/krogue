@@ -145,7 +145,18 @@ module.exports = class WebRenderer
 
 				# @renderHealth 0, 22
 
+			when 'death'
+				@renderDeath()
+
 			else null
+
+	renderDeath: ->
+		@viewport.font = '30pt monospace'
+		@viewport.textAlign = 'center'
+		@viewport.textBaseline = 'middle'
+		@viewport.fillStyle = 'red'
+		@viewport.fillText "You have died, #{@game.player.creature}!",
+			@viewport.canvas.width/2, @viewport.canvas.height/2
 
 	renderMap: (x, y) ->
 		canvasSize = {x: @viewport.canvas.width, y: @viewport.canvas.height}

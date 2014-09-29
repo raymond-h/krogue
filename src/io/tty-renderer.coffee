@@ -128,9 +128,19 @@ module.exports = class TtyRenderer
 
 				@renderHealth 0, 22
 
+			when 'death'
+				@renderDeath()
+
 			else null
 
 		@flipBuffer()
+
+	renderDeath: ->
+		@fillArea 0, 0, 80, 25, ' '
+
+		@write 0, 0, "Well well, #{@game.player.creature}, you have died..."
+		@write 4, 1, "See you around..."
+		@write 4, 2, "(Ctrl-C to exit.)"
 
 	renderLog: (x, y) ->
 		@fillArea x, y, 80, 1, ' '

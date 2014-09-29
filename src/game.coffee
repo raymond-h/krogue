@@ -66,6 +66,10 @@ class Game extends EventEmitter2
 
 		@goTo 'main-1', 'entrance'
 
+		@on 'game.creature.dead', (creature, cause) =>
+			if creature.isPlayer()
+				@goState 'death'
+
 	createPlayerCreature: ->
 		{Creature} = require './entities'
 		{Human} = require './definitions/creature-species'
