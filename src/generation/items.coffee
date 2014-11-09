@@ -17,11 +17,14 @@ exports.generateGun = (type, name) ->
 	gun.name = name
 	gun.gunType = type
 
-	gun.range = game.random.range 5, 12
+	switch type
+		when 'handgun'
+			gun.range = game.random.range 5, 12
 
-	if type is 'shotgun'
-		angle = game.random.range 15, 60
-		gun.spread = (angle / 180 * Math.PI)
+		when 'shotgun'
+			gun.range = game.random.range 3, 9
+			angle = game.random.range 15, 60
+			gun.spread = (angle / 180 * Math.PI)
 
 	gun
 
