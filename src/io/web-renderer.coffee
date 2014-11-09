@@ -149,6 +149,13 @@ module.exports = class WebRenderer
 
 			opts?.onChecked? i, items[i], ($(this).hasClass 'checked')
 
+		done = ->
+			indices = []
+
+			$('#menu .items .checked').each -> indices.push $(this).index()
+
+			opts?.onDone? indices
+
 		$('#menu .items').on 'click', 'li', ->
 			console.log "Clicked #{$(this).index()}", this
 			updateChecked $(this).index()
@@ -157,13 +164,9 @@ module.exports = class WebRenderer
 			opts?.onCancel?()
 
 		$('#menu #done').click ->
-			indices = []
+			
 
-			$('#menu .items .checked').each -> indices.push $(this).index()
-
-			opts?.onDone? indices
-
-		updateChecked
+		[updateChecked, done]
 
 	preRenderAscii: ->
 		dim =

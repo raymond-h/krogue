@@ -82,7 +82,7 @@ exports.multichoiceList = (header, choices, opts) ->
 
 	items = ("#{v.key} - #{v.name}" for v in _choices)
 
-	updateChecked =
+	[updateChecked, callbackDone] =
 		game.renderer.showMultiChoiceMenu header, items,
 			onDone: done
 			onCancel: cancel
@@ -95,7 +95,10 @@ exports.multichoiceList = (header, choices, opts) ->
 		->
 			exports.keys null, ['escape', 'enter', (_.keys mapDisplayed)...]
 			.then (key) ->
+				return if stopped
 				return cancel() if key is 'escape'
+				return callbackDone() if key is 'enter'
+
 				updateChecked mapDisplayed[key]
 
 	deferred.promise
