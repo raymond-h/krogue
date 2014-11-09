@@ -195,7 +195,7 @@ module.exports = class Creature extends Entity
 
 		found = @raytraceUntilBlocked endPos, range: 15
 
-		if found.type is 'creature'
+		if found.type in ['creature', 'none']
 			endPos = found
 
 		else if found.type is 'wall'
@@ -316,6 +316,9 @@ module.exports = class Creature extends Entity
 
 		bresenhamLine @, to, (x, y) =>
 			return no if (@distanceSqTo {x, y}) > (opts.range * opts.range)
+
+			found.x = x
+			found.y = y
 
 			checked.unshift {x, y}
 			return if x is @x and y is @y

@@ -139,11 +139,10 @@ class exports.Gun extends Item
 			endPos = vectorMath.add creature, offset
 
 			found = creature.raytraceUntilBlocked endPos, {@range}
-			endPos = found if found.type in ['wall', 'creature']
 
 			game.renderer.doEffect
 				type: 'line'
-				start: creature, end: endPos
+				start: creature, end: found
 				delay: 50
 				symbol: 'bullet'
 
