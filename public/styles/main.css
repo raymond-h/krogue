@@ -21,16 +21,24 @@ body {
 	left: 16px;
 }
 
+#menu .multi-choice {
+	list-style-type: none;
+	padding-left: 0;
+}
+
 #menu .multi-choice > li {
 	cursor: pointer;
+	padding: 4px;
 }
 
 #menu .multi-choice > li.checked {
-	color: red;
+	color: rgb(255, 224, 84);
+	background: rgba(214, 236, 255, 0.35);
+	border-radius: 2px;
 }
 
 .box {
-	background: rgba(30, 30, 30, 0.4);
+	background: rgba(123, 123, 123, 0.67);
 	overflow: hidden;
 
 	border: 0.5cm solid transparent;
@@ -38,7 +46,7 @@ body {
 
 	color: white;
 	font-size: 1.2em;
-	text-shadow: black 1px 3px 2px;
+	text-shadow: black 0px 2px 2px;
 }
 
 .box .menu-title {
