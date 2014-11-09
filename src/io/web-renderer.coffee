@@ -121,7 +121,7 @@ module.exports = class WebRenderer
 		$('#menu').show().html "
 			<h1 class=\"menu-title\">#{header}</h1>
 			<ul class=\"single-choice items\">
-				#{("<li><a href=\"#\">#{i}</a></li>" for i in items).join ''}
+				#{("<li>#{i}</li>" for i in items).join ''}
 			</ul>
 			<div class=\"actions\">
 				<a id=\"cancel\" class=\"action cancel\" href=\"#\">Cancel</a>

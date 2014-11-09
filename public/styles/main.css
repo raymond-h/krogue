@@ -15,17 +15,6 @@ body {
 	width: 450px;
 }
 
-#menu {
-	position: absolute;
-	top: 16px;
-	left: 16px;
-}
-
-#menu .multi-choice {
-	list-style-type: none;
-	padding-left: 0;
-}
-
 .actions {
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -48,9 +37,25 @@ body {
 	color: rgb(105, 255, 105);
 }
 
-#menu .multi-choice > li {
+#menu {
+	position: absolute;
+	top: 16px;
+	left: 16px;
+}
+
+#menu .items {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+#menu .items > li {
 	cursor: pointer;
 	padding: 4px;
+}
+
+#menu .items > li:hover {
+	background: rgba(214, 236, 255, 0.15);
+	border-radius: 2px;
 }
 
 #menu .multi-choice > li.checked {
