@@ -111,38 +111,54 @@ exports.position = (message, opts = {}) ->
 		game.message message
 		game.renderer.showMoreLogs()
 
-	pos =
+	pos = null
+
+	snapPos = ->
+		pos.x = snapToRange 0, pos.x, game.currentMap.w-1
+		pos.y = snapToRange 0, pos.y, game.currentMap.h-1
+
+	updatePos = (newPos) ->
+		pos = newPos
+		snapPos()
+		game.renderer.cursor = pos
+		game.renderer.invalidate()
+
+	updatePos
 		x: opts.default?.x ? 0
 		y: opts.default?.y ? 0
 
-	cancelled = no
-	done = no
-	whilst (-> not done),
-		->
-			game.renderer.cursor = pos
-			game.renderer.invalidate()
+	# Mouse
+	unbindClick =
+		game.renderer.onClick (e) ->
+			if pos.x is e.world.x and pos.y is e.world.y
+				done no
 
-			exports.generic null, ['key.escape', 'key.enter', 'action.**'],
-				(event, action, params...) ->
-					(event in ['key.escape', 'key.enter']) or action is 'direction'
+			else updatePos e.world
 
-			.then ([event, action, dir]) ->
-				switch event
-					when 'key.escape'
-						done = yes
-						cancelled = yes
+	# Keyboard
+	handler = (action, dir) ->
+		switch @event
+			when 'key.escape' then done yes
+			when 'key.enter' then done no
 
-					when 'key.enter' then done = yes
+			else
+				updatePos (vectorMath.add pos, direction.parse dir)
 
-					else
-						pos = vectorMath.add pos, direction.parse dir
+	(game.on e, handler) for e in ['key.escape', 'key.enter', 'action.**']
 
-						pos.x = snapToRange 0, pos.x, game.currentMap.w
-						pos.y = snapToRange 0, pos.y, game.currentMap.h
+	deferred = Q.defer()
 
-	.then ->
+	# Done
+	done = (cancelled) ->
+		unbindClick()
+		(game.off e, handler) for e in ['key.escape', 'key.enter', 'action.**']
+
 		game.renderer.cursor = null
 		game.renderer.invalidate()
 
-		if not cancelled then pos
-		else null
+		deferred.resolve(
+			if not cancelled then pos
+			else null
+		)
+
+	deferred.promise

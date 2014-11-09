@@ -176,6 +176,26 @@ module.exports = class WebRenderer
 
 		[updateChecked, done]
 
+	onClick: (callback) ->
+		handler = (e) =>
+			worldPos =
+				x: (e.pageX + @camera.x) // @tileSize
+				y: (e.pageY + @camera.y) // @tileSize
+
+			eventData =
+				original: e
+				x: e.pageX + @camera.x
+				y: e.pageY + @camera.y
+				world: worldPos
+
+			callback eventData
+
+		canvas = $(@viewport.canvas)
+
+		canvas.bind 'click', handler
+
+		return (-> canvas.unbind 'click', handler)
+
 	preRenderAscii: ->
 		dim =
 			x: 4
