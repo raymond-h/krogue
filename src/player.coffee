@@ -5,6 +5,7 @@ game = require './game'
 
 {Stairs} = require './entities'
 direction = require './direction'
+vectorMath = require './vector-math'
 {whilst, arrayRemove} = require './util'
 prompts = game.prompts
 
@@ -136,9 +137,9 @@ module.exports = class Player
 						3 * choices.length
 
 			when 'fire'
-				prompts.direction 'Fire in what direction?'
-
-				.then (dir) =>
+				prompts.position 'Fire where?', default: @creature
+				.then (pos) =>
+					offset = vectorMath.sub pos, @creature
 					item = @creature.equipment['right hand']
 
 					if not item?
@@ -151,7 +152,7 @@ module.exports = class Player
 						"
 						2
 					else
-						Q item.fire @creature, dir
+						Q item.fire @creature, offset
 						.thenResolve 6
 
 			when 'attack'
@@ -169,11 +170,13 @@ module.exports = class Player
 
 					{value: item} = choice
 
-					prompts.direction 'Throw in what direction?'
-					.then (dir) =>
-						return game.message 'Never mind.' if not dir?
+					prompts.position 'Throw where?', default: @creature
+					.then (pos) =>
+						return game.message 'Never mind.' if not pos?
 
-						Q @creature.throw item, dir
+						offset = vectorMath.sub pos, @creature
+
+						Q @creature.throw item, offset
 						.thenResolve 6
 
 			when 'test-dir'
@@ -226,7 +229,7 @@ module.exports = class Player
 				game.renderer.effectLine @creature, target, time: 500, symbol: '*'
 
 			when 'test-pos'
-				prompts.position 'Test position!', default: {x: @creature.x, y: @creature.y}
+				prompts.position 'Test position!', default: @creature
 				.then (pos) ->
 					game.message "You picked position: #{pos.x},#{pos.y}" if pos?
 					game.message "Never mind." if not pos?
