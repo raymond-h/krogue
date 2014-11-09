@@ -10,7 +10,7 @@ exports.generatePeculiarObject = ->
 	new items.PeculiarObject
 
 exports.generateGun = (type, name) ->
-	type ?= game.random.sample ['handgun', 'shotgun']
+	type ?= game.random.sample ['handgun', 'shotgun', 'sniper']
 	name ?= type
 
 	gun = new items.Gun
@@ -20,6 +20,9 @@ exports.generateGun = (type, name) ->
 	switch type
 		when 'handgun'
 			gun.range = game.random.range 5, 12
+
+		when 'sniper'
+			gun.range = game.random.range 18, 26
 
 		when 'shotgun'
 			gun.range = game.random.range 3, 9

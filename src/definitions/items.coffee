@@ -120,7 +120,7 @@ class exports.Gun extends Item
 
 	fireType: ->
 		switch @gunType
-			when 'handgun' then 'line'
+			when 'handgun', 'sniper' then 'line'
 
 			when 'shotgun' then 'spread'
 
