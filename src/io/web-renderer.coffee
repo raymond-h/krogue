@@ -123,7 +123,7 @@ module.exports = class WebRenderer
 			<ul class=\"single-choice items\">
 				#{("<li><a href=\"#\">#{i}</a></li>" for i in items).join ''}
 			</ul>
-			<a id=\"cancel\" href=\"#\">Cancel</a>
+			<a id=\"cancel\" class=\"action cancel\" href=\"#\">Cancel</a>
 		"
 
 		$('#menu .items').on 'click', 'li', ->
@@ -140,8 +140,8 @@ module.exports = class WebRenderer
 			<ul class=\"multi-choice items\">
 				#{("<li>#{i}</li>" for i in items).join ''}
 			</ul>
-			<a id=\"cancel\" href=\"#\">Cancel</a>
-			<a id=\"done\" href=\"#\">Done</a>
+			<a id=\"cancel\" class=\"action cancel\" href=\"#\">Cancel</a>
+			<a id=\"done\" class=\"action done\" href=\"#\">Done</a>
 		"
 
 		updateChecked = (i) ->
@@ -164,7 +164,7 @@ module.exports = class WebRenderer
 			opts?.onCancel?()
 
 		$('#menu #done').click ->
-			
+			done()
 
 		[updateChecked, done]
 
