@@ -26,6 +26,28 @@ body {
 	padding-left: 0;
 }
 
+.actions {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.action {
+	padding: 10px;
+	text-decoration: none;
+	color: white;
+	border-radius: 2px;
+}
+.action:hover {
+	background: rgba(137, 201, 230, 0.28);
+}
+
+.action.cancel {
+	color: rgb(255, 79, 79);
+}
+.action.done {
+	color: rgb(105, 255, 105);
+}
+
 #menu .multi-choice > li {
 	cursor: pointer;
 	padding: 4px;

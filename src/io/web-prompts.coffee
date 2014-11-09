@@ -31,7 +31,7 @@ exports.list = (header, choices, opts) ->
 		game.renderer.hideMenu()
 		deferred.resolve null
 
-	items = ("#{v.key} - #{v.name}" for v in _choices)
+	items = ("#{v.key}. #{v.name}" for v in _choices)
 
 	game.renderer.showSingleChoiceMenu header, items,
 		onChoice: choicePicked
@@ -80,7 +80,7 @@ exports.multichoiceList = (header, choices, opts) ->
 		game.renderer.hideMenu()
 		deferred.resolve null
 
-	items = ("#{v.key} - #{v.name}" for v in _choices)
+	items = ("#{v.key}. #{v.name}" for v in _choices)
 
 	[updateChecked, callbackDone] =
 		game.renderer.showMultiChoiceMenu header, items,
