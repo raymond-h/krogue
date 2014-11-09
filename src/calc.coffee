@@ -1,7 +1,22 @@
 _ = require 'lodash'
 
+game = require './game'
+
 meleeDamage = (subject, item, target) ->
-	Math.floor (subject.calc 'attack', item) - (target.calc 'defense')
+	dmgDev = (-0.1107 * (subject.calc 'accuracy', item) + 3.32881) * 4
+
+	[meleeDmg] = game.random.gaussian (subject.calc 'attack', item), dmgDev
+	dmg = Math.round meleeDmg - (target.calc 'defense')
+
+	Math.max 0, dmg
+
+gunDamage = (subject, gun, target) ->
+	dmgDev = (-0.1107 * (subject.calc 'accuracy', gun) + 3.32881) * 4
+
+	[gunDmg] = game.random.gaussian gun.damage, dmgDev
+	dmg = Math.round gunDmg - (target.calc 'defense')
+
+	Math.max 0, dmg
 
 xpForLevel = (level) ->
 	(level-1) * 100
@@ -73,7 +88,7 @@ stat =
 		Math.max 0, (subject.calc 'weight', itself: no) - (subject.calc 'maxWeight')
 
 module.exports = {
-	meleeDamage
+	meleeDamage, gunDamage
 	xpForLevel, levelFromXp
 	creatureStat
 

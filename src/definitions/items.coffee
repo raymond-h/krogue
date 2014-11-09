@@ -3,6 +3,7 @@ _ = require 'lodash'
 game = require '../game'
 direction = require '../direction'
 vectorMath = require '../vector-math'
+calc = require '../calc'
 
 Item = class exports.Item
 	symbol: 'geneticItem'
@@ -146,7 +147,7 @@ class exports.Gun extends Item
 				delay: 50
 				symbol: 'bullet'
 
-			.then ->
+			.then =>
 				switch found.type
 					when 'none'
 						game.emit 'game.creature.fire.hit.none', creature, @, offset
@@ -157,9 +158,10 @@ class exports.Gun extends Item
 
 					when 'creature'
 						target = found.creature
+						dmg = calc.gunDamage creature, @, target
 
 						game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
-						target.damage 10, creature
+						target.damage dmg, creature
 
 		'spread': (creature, offset) ->
 			game.emit 'game.creature.fire', creature, @, offset
@@ -189,9 +191,12 @@ class exports.Gun extends Item
 
 			if targets.length > 0
 				for target in targets
+					dmg = calc.gunDamage creature, @, target
+
 					game.emit 'game.creature.fire.hit.creature',
 						creature, @, offset, target
-					target.damage 10, creature
+
+					target.damage dmg, creature
 
 			else
 				game.emit 'game.creature.fire.hit.none', creature, @, offset

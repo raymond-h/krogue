@@ -9,6 +9,9 @@ module.exports = class Random
 	range: (min, max) ->
 		@rnd() * (max - min) // 1 + min
 
+	rangeFloat: (min, max) ->
+		@rnd() * (max - min) + min
+
 	chance: (chance) ->
 		@rnd() < chance
 
