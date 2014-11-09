@@ -6,7 +6,7 @@ game = require './game'
 {Stairs} = require './entities'
 direction = require './direction'
 {whilst, arrayRemove} = require './util'
-prompts = require './prompts'
+prompts = game.prompts
 
 module.exports = class Player
 	constructor: (@creature) ->

@@ -21,6 +21,14 @@ body {
 	left: 16px;
 }
 
+#menu .multi-choice > li {
+	cursor: pointer;
+}
+
+#menu .multi-choice > li.checked {
+	color: red;
+}
+
 .box {
 	background: rgba(30, 30, 30, 0.4);
 	overflow: hidden;

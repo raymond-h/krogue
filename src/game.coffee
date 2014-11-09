@@ -36,6 +36,7 @@ class Game extends EventEmitter2
 		@io.initialized = yes
 		
 		@renderer = @io.renderer
+		@prompts = @io.prompts
 
 		(require './messages')(@)
 

@@ -97,21 +97,73 @@ module.exports = class WebRenderer
 
 	showMoreLogs: ->
 
-	showList: (@menu) ->
-		if @menu?
-			$('#menu').show().html "
-				<h1 class=\"menu-title\">
-					#{@menu.header}
-				</h1>
-				<ul>
-					#{("<li>#{i}</li>" for i in @menu.items).join ''}
-				</ul>
-			"
+	# showList: (@menu) ->
+	# 	if @menu?
+	# 		$('#menu').show().html "
+	# 			<h1 class=\"menu-title\">
+	# 				#{@menu.header}
+	# 			</h1>
+	# 			<ul>
+	# 				#{("<li>#{i}</li>" for i in @menu.items).join ''}
+	# 			</ul>
+	# 		"
 
-		else
-			$('#menu').hide().html ''
+	# 	else
+	# 		$('#menu').hide().html ''
 
-		@invalidate()
+	# 	@invalidate()
+
+	hideMenu: ->
+		$('#menu').off()
+		$('#menu').hide().html ''
+
+	showSingleChoiceMenu: (header, items, opts) ->
+		$('#menu').show().html "
+			<h1 class=\"menu-title\">#{header}</h1>
+			<ul class=\"single-choice items\">
+				#{("<li><a href=\"#\">#{i}</a></li>" for i in items).join ''}
+			</ul>
+			<a id=\"cancel\" href=\"#\">Cancel</a>
+		"
+
+		$('#menu .items').on 'click', 'li', ->
+			i = $(this).index()
+
+			opts?.onChoice i, items[i]
+
+		$('#menu #cancel').click ->
+			opts?.onCancel?()
+
+	showMultiChoiceMenu: (header, items, opts) ->
+		$('#menu').show().html "
+			<h1 class=\"menu-title\">#{header}</h1>
+			<ul class=\"multi-choice items\">
+				#{("<li>#{i}</li>" for i in items).join ''}
+			</ul>
+			<a id=\"cancel\" href=\"#\">Cancel</a>
+			<a id=\"done\" href=\"#\">Done</a>
+		"
+
+		updateChecked = (i) ->
+			$('#menu .items > li').eq(i).toggleClass 'checked'
+
+			opts?.onChecked? i, items[i], ($(this).hasClass 'checked')
+
+		$('#menu .items').on 'click', 'li', ->
+			console.log "Clicked #{$(this).index()}", this
+			updateChecked $(this).index()
+
+		$('#menu #cancel').click ->
+			opts?.onCancel?()
+
+		$('#menu #done').click ->
+			indices = []
+
+			$('#menu .items .checked').each -> indices.push $(this).index()
+
+			opts?.onDone? indices
+
+		updateChecked
 
 	preRenderAscii: ->
 		dim =

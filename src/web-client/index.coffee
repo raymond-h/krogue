@@ -1,6 +1,6 @@
 log = require '../log'
 
-logLevel = 'silly'
+logLevel = 'info'
 log.initialize logLevel, require '../io/web-log'
 
 log "Using log level #{logLevel}"

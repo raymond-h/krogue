@@ -15,6 +15,8 @@ module.exports = class Web
 		Renderer = require './web-renderer'
 		@renderer = new Renderer @game
 
+		@prompts = require './web-prompts'
+
 		@game.on 'action.toggle-graphics', =>
 			@renderer.useTiles = not @renderer.useTiles
 			@renderer.invalidate()

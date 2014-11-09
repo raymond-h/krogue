@@ -16,6 +16,8 @@ module.exports = class Tty
 		Renderer = require './tty-renderer'
 		@renderer = new Renderer @game
 
+		@prompts = require './tty-prompts'
+
 	deinitialize: ->
 		program.clear()
 		program.normalBuffer()
