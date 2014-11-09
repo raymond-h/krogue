@@ -111,7 +111,9 @@ exports.position = (message, opts = {}) ->
 		game.message message
 		game.renderer.showMoreLogs()
 
-	pos = opts.default ? {x: 0, y: 0}
+	pos =
+		x: opts.default?.x ? 0
+		y: opts.default?.y ? 0
 
 	cancelled = no
 	done = no

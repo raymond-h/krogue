@@ -98,7 +98,9 @@ exports.position = (message, opts = {}) ->
 			w: camera.viewport.w, h: camera.viewport.h
 		}
 
-	pos = opts.default ? {x: camera.x, y: camera.y}
+	pos =
+		x: opts.default?.x ? camera.x
+		y: opts.default?.y ? camera.y
 
 	cancelled = no
 	done = no
