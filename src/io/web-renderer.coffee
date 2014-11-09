@@ -21,6 +21,10 @@ module.exports = class WebRenderer
 
 		@tileSize = 32
 
+		@cursor =
+			x: 2
+			y: 2
+
 		@logBox = document.getElementById 'log'
 
 		@game
@@ -200,6 +204,7 @@ module.exports = class WebRenderer
 			when 'game'
 				# @renderLog 0, 0
 				@renderMap 0, 0
+				@renderCursor() if @cursor?
 				# @renderMenu @menu if @menu?
 
 				# @renderHealth 0, 22
@@ -216,6 +221,15 @@ module.exports = class WebRenderer
 		@viewport.fillStyle = 'red'
 		@viewport.fillText "You have died, #{@game.player.creature}!",
 			@viewport.canvas.width/2, @viewport.canvas.height/2
+
+	renderCursor: ->
+		{x, y} = @cursor
+
+		x = x*@tileSize - @camera.x
+		y = y*@tileSize - @camera.y
+
+		@viewport.fillStyle = 'rgba(255,0,0, 0.2)'
+		@viewport.fillRect x, y, @tileSize, @tileSize
 
 	renderMap: (x, y) ->
 		canvasSize = {x: @viewport.canvas.width, y: @viewport.canvas.height}

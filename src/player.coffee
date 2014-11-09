@@ -224,3 +224,9 @@ module.exports = class Player
 				target = @creature.findNearest null, (-> yes)
 
 				game.renderer.effectLine @creature, target, time: 500, symbol: '*'
+
+			when 'test-pos'
+				prompts.position 'Test position!', default: {x: @creature.x, y: @creature.y}
+				.then (pos) ->
+					game.message "You picked position: #{pos.x},#{pos.y}" if pos?
+					game.message "Never mind." if not pos?

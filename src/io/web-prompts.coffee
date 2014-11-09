@@ -5,7 +5,7 @@ _.extend exports, require './common-prompts'
 {pressedKey, listOptions} = exports
 
 game = require '../game'
-{whilst} = require '../util'
+{whilst, snapToRange} = require '../util'
 
 # On choice taken: {key, value, index}
 # On cancel: null
@@ -102,3 +102,45 @@ exports.multichoiceList = (header, choices, opts) ->
 				updateChecked mapDisplayed[key]
 
 	deferred.promise
+
+direction = require '../direction'
+vectorMath = require '../vector-math'
+
+exports.position = (message, opts = {}) ->
+	if message?
+		game.message message
+		game.renderer.showMoreLogs()
+
+	pos = opts.default ? {x: 0, y: 0}
+
+	cancelled = no
+	done = no
+	whilst (-> not done),
+		->
+			game.renderer.cursor = pos
+			game.renderer.invalidate()
+
+			exports.generic null, ['key.escape', 'key.enter', 'action.**'],
+				(event, action, params...) ->
+					(event in ['key.escape', 'key.enter']) or action is 'direction'
+
+			.then ([event, action, dir]) ->
+				switch event
+					when 'key.escape'
+						done = yes
+						cancelled = yes
+
+					when 'key.enter' then done = yes
+
+					else
+						pos = vectorMath.add pos, direction.parse dir
+
+						pos.x = snapToRange 0, pos.x, game.currentMap.w
+						pos.y = snapToRange 0, pos.y, game.currentMap.h
+
+	.then ->
+		game.renderer.cursor = null
+		game.renderer.invalidate()
+
+		if not cancelled then pos
+		else null

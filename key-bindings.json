@@ -35,5 +35,6 @@
   "y": "test-dir",
   "r": "test-yn",
   "m": "test-multi",
-  "l": "line-effect"
+  "l": "line-effect",
+  "b": "test-pos"
 }

@@ -119,6 +119,9 @@ module.exports = class TtyRenderer
 	showList: (@menu) ->
 		@invalidate()
 
+	setCursorPos: (x, y) ->
+		program.cursorPos x, y
+
 	render: ->
 		switch @game.state
 			when 'game'
