@@ -25,7 +25,7 @@ exports.generateGun = (type, name) ->
 
 		when 'sniper'
 			gun.range = game.random.range 18, 26
-			gun.damage = game.random.range 12, 15
+			gun.damage = game.random.range 17, 20
 			gun.accuracy = game.random.rangeFloat 0.9, 0.99
 
 		when 'shotgun'
