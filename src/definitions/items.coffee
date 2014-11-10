@@ -9,6 +9,11 @@ log = require '../log'
 Item = class exports.Item
 	symbol: 'geneticItem'
 
+	copy: ->
+		c = new @constructor
+		_.assign c, @
+		c
+
 	asMapItem: (x, y) ->
 		MapItem = require '../entities/map-item'
 
@@ -116,21 +121,39 @@ class exports.PokeBall extends Item
 
 			@creature = null
 
-class exports.GunAmmo extends Item
-	name: 'pack of ammo'
-	symbol: 'gunAmmoPack'
-	bulletSymbol: 'bullet'
+class exports.Bullet extends Item
+	name: 'bullet'
+	symbol: 'bullet'
 	leaveWhenShot: no
 
-	constructor: (@type = 'medium', @amount = 1) ->
+	constructor: (@type = 'medium') ->
 		Object.defineProperty @, 'name',
-			get: => "pack of #{@type} ammo (x#{@amount})"
+			get: => "#{@type} bullet"
 
-	onAmmoHit: (map, pos, target, dealDamage) ->
+	onHit: (map, pos, target, dealDamage) ->
 		# When this, fired as ammo, hits something...
 
-	onAmmoLand: (map, pos, target, dealDamage) ->
+	onLand: (map, pos, target, dealDamage) ->
 		# When this, fired as ammo, lands on the ground...
+
+class exports.BulletPack extends Item
+	name: 'pack of ammo'
+	symbol: 'gunAmmoPack'
+
+	constructor: (@ammo = new exports.Bullet, @amount = 1) ->
+		Object.defineProperty @, 'name',
+			get: => "pack of #{@amount}x ammo (#{@ammo.name})"
+
+	reload: (ammoItem) ->
+		if ammoItem instanceof exports.BulletPack and _.isEqual ammoItem.ammo, @ammo
+			@amount += ammoItem.amount
+			yes
+
+		else if _.isEqual ammoItem, @ammo
+			@amount += 1
+			yes
+
+		else no
 
 class exports.Gun extends Item
 	name: 'gun'
@@ -144,15 +167,13 @@ class exports.Gun extends Item
 		fn.apply @, a
 
 	reload: (ammoItem) ->
-		if ammoItem instanceof exports.GunAmmo
-			ownItem = _.find @ammo, (item) ->
-				item instanceof exports.GunAmmo and item.type is ammoItem.type
+		if ammoItem instanceof exports.BulletPack
+			(@ammo.push ammoItem.ammo.copy()) for i in [1..ammoItem.amount]
 
-			if ownItem?
-				ownItem.amount = (ownItem.amount ? 1) + (ammoItem.amount ? 1)
-				return
+		else @ammo.push ammoItem
 
-		@ammo.push ammoItem
+		log.info "Current ammo after reload: #{(require 'util').inspect @ammo} (#{@ammo.length})"
+		yes
 
 	fireType: ->
 		switch @gunType
@@ -163,16 +184,10 @@ class exports.Gun extends Item
 			else '_dud'
 
 	pullCurrentAmmo: ->
-		currentAmmo = @ammo[0]
-		return null if not currentAmmo?
+		currentAmmo = @ammo.shift()
+		# return null if not currentAmmo?
 
-		if currentAmmo.amount?
-			currentAmmo.amount -= 1
-
-		if not currentAmmo.amount? or currentAmmo.amount <= 0
-			@ammo.shift()
-
-		log.info "Current ammo: #{(require 'util').inspect @ammo}"
+		log.info "Current ammo: #{(require 'util').inspect @ammo} (#{@ammo.length})"
 
 		currentAmmo
 
@@ -205,7 +220,7 @@ class exports.Gun extends Item
 				type: 'line'
 				start: creature, end: found
 				delay: 50
-				symbol: currentAmmo.bulletSymbol ? currentAmmo.symbol
+				symbol: currentAmmo.symbol
 
 			.then =>
 				map = creature.map
@@ -226,9 +241,9 @@ class exports.Gun extends Item
 						dealDamage = ->
 							target.damage dmg, creature
 
-						r = (currentAmmo.onAmmoHit ? currentAmmo.onHit)? map, found, target, dealDamage
-
 						game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
+
+						r = currentAmmo.onHit? map, found, target, dealDamage
 						if r isnt no then dealDamage()
 
 						hit = yes
@@ -238,7 +253,7 @@ class exports.Gun extends Item
 					map.addEntity mapItem
 					game.timeManager.add mapItem
 				
-				(currentAmmo.onAmmoLand ? currentAmmo.onLand)? map, endPos, hit
+				currentAmmo.onLand? map, endPos, hit
 
 				return
 

@@ -121,9 +121,13 @@ module.exports = class Player
 						return game.message 'Never mind.' if not choice?
 						{value: {item: ammo}} = choice
 
-						arrayRemove @creature.inventory, ammo
-						reloadItem.reload ammo
-						game.message "Loaded #{reloadItem.name} with #{ammo.name} - rock and roll!"
+						oldReloadItemName = reloadItem.name
+
+						if reloadItem.reload ammo
+							arrayRemove @creature.inventory, ammo
+							game.message "Loaded #{oldReloadItemName} with #{ammo.name} - rock and roll!"
+
+						else game.message "Dangit! Can't fit #{ammo.name} into #{oldReloadItemName}, it seems..."
 
 			when 'pickup'
 				items = @creature.map.entitiesAt @creature.x, @creature.y, 'item'
