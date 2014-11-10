@@ -2,6 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 
 game = require './game'
+log = require './log'
 
 {Stairs} = require './entities'
 direction = require './direction'
@@ -98,6 +99,31 @@ module.exports = class Player
 
 					@creature.unequip choice.value.slot
 					6
+
+			when 'reload'
+				equips = for s,i of @creature.equipment
+					item: i
+					name: "#{i.name} (#{s})"
+
+				inventory = for i in @creature.inventory
+					item: i
+					name: i.name
+
+				prompts.list 'Reload which item?', [equips..., inventory...].filter (v) -> v.item.reload?
+				.then (choice) =>
+					return game.message 'Never mind.' if not choice?
+					{value: {item: reloadItem}} = choice
+
+					invWithoutPicked = inventory.filter (v) -> v.item isnt reloadItem
+
+					prompts.list 'Reload with which item?', invWithoutPicked
+					.then (choice) =>
+						return game.message 'Never mind.' if not choice?
+						{value: {item: ammo}} = choice
+
+						arrayRemove @creature.inventory, ammo
+						reloadItem.reload ammo
+						game.message "Loaded #{reloadItem.name} with #{ammo.name} - rock and roll!"
 
 			when 'pickup'
 				items = @creature.map.entitiesAt @creature.x, @creature.y, 'item'

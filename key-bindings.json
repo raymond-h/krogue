@@ -20,6 +20,7 @@
   "i": "inventory",
   "e": "equip",
   "S-e": "unequip",
+  "r": "reload",
   "s": "save",
   "S-s": "load",
   "p": "possess",
@@ -33,7 +34,7 @@
   "g": "toggle-graphics",
 
   "y": "test-dir",
-  "r": "test-yn",
+  "S-y": "test-yn",
   "m": "test-multi",
   "l": "line-effect",
   "b": "test-pos"

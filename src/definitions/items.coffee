@@ -122,10 +122,23 @@ class exports.Gun extends Item
 	name: 'gun'
 	symbol: 'gun'
 
+	constructor: (@ammo = []) ->
+
 	fire: (a...) ->
 		fn = @fireHandlers[@fireType()]
 
 		fn.apply @, a
+
+	reload: (ammoItem) ->
+		if ammoItem instanceof exports.GunAmmo
+			ownItem = _.find @ammo, (item) ->
+				item instanceof exports.GunAmmo and item.type is ammoItem.type
+
+			if ownItem?
+				ownItem.amount = (ownItem.amount ? 1) + (ammoItem.amount ? 1)
+				return
+
+		@ammo.push ammoItem
 
 	fireType: ->
 		switch @gunType
