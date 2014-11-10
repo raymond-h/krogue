@@ -109,7 +109,9 @@ module.exports = class Player
 					item: i
 					name: i.name
 
-				prompts.list 'Reload which item?', [equips..., inventory...].filter (v) -> v.item.reload?
+				reloadableItems = [equips..., inventory...].filter (v) -> v.item.reload?
+
+				prompts.list 'Reload which item?', reloadableItems
 				.then (choice) =>
 					return game.message 'Never mind.' if not choice?
 					{value: {item: reloadItem}} = choice
@@ -125,9 +127,13 @@ module.exports = class Player
 
 						if reloadItem.reload ammo
 							arrayRemove @creature.inventory, ammo
-							game.message "Loaded #{oldReloadItemName} with #{ammo.name} - rock and roll!"
+							game.message "
+								Loaded #{oldReloadItemName} with #{ammo.name} - rock and roll!
+							"
 
-						else game.message "Dangit! Can't fit #{ammo.name} into #{oldReloadItemName}, it seems..."
+						else game.message "
+							Dangit! Can't fit #{ammo.name} into #{oldReloadItemName}, it seems...
+						"
 
 			when 'pickup'
 				items = @creature.map.entitiesAt @creature.x, @creature.y, 'item'

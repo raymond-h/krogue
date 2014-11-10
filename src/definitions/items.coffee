@@ -172,7 +172,8 @@ class exports.Gun extends Item
 
 		else @ammo.push ammoItem
 
-		log.info "Current ammo after reload: #{(require 'util').inspect @ammo} (#{@ammo.length})"
+		util = require 'util'
+		log.info "Current ammo after reload: #{util.inspect @ammo} (#{@ammo.length})"
 		yes
 
 	fireType: ->
