@@ -57,6 +57,9 @@ module.exports = (game) ->
 	.on 'game.creature.fire', (firer, item, dir) ->
 		msg 'BANG!'
 
+	.on 'game.creature.fire.empty', (firer, item, dir) ->
+		msg 'Click! No ammo...'
+
 	.on 'game.creature.fire.hit.none', (firer, item, dir) ->
 		msg 'The bullet doesn\'t hit anything...'
 

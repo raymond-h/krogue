@@ -4,9 +4,15 @@ game = require '../game'
 direction = require '../direction'
 vectorMath = require '../vector-math'
 calc = require '../calc'
+log = require '../log'
 
 Item = class exports.Item
 	symbol: 'geneticItem'
+
+	asMapItem: (x, y) ->
+		MapItem = require '../entities/map-item'
+
+		new MapItem null, x, y, @
 
 class exports.PeculiarObject extends Item
 	name: 'peculiar object'
@@ -113,10 +119,18 @@ class exports.PokeBall extends Item
 class exports.GunAmmo extends Item
 	name: 'pack of ammo'
 	symbol: 'gunAmmoPack'
+	bulletSymbol: 'bullet'
+	leaveWhenShot: no
 
 	constructor: (@type = 'medium', @amount = 1) ->
 		Object.defineProperty @, 'name',
 			get: => "pack of #{@type} ammo (x#{@amount})"
+
+	onAmmoHit: (map, pos, target, dealDamage) ->
+		# When this, fired as ammo, hits something...
+
+	onAmmoLand: (map, pos, target, dealDamage) ->
+		# When this, fired as ammo, lands on the ground...
 
 class exports.Gun extends Item
 	name: 'gun'
@@ -148,11 +162,30 @@ class exports.Gun extends Item
 
 			else '_dud'
 
+	pullCurrentAmmo: ->
+		currentAmmo = @ammo[0]
+		return null if not currentAmmo?
+
+		if currentAmmo.amount?
+			currentAmmo.amount -= 1
+
+		if not currentAmmo.amount? or currentAmmo.amount <= 0
+			@ammo.shift()
+
+		log.info "Current ammo: #{(require 'util').inspect @ammo}"
+
+		currentAmmo
+
 	fireHandlers:
 		'_dud': (creature, offset) ->
 			game.message 'Nothing happens; this gun is a dud.'
 
 		'line': (creature, offset) ->
+			currentAmmo = @pullCurrentAmmo()
+			if not currentAmmo?
+				game.emit 'game.creature.fire.empty', creature, @, offset
+				return
+
 			game.emit 'game.creature.fire', creature, @, offset
 
 			if _.isString offset
@@ -162,13 +195,22 @@ class exports.Gun extends Item
 
 			found = creature.raytraceUntilBlocked endPos, {@range}
 
+			if found.type in ['creature', 'none']
+				endPos = found
+
+			else if found.type is 'wall'
+				endPos = found.checked[1]
+
 			game.renderer.doEffect
 				type: 'line'
 				start: creature, end: found
 				delay: 50
-				symbol: 'bullet'
+				symbol: currentAmmo.bulletSymbol ? currentAmmo.symbol
 
 			.then =>
+				map = creature.map
+				hit = no
+
 				switch found.type
 					when 'none'
 						game.emit 'game.creature.fire.hit.none', creature, @, offset
@@ -181,8 +223,24 @@ class exports.Gun extends Item
 						target = found.creature
 						dmg = calc.gunDamage creature, @, target
 
+						dealDamage = ->
+							target.damage dmg, creature
+
+						r = (currentAmmo.onAmmoHit ? currentAmmo.onHit)? map, found, target, dealDamage
+
 						game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
-						target.damage dmg, creature
+						if r isnt no then dealDamage()
+
+						hit = yes
+
+				if (currentAmmo.leaveWhenShot ? yes)
+					mapItem = currentAmmo.asMapItem endPos.x, endPos.y
+					map.addEntity mapItem
+					game.timeManager.add mapItem
+				
+				(currentAmmo.onAmmoLand ? currentAmmo.onLand)? map, endPos, hit
+
+				return
 
 		'spread': (creature, offset) ->
 			game.emit 'game.creature.fire', creature, @, offset
