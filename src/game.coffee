@@ -85,6 +85,8 @@ class Game extends EventEmitter2
 		creature.inventory = for i in [1..5]
 			new items.PokeBall @random.sample ['normal', 'great', 'ultra', 'master']
 
+		creature.inventory.push new items.GunAmmo 'medium', 20
+
 		creature
 
 	quit: ->

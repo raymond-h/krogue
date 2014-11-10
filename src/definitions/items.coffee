@@ -110,6 +110,14 @@ class exports.PokeBall extends Item
 
 			@creature = null
 
+class exports.GunAmmo extends Item
+	name: 'pack of ammo'
+	symbol: 'gunAmmoPack'
+
+	constructor: (@type = 'medium', @amount = 1) ->
+		Object.defineProperty @, 'name',
+			get: => "pack of #{@type} ammo (x#{@amount})"
+
 class exports.Gun extends Item
 	name: 'gun'
 	symbol: 'gun'
