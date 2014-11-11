@@ -1,5 +1,24 @@
+_ = require 'lodash'
+
 Species = class exports.Species
-	equipSlots: []
+	equipSlotNum:
+		head: 1
+		hand: 0
+		body: 1
+		foot: 0
+
+equipSlotNum = (Clazz, slots) ->
+	Clazz::equipSlotNum = _.assign {}, (Species::equipSlotNum), slots
+
+exports._equipSlots = ['head', 'hand', 'body', 'foot']
+
+humanoidSlots =
+	hand: 2
+	foot: 2
+
+quadrupedSlots =
+	hand: 0
+	foot: 4
 
 class exports.StrangeGoo extends Species
 	name: 'strange goo'
@@ -13,10 +32,7 @@ class exports.Human extends Species
 	symbol: 'human'
 	weight: 60 # kg
 
-	equipSlots: [
-		'head'
-		'right hand', 'left hand'
-	]
+	equipSlotNum @, humanoidSlots
 
 	# modifyStat: (stat, name) ->
 	# 	stat * 100 if name is 'strength'
@@ -26,20 +42,23 @@ class exports.ViolentDonkey extends Species
 	symbol: 'violentDonkey'
 	weight: 120
 
+	equipSlotNum @, quadrupedSlots
+
 class exports.TinyAlien extends Species
 	name: 'tiny alien'
 	symbol: 'tinyAlien'
 	weight: 20
 
-	equipSlots: [
-		'head'
-		'right hand', 'left hand'
-	]
+	equipSlotNum @, humanoidSlots
 
 class exports.SpaceAnemone extends Species
 	name: 'space anemone'
 	symbol: 'spaceAnemone'
 	weight: 300
+
+	equipSlotNum @,
+		head: 0
+		hand: 55
 
 	modifyStat: (creature, stat, name) ->
 		switch name

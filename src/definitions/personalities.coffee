@@ -107,12 +107,14 @@ class exports.FleeIfWeak extends Personality
 
 class exports.Gunman extends Personality
 	weight: (creature) ->
-		if creature.equipment['right hand']?.fire?
+		if creature.hasItemInSlot 'hand', ((item) -> item.fire?)
 			100
+
 		else 0
 
 	tick: (creature) ->
-		gun = creature.equipment['right hand']
+		gun = game.random.sample creature.getItemsForSlot 'hand'
+
 		range = gun.range
 
 		target = creature.findNearest 30,

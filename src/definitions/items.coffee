@@ -9,10 +9,30 @@ log = require '../log'
 Item = class exports.Item
 	symbol: 'geneticItem'
 
+	getEquipSlotUse: (slot, creature) ->
+		if slot is 'hand' then 1
+		else 0
+
+	equipSlotUse: ->
+		(require './creature-species')._equipSlots
+		.map (slot) => @getEquipSlotUse slot
+
 	copy: ->
 		c = new @constructor
 		_.assign c, @
 		c
+
+	equipSlotUseString: (creature) ->
+		(require './creature-species')._equipSlots
+
+		.filter (slot) => (@getEquipSlotUse slot, creature) > 0
+		.map (slot) =>
+			log.info "Slot #{slot} is go!"
+			count = @getEquipSlotUse slot, creature
+
+			if count is 1 then slot else "#{count} #{slot}"
+
+		.join ', '
 
 	asMapItem: (x, y) ->
 		MapItem = require '../entities/map-item'

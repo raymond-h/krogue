@@ -63,7 +63,10 @@ module.exports = class Player
 
 			when 'inventory'
 				choices = [
-					("#{i.name} (#{s})" for s,i of @creature.equipment)...
+					(
+						for i in @creature.equipment
+							"#{i.name} (#{i.equipSlotUseString @creature})"
+					)...
 					(i.name for i in @creature.inventory)...
 				]
 
@@ -80,30 +83,32 @@ module.exports = class Player
 					return game.message 'Never mind.' if not choice?
 
 					{value: item} = choice
-					prompts.list 'To what slot?', @creature.species.equipSlots
-					.then (choice) =>
-						return game.message 'Never mind.' if not choice?
+					# prompts.list 'To what slot?', @creature.species.equipSlots
+					# .then (choice) =>
+					# 	return game.message 'Never mind.' if not choice?
 
-						{value: slot} = choice
-						@creature.equip slot, item
+					# 	{value: slot} = choice
+					if @creature.equip item
 						6
+
+					else game.message "Hold up, don't overburden yourself!"
 
 			when 'unequip'
 				equips = for s,i of @creature.equipment
-					slot: s
-					name: "#{i.name} (#{s})"
+					item: i
+					name: "#{i.name} (#{i.equipSlotUseString @creature})"
 
 				prompts.list 'Put away which item?', equips
 				.then (choice) =>
 					return game.message 'Never mind.' if not choice?
 
-					@creature.unequip choice.value.slot
+					@creature.unequip choice.value.item
 					6
 
 			when 'reload'
 				equips = for s,i of @creature.equipment
 					item: i
-					name: "#{i.name} (#{s})"
+					name: "#{i.name} (#{i.equipSlotUseString @creature})"
 
 				inventory = for i in @creature.inventory
 					item: i
@@ -176,7 +181,7 @@ module.exports = class Player
 				prompts.position 'Fire where?', default: @creature
 				.then (pos) =>
 					offset = vectorMath.sub pos, @creature
-					item = @creature.equipment['right hand']
+					item = game.random.sample @creature.getItemsForSlot 'hand'
 
 					if not item?
 						game.message 'Your hand is surprisingly bad at firing bullets.'

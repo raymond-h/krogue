@@ -83,14 +83,14 @@ module.exports = (game) ->
 
 		msg "#{It_drops} the #{item.name}."
 
-	.on 'game.creature.equip', (equipper, slot, item) ->
+	.on 'game.creature.equip', (equipper, item) ->
 		It_equips =
 			if equipper.isPlayer() then 'You equip'
 			else "The #{equipper.species.name} equips"
 
 		msg "#{It_equips} the #{item.name}."
 
-	.on 'game.creature.unequip', (equipper, slot, item) ->
+	.on 'game.creature.unequip', (equipper, item) ->
 		It_puts =
 			if equipper.isPlayer() then 'You put'
 			else "The #{equipper.species.name} puts"

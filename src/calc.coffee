@@ -75,7 +75,8 @@ stat =
 
 		eqpWeight =
 			if equips
-				(weightOf item for slot,item of subject.equipment)
+				subject.equipment
+				.map (item) -> weightOf item
 				.reduce ((p, c) -> p+c), 0
 
 			else 0

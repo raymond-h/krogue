@@ -53,7 +53,7 @@ module.exports = class Creature extends Entity
 		@personalities ?= []
 
 		@inventory ?= []
-		@equipment ?= {}
+		@equipment ?= []
 
 		@recalculateStats()
 
@@ -89,7 +89,7 @@ module.exports = class Creature extends Entity
 		val = @baseStat stat, params...
 
 		val = (@species.modifyStat? @, val, stat, params...) ? val
-		for slot,item of @equipment
+		for item in @equipment
 			val = (item.modifyStat? @, val, stat, slot, params...) ? val
 
 		val
@@ -103,6 +103,36 @@ module.exports = class Creature extends Entity
 
 	overburdened: ->
 		(calc.excessWeight this) > 0
+
+	equipSlotCount: (slot) ->
+		@equipment
+		.map (item) -> log.info slot, item.getEquipSlotUse slot, @; (item.getEquipSlotUse slot, @)
+		.reduce ((prev, curr) -> prev + curr), 0
+		# 0
+
+	maxSpacesInSlot: (slot) ->
+		@species.equipSlotNum[slot]
+
+	equipSlotFits: (slot, item) ->
+		maxSpaces = @maxSpacesInSlot slot
+
+		log.info "Check for #{slot}: #{@equipSlotCount slot} + #{item.getEquipSlotUse slot, @} <= #{maxSpaces}"
+
+		((@equipSlotCount slot) + (item.getEquipSlotUse slot)) <= maxSpaces
+		# no
+
+	hasItemEquipped: (item) ->
+		item in @equipment
+		# no
+
+	hasItemInSlot: (slot, extraCheck) ->
+		_.any @equipment, (item) ->
+			(item.getEquipSlotUse slot, @) > 0 and (extraCheck?(item, slot) ? yes)
+		# no
+
+	getItemsForSlot: (slot) ->
+		@equipment.filter (item) -> (item.getEquipSlotUse slot, @) > 0
+		# []
 
 	damage: (dmg, cause) ->
 		game.emit 'game.creature.hurt', @, dmg, cause
@@ -120,8 +150,8 @@ module.exports = class Creature extends Entity
 			drop item for item in @inventory
 			@inventory = []
 
-			drop item for slot, item of @equipment
-			@equipment = {}
+			drop item for item in @equipment
+			@equipment = []
 
 			corpse = new items.Corpse @
 			drop corpse
@@ -160,30 +190,30 @@ module.exports = class Creature extends Entity
 		game.renderer.invalidate()
 		yes
 
-	equip: (slot, item) ->
-		return no if not (slot in @species.equipSlots)
-		return no if not (item in @inventory)
+	equip: (item, silent = no) ->
+		notFit = (slot) =>
+			r = @equipSlotFits slot, item
+			# log.info "YO #{slot} = #{r}"
+			not r
 
-		(@unequip slot) if @equipment[slot]?
+		if _.any creatureSpecies._equipSlots, notFit
+			return no
 
 		arrayRemove @inventory, item
-		@equipment[slot] = item
-		game.emit 'game.creature.equip', @, slot, item
+		@equipment.push item
+		if not silent then game.emit 'game.creature.equip', @, item
 		yes
 
-	unequip: (item) ->
-		if _.isString item
-			[slot, item] = [item, @equipment[item]]
+	unequip: (item, silent = no) ->
+		log.info "Is it equipped already? #{@hasItemEquipped item}"
 
-		else
-			break for slot, i of @equipment when i is item
-
-		if not (slot? or item?) or @equipment[slot] isnt item then no
-		else
-			delete @equipment[slot]
+		if @hasItemEquipped item
+			arrayRemove @equipment, item
 			@inventory.push item
-			game.emit 'game.creature.unequip', @, slot, item
+			game.emit 'game.creature.unequip', @, item
 			yes
+
+		else no
 
 	throw: (item, offset) ->
 		if _.isString offset
@@ -262,7 +292,7 @@ module.exports = class Creature extends Entity
 				target = creatures[0]
 				game.emit 'game.creature.attack.creature', @, dir, target
 
-				item = @equipment['right hand']
+				item = game.random.sample @getItemsForSlot 'hand'
 
 				dmg = calc.meleeDamage @, item, target
 				target.damage dmg, @

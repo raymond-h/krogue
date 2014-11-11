@@ -15,7 +15,8 @@ class ClassManager
 				@classNames[name] = v
 				v::_type = name
 
-			else @add v, "#{namespace}#{k}::"
+			else if k[0] isnt '_'
+				@add v, "#{namespace}#{k}::"
 
 classManager = new ClassManager
 

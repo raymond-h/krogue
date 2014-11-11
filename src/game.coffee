@@ -79,7 +79,7 @@ class Game extends EventEmitter2
 
 		gun = (require './generation/items').generateStartingGun()
 
-		creature.equipment['right hand'] = gun
+		creature.equip gun, yes
 
 		items = require './definitions/items'
 		creature.inventory = for i in [1..5]
