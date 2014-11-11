@@ -196,6 +196,12 @@ class exports.Gun extends Item
 		log.info "Current ammo after reload: #{util.inspect @ammo} (#{@ammo.length})"
 		yes
 
+	getEquipSlotUse: (slot, creature) ->
+		if @gunType is 'sniper' and slot is 'hand'
+			return 2
+
+		super
+
 	fireType: ->
 		switch @gunType
 			when 'handgun', 'sniper' then 'line'
