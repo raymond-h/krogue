@@ -27,6 +27,15 @@ levelFromXp = _.memoize (xp) ->
 		level++
 	level
 
+itemSlotUse = (creature, item) ->
+	cs = creature.calc 'strength'
+	iw = item.weight ? 0
+
+	# Math.max 1, Math.ceil (iw * 5) / cs
+	Math.max 1, Math.round(
+		0.148773 * iw * Math.pow Math.E, -0.0241275 * (cs - 15) / 3
+	)
+
 creatureStat = (creature, stat) ->
 	15 + 3 * creature.level
 
@@ -90,6 +99,7 @@ stat =
 
 module.exports = {
 	meleeDamage, gunDamage
+	itemSlotUse
 	xpForLevel, levelFromXp
 	creatureStat
 

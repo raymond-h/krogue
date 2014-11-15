@@ -10,7 +10,7 @@ Item = class exports.Item
 	symbol: 'geneticItem'
 
 	getEquipSlotUse: (slot, creature) ->
-		if slot is 'hand' then 1
+		if slot is 'hand' then calc.itemSlotUse creature, @
 		else 0
 
 	equipSlotUse: ->
@@ -195,12 +195,6 @@ class exports.Gun extends Item
 		util = require 'util'
 		log.info "Current ammo after reload: #{util.inspect @ammo} (#{@ammo.length})"
 		yes
-
-	getEquipSlotUse: (slot, creature) ->
-		if @gunType is 'sniper' and slot is 'hand'
-			return 2
-
-		super
 
 	fireType: ->
 		switch @gunType

@@ -106,7 +106,7 @@ module.exports = class Creature extends Entity
 
 	equipSlotCount: (slot) ->
 		@equipment
-		.map (item) -> log.info slot, item.getEquipSlotUse slot, @; (item.getEquipSlotUse slot, @)
+		.map (item) => log.info slot, item.getEquipSlotUse slot, @; (item.getEquipSlotUse slot, @)
 		.reduce ((prev, curr) -> prev + curr), 0
 		# 0
 
@@ -118,7 +118,7 @@ module.exports = class Creature extends Entity
 
 		log.info "Check for #{slot}: #{@equipSlotCount slot} + #{item.getEquipSlotUse slot, @} <= #{maxSpaces}"
 
-		((@equipSlotCount slot) + (item.getEquipSlotUse slot)) <= maxSpaces
+		((@equipSlotCount slot) + (item.getEquipSlotUse slot, @)) <= maxSpaces
 		# no
 
 	hasItemEquipped: (item) ->
@@ -126,12 +126,12 @@ module.exports = class Creature extends Entity
 		# no
 
 	hasItemInSlot: (slot, extraCheck) ->
-		_.any @equipment, (item) ->
+		_.any @equipment, (item) =>
 			(item.getEquipSlotUse slot, @) > 0 and (extraCheck?(item, slot) ? yes)
 		# no
 
 	getItemsForSlot: (slot) ->
-		@equipment.filter (item) -> (item.getEquipSlotUse slot, @) > 0
+		@equipment.filter (item) => (item.getEquipSlotUse slot, @) > 0
 		# []
 
 	damage: (dmg, cause) ->
