@@ -1,6 +1,6 @@
 log = require '../log'
 
-keyHandling = require './web-keyhandling'
+keyHandling = require './keyhandling'
 
 module.exports = class Web
 	constructor: (@game) ->
@@ -12,10 +12,10 @@ module.exports = class Web
 		$(document).keypress handle
 		$(document).keydown handle
 
-		Renderer = require './web-renderer'
+		Renderer = require './renderer'
 		@renderer = new Renderer @game
 
-		@prompts = require './web-prompts'
+		@prompts = require './prompts'
 
 		@game.on 'action.toggle-graphics', =>
 			@renderer.useTiles = not @renderer.useTiles

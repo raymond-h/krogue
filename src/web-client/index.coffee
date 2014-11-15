@@ -1,7 +1,7 @@
 log = require '../log'
 
 logLevel = 'info'
-log.initialize logLevel, require '../io/web-log'
+log.initialize logLevel, require '../io/web/log'
 
 log "Using log level #{logLevel}"
 

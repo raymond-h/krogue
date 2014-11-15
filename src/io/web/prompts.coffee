@@ -1,11 +1,13 @@
 Q = require 'q'
 _ = require 'lodash'
 
-_.extend exports, require './common-prompts'
+_.extend exports, require '../common-prompts'
 {pressedKey, listOptions} = exports
 
-game = require '../game'
-{whilst, snapToRange} = require '../util'
+game = require '../../game'
+{whilst, snapToRange} = require '../../util'
+direction = require '../../direction'
+vectorMath = require '../../vector-math'
 
 # On choice taken: {key, value, index}
 # On cancel: null
@@ -102,9 +104,6 @@ exports.multichoiceList = (header, choices, opts) ->
 				updateChecked mapDisplayed[key]
 
 	deferred.promise
-
-direction = require '../direction'
-vectorMath = require '../vector-math'
 
 exports.position = (message, opts = {}) ->
 	if message?

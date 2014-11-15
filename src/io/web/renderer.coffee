@@ -2,12 +2,12 @@ _ = require 'lodash'
 
 log = require '../log'
 
-vectorMath = require '../vector-math'
+vectorMath = require '../../vector-math'
 
-tileGraphics = require './graphics-tiles'
-graphics = require './graphics-ascii'
+tileGraphics = require '../graphics-tiles'
+graphics = require '.,/graphics-ascii'
 
-Effects = require './web-effects'
+Effects = require './effects'
 
 module.exports = class WebRenderer
 	constructor: (@game) ->
