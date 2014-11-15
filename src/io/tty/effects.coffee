@@ -1,7 +1,7 @@
 Q = require 'q'
 
-vectorMath = require '../vector-math'
-{bresenhamLine, whilst, arrayRemove} = require '../util'
+vectorMath = require '../../vector-math'
+{bresenhamLine, whilst, arrayRemove} = require '../../util'
 
 module.exports = class TtyEffects
 	constructor: (@renderer) ->

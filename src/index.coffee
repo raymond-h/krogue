@@ -12,7 +12,7 @@ process.on 'uncaughtException', (err) ->
 		process.exit 1
 
 logLevel = argv.log ? 'info'
-log.initialize logLevel, require './io/tty-log'
+log.initialize logLevel, require './io/tty/log'
 
 log "Using log level #{logLevel}"
 

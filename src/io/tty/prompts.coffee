@@ -1,10 +1,13 @@
 _ = require 'lodash'
 
-game = require '../game'
-{whilst, snapToRange} = require '../util'
+game = require '../../game'
+{whilst, snapToRange} = require '../../util'
 
-_.extend exports, require './common-prompts'
+_.extend exports, require '../common-prompts'
 {pressedKey, listOptions} = exports
+
+direction = require '../../direction'
+vectorMath = require '../../vector-math'
 
 exports.list = (header, choices, opts) ->
 	_choices = for v, i in choices
@@ -80,9 +83,6 @@ exports.multichoiceList = (header, choices, opts) ->
 				value: choices[choice.index]
 				index: choice.index
 			}
-
-direction = require '../direction'
-vectorMath = require '../vector-math'
 
 exports.position = (message, opts = {}) ->
 	if message?

@@ -5,12 +5,12 @@ wordwrap = require 'wordwrap'
 _ = require 'lodash'
 Q = require 'q'
 
-log = require '../log'
+log = require '../../log'
 
-Camera = require '../camera'
-graphics = require './graphics-ascii'
-Effects = require './tty-effects'
-{whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../util'
+Camera = require '../../camera'
+graphics = require '../graphics-ascii'
+Effects = require './effects'
+{whilst, bresenhamLine, arrayRemove, repeatStr: repeat} = require '../../util'
 
 parseAttrs = (graphic) ->
 	attrs = []
@@ -48,7 +48,7 @@ module.exports = class TtyRenderer
 		@effects = new Effects @
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
 
-		@saveData = require './tty-save-data'
+		@saveData = require './save-data'
 
 	bufferPut: (x, y, graphic) ->
 		if _.isString graphic
