@@ -11,6 +11,9 @@ exports.graphics = graphics =
 	strangeGoo: x: 16, y: 16
 	spaceAnemone: x: 32, y: 16
 
+	gun: x: 16, y: 32
+	peculiarObject: x: 32, y: 32
+
 	stairsDown: x: 32, y: 0
 	stairsUp: x: 48, y: 0
 
