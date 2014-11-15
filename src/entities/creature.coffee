@@ -106,7 +106,7 @@ module.exports = class Creature extends Entity
 
 	equipSlotCount: (slot) ->
 		@equipment
-		.map (item) => log.info slot, item.getEquipSlotUse slot, @; (item.getEquipSlotUse slot, @)
+		.map (item) => item.getEquipSlotUse slot, @
 		.reduce ((prev, curr) -> prev + curr), 0
 		# 0
 
@@ -115,8 +115,6 @@ module.exports = class Creature extends Entity
 
 	equipSlotFits: (slot, item) ->
 		maxSpaces = @maxSpacesInSlot slot
-
-		log.info "Check for #{slot}: #{@equipSlotCount slot} + #{item.getEquipSlotUse slot, @} <= #{maxSpaces}"
 
 		((@equipSlotCount slot) + (item.getEquipSlotUse slot, @)) <= maxSpaces
 		# no

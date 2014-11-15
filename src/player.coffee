@@ -91,7 +91,10 @@ module.exports = class Player
 					if @creature.equip item
 						6
 
-					else game.message "If you do that, you're gonna overburden yourself. So don't do that."
+					else game.message "
+						If you do that, you're gonna overburden
+						yourself. So don't do that.
+					"
 
 			when 'unequip'
 				equips = for s,i of @creature.equipment
