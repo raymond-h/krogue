@@ -21,9 +21,7 @@ module.exports = class WebRenderer
 
 		@tileSize = 32
 
-		@cursor =
-			x: 2
-			y: 2
+		@cursor = null
 
 		@logBox = document.getElementById 'log'
 
