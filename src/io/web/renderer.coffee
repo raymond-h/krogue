@@ -101,22 +101,6 @@ module.exports = class WebRenderer
 
 	showMoreLogs: ->
 
-	# showList: (@menu) ->
-	# 	if @menu?
-	# 		$('#menu').show().html "
-	# 			<h1 class=\"menu-title\">
-	# 				#{@menu.header}
-	# 			</h1>
-	# 			<ul>
-	# 				#{("<li>#{i}</li>" for i in @menu.items).join ''}
-	# 			</ul>
-	# 		"
-
-	# 	else
-	# 		$('#menu').hide().html ''
-
-	# 	@invalidate()
-
 	hideMenu: ->
 		$('#menu').off()
 		$('#menu').hide().html ''
