@@ -14,7 +14,6 @@ items = require '../definitions/items'
 calc = require '../calc'
 
 {Entity} = require './entity'
-MapItem = require './map-item'
 
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
@@ -140,7 +139,7 @@ module.exports = class Creature extends Entity
 
 	die: (cause) ->
 		drop = (item) =>
-			mapItem = new MapItem @map, @x, @y, item
+			mapItem = item.asMapItem @x, @y
 			@map.addEntity mapItem
 			game.timeManager.add mapItem
 
@@ -180,7 +179,7 @@ module.exports = class Creature extends Entity
 
 		arrayRemove @inventory, item
 
-		mapItem = new MapItem @map, @x, @y, item
+		mapItem = item.asMapItem @x, @y
 		@map.addEntity mapItem
 		game.timeManager.add mapItem
 
@@ -251,7 +250,7 @@ module.exports = class Creature extends Entity
 				
 				hit = yes
 
-			mapItem = new MapItem @map, endPos.x, endPos.y, item
+			mapItem = item.asMapItem endPos.x, endPos.y
 			@map.addEntity mapItem
 			game.timeManager.add mapItem
 			

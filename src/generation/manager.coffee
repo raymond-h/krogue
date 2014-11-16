@@ -79,9 +79,7 @@ class exports.GenerationManager
 		for i in [1..3]
 			{x, y} = MapGen.generatePos map
 
-			map.addEntity ItemGen.asMapItem x, y,
-				ItemGen.generatePeculiarObject()
+			map.addEntity ItemGen.generatePeculiarObject().asMapItem x, y
 
 		{x, y} = MapGen.generatePos map
-		map.addEntity ItemGen.asMapItem x, y,
-			ItemGen.generateGun()
+		map.addEntity ItemGen.generateGun().asMapItem x, y
