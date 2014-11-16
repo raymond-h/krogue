@@ -1,5 +1,3 @@
-log = require '../log'
-
 keyHandling = require './keyhandling'
 
 module.exports = class Web

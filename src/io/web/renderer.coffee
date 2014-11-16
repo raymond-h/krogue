@@ -1,11 +1,11 @@
 _ = require 'lodash'
 
-log = require '../log'
+log = require '../../log'
 
 vectorMath = require '../../vector-math'
 
 tileGraphics = require '../graphics-tiles'
-graphics = require '.,/graphics-ascii'
+graphics = require '../graphics-ascii'
 
 Effects = require './effects'
 
