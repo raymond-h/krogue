@@ -237,7 +237,14 @@ module.exports = class Player
 					return game.message 'Never mind.' if not choice?
 
 					skill = choice.value
-					skill.use @creature
+
+					Q.fcall ->
+						return null if not skill.askParams?
+
+						skill.askParams @creature
+
+					.then (params) ->
+						skill.use @creature, params
 
 			when 'test-dir'
 				prompts.direction 'Pick a direction!', cancelable: yes

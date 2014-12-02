@@ -2,6 +2,7 @@ _ = require 'lodash'
 
 game = require '../game'
 log = require '../log'
+prompts = game.prompts
 
 direction = require '../direction'
 vectorMath = require '../vector-math'
@@ -13,6 +14,20 @@ Skill = class exports.Skill
 
 class exports.TentacleWhip extends Skill
 	name: 'tentacle whip'
+
+	askParams: (creature) ->
+		# only called for player, to populate params to pass to #use()
+
+		params = {}
+
+		prompts.position 'Whip towards where?', default: creature
+		.then (pos) -> params.position = pos
+
+		.thenResolve params
+
+	use: (creature, params) ->
+		console.log 'whip:', params
+		12
 
 class exports.SenseLasagna extends Skill
 	name: 'sense lasagna'

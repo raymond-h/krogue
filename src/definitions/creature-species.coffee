@@ -41,6 +41,7 @@ class exports.Human extends Species
 	skills: -> [
 		super...
 		new skills.SenseLasagna
+		new skills.TentacleWhip
 	]
 
 	# modifyStat: (stat, name) ->
