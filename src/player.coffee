@@ -223,6 +223,22 @@ module.exports = class Player
 						Q @creature.throw item, offset
 						.thenResolve 6
 
+			when 'use-skill'
+				skills = @creature.skills()
+
+				if skills.length is 0
+					game.message "
+						You really don't have the skills to do that. Get better.
+					"
+					return
+
+				prompts.list 'Use which skill?', skills
+				.then (choice) =>
+					return game.message 'Never mind.' if not choice?
+
+					skill = choice.value
+					skill.use @creature
+
 			when 'test-dir'
 				prompts.direction 'Pick a direction!', cancelable: yes
 

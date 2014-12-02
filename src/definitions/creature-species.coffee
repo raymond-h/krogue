@@ -1,11 +1,15 @@
 _ = require 'lodash'
 
+skills = require './skills'
+
 Species = class exports.Species
 	equipSlotNum:
 		head: 1
 		hand: 0
 		body: 1
 		foot: 0
+
+	skills: -> [] # by default, species have no skills at all
 
 equipSlotNum = (Clazz, slots) ->
 	Clazz::equipSlotNum = _.assign {}, (Species::equipSlotNum), slots
@@ -33,6 +37,11 @@ class exports.Human extends Species
 	weight: 60 # kg
 
 	equipSlotNum @, humanoidSlots
+
+	skills: -> [
+		super...
+		new skills.SenseLasagna
+	]
 
 	# modifyStat: (stat, name) ->
 	# 	stat * 100 if name is 'strength'

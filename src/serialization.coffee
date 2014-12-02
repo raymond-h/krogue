@@ -26,6 +26,7 @@ classManager.add {
 	items: require './definitions/items'
 	species: require './definitions/creature-species'
 	personalities: require './definitions/personalities'
+	skills: require './definitions/skills'
 	entities: require './entities'
 
 	Map

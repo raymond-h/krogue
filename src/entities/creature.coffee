@@ -54,6 +54,8 @@ module.exports = class Creature extends Entity
 		@inventory ?= []
 		@equipment ?= []
 
+		@_skills ?= []
+
 		@recalculateStats()
 
 	isPlayer: ->
@@ -99,6 +101,12 @@ module.exports = class Creature extends Entity
 		percent = @health.percent
 		@health.max = @stat 'health'
 		@health.percent = percent
+
+	skills: ->
+		[
+			@species.skills(this)...
+			@_skills...
+		]
 
 	overburdened: ->
 		(calc.excessWeight this) > 0
