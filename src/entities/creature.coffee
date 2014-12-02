@@ -108,6 +108,9 @@ module.exports = class Creature extends Entity
 			@_skills...
 		]
 
+	skill: (name) ->
+		_.find @skills(), (skill) -> skill.name is name
+
 	overburdened: ->
 		(calc.excessWeight this) > 0
 
@@ -169,7 +172,7 @@ module.exports = class Creature extends Entity
 
 	pickup: (item) ->
 		MapItem = require './map-item'
-		
+
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
