@@ -168,6 +168,8 @@ module.exports = class Creature extends Entity
 		cause.level++ if cause.isPlayer?()
 
 	pickup: (item) ->
+		MapItem = require './map-item'
+		
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
