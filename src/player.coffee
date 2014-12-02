@@ -238,7 +238,7 @@ module.exports = class Player
 
 					skill = choice.value
 
-					Q.fcall ->
+					Q.fcall =>
 						return null if not skill.askParams?
 
 						skill.askParams @creature
