@@ -5,7 +5,7 @@ Effects = require '../effects'
 vectorMath = require '../../vector-math'
 {bresenhamLine, whilst} = require '../../util'
 
-module.exports = class WebEffects
+module.exports = class WebEffects extends Effects
 	throw: ({start, end, symbol}) ->
 		@line {start, end, symbol, delay: 50}
 
