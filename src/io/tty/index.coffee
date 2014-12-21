@@ -1,10 +1,14 @@
 blessed = require 'blessed'
 program = blessed.program()
 
-log = require '../../log'
+Renderer = require './renderer'
+Effects = require './effects'
 
 module.exports = class Tty
 	constructor: (@game) ->
+
+	initializeLog: (logLevel) ->
+		(require '../../log').initialize logLevel, require './log'
 
 	initialize: ->
 		program.reset()
@@ -13,9 +17,8 @@ module.exports = class Tty
 		program.on 'keypress', (ch, key) =>
 			@game.emit "key.#{key.name}", ch, key
 
-		Renderer = require './renderer'
-		@renderer = new Renderer @game
-
+		@renderer = new Renderer @, @game
+		@effects = new Effects @
 		@prompts = require './prompts'
 
 	deinitialize: ->

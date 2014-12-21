@@ -4,7 +4,7 @@ vectorMath = require '../../vector-math'
 {bresenhamLine, whilst, arrayRemove} = require '../../util'
 
 module.exports = class TtyEffects
-	constructor: (@renderer) ->
+	constructor: (@io) ->
 		@effects = []
 
 	doEffect: (data) ->
@@ -35,12 +35,12 @@ module.exports = class TtyEffects
 				.delay delay
 
 	renderEffects: (x, y) ->
-		c = @renderer.camera
+		c = @io.renderer.camera
 		[ox, oy] = [x - c.x, y - c.y]
 
 		for e in @effects
 			if e.type is 'line'
 				{x, y} = e.current
-				@renderer.putGraphic x+ox, y+oy, e.symbol
+				@io.renderer.putGraphic x+ox, y+oy, e.symbol
 
-	invalidate: -> @renderer.invalidate()
+	invalidate: -> @io.renderer.invalidate()

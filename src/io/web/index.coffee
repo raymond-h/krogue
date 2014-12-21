@@ -1,7 +1,12 @@
 keyHandling = require './keyhandling'
+Renderer = require './renderer'
+Effects = require './effects'
 
 module.exports = class Web
 	constructor: (@game) ->
+
+	initializeLog: (logLevel) ->
+		(require '../../log').initialize logLevel, require './log'
 
 	initialize: ->
 		handle = (a...) =>
@@ -10,9 +15,8 @@ module.exports = class Web
 		$(document).keypress handle
 		$(document).keydown handle
 
-		Renderer = require './renderer'
-		@renderer = new Renderer @game
-
+		@renderer = new Renderer @, @game
+		@effects = new Effects @
 		@prompts = require './prompts'
 
 		@game.on 'action.toggle-graphics', =>

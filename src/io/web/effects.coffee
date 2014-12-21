@@ -4,7 +4,7 @@ vectorMath = require '../../vector-math'
 {bresenhamLine, whilst, arrayRemove} = require '../../util'
 
 module.exports = class WebEffects
-	constructor: (@renderer) ->
+	constructor: (@io) ->
 		@effects = []
 
 	doEffect: (data) ->
@@ -38,6 +38,6 @@ module.exports = class WebEffects
 		for e in @effects
 			if e.type is 'line'
 				{x, y} = e.current
-				@renderer.renderGraphicAtSlot x+ox, y+oy, e.symbol
+				@io.renderer.renderGraphicAtSlot x+ox, y+oy, e.symbol
 
-	invalidate: -> @renderer.invalidate()
+	invalidate: -> @io.renderer.invalidate()

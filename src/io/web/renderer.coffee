@@ -10,7 +10,7 @@ graphics = require '../graphics-ascii'
 Effects = require './effects'
 
 module.exports = class WebRenderer
-	constructor: (@game) ->
+	constructor: (@io, @game) ->
 		@invalidated = no
 
 		@invalidate() # initial render
@@ -55,7 +55,7 @@ module.exports = class WebRenderer
 		window.onresize = _.debounce =>
 			@updateSize()
 
-			@game.renderer.invalidate()
+			@invalidate()
 
 		, 300
 
@@ -69,8 +69,6 @@ module.exports = class WebRenderer
 
 		@graphics = @preRenderAscii()
 		log @graphics
-
-		@effects = new Effects @
 
 		@useTiles = no # ascii by default
 
@@ -313,7 +311,7 @@ module.exports = class WebRenderer
 		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
 
 	renderEffects: (ox, oy) ->
-		@effects.renderEffects ox, oy
+		@io.effects.renderEffects ox, oy
 
-	doEffect: (data) ->
-		@effects.doEffect data
+	# doEffect: (data) ->
+	# 	@io.effects.doEffect data

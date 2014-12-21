@@ -23,7 +23,7 @@ parseAttrs = (graphic) ->
 module.exports = class TtyRenderer
 	@strMore = ' [more]'
 
-	constructor: (@game) ->
+	constructor: (@io, @game) ->
 		@invalidated = no
 
 		blank = {symbol: ' '}
@@ -245,7 +245,7 @@ module.exports = class TtyRenderer
 		@write x, y, "[#{repeat '=', currentWidth}#{repeat ' ', restWidth}]"
 
 	renderEffects: (ox, oy) ->
-		@effects.renderEffects ox, oy
+		@io.effects.renderEffects ox, oy
 
 	doEffect: (data) ->
-		@effects.doEffect data
+		@io.effects.doEffect data

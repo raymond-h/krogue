@@ -1,14 +1,18 @@
+Q = require 'q'
+Q.longStackTraces = yes
+
 log = require '../log'
 
 logLevel = 'info'
-log.initialize logLevel, require '../io/web/log'
-
-log "Using log level #{logLevel}"
 
 $ ->
 	Web = require '../io/web'
 	game = require '../game'
 
 	web = new Web game
+
+	web.initializeLog logLevel
+	log "Using log level #{logLevel}"
+
 	game.initialize web
 	game.main()

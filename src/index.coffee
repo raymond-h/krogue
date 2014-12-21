@@ -12,13 +12,14 @@ process.on 'uncaughtException', (err) ->
 		process.exit 1
 
 logLevel = argv.log ? 'info'
-log.initialize logLevel, require './io/tty/log'
-
-log "Using log level #{logLevel}"
 
 Tty = require './io/tty'
 game = require './game'
 
 tty = new Tty game
+
+tty.initializeLog logLevel
+log "Using log level #{logLevel}"
+
 game.initialize tty
 game.main()
