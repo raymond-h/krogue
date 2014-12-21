@@ -237,10 +237,8 @@ class exports.Gun extends Item
 			else if found.type is 'wall'
 				endPos = found.checked[1]
 
-			game.effects.doEffect
-				type: 'line'
+			game.effects.shootLine
 				start: creature, end: found
-				delay: 50
 				symbol: currentAmmo.symbol
 
 			.then =>

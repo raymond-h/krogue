@@ -7,36 +7,43 @@ module.exports = class WebEffects
 	constructor: (@io) ->
 		@effects = []
 
-	doEffect: (data) ->
-		Q @effects.push data
+	throw: ({start, end, symbol}) ->
+		@line {start, end, symbol, delay: 50}
 
-		.then =>
-			switch data.type
-				when 'line' then @doEffectLine data
+	shootLine: ({start, end, symbol}) ->
+		@line {start, end, symbol, delay: 50}
 
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
-
-	doEffectLine: (data) ->
-		{start, end, time, delay} = data
-
+	line: (data) ->
 		points = bresenhamLine start, end
 		
 		if time? and not delay?
 			delay = time / points.length
 
-		whilst (-> points.length > 0),
-			=>
-				Q.fcall =>
-					data.current = points.shift()
-					@invalidate()
+		@_performEffect {type: 'line', symbol}, (data) ->
+			
+			whilst (-> points.length > 0),
+				=>
+					Q.fcall =>
+						data.current = points.shift()
+						@invalidate()
 
-				.delay delay
+					.delay delay
+
+	doEffect: (data) ->
+		@[data.type]? data
+
+	_performEffect: (data, cb) ->
+		@effects.push data
+
+		Q cb.call @, data
+
+		.then =>
+			arrayRemove @effects, data
+			@invalidate()
 
 	renderEffects: (ox, oy) ->
-		for e in @effects
-			if e.type is 'line'
+		for e in @effects then switch e.type
+			when 'line'
 				{x, y} = e.current
 				@io.renderer.renderGraphicAtSlot x+ox, y+oy, e.symbol
 

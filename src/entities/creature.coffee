@@ -241,10 +241,8 @@ module.exports = class Creature extends Entity
 		else if found.type is 'wall'
 			endPos = found.checked[1]
 
-		game.effects.doEffect
-			type: 'line'
+		game.effects.throw
 			start: @, end: endPos
-			delay: 50
 			symbol: _.result item, 'symbol'
 
 		.then =>
