@@ -12,6 +12,20 @@ module.exports = class TtyEffects extends Effects
 	shootLine: ({start, end, symbol}) ->
 		@line {start, end, symbol, delay: 50}
 
+	shootSpread: ({start, angle, spread, range, symbol}) ->
+		angles = (angle + spread*i for i in [-1..1])
+
+		Q.all (for i in [-1..1]
+			a = angle + spread*i
+
+			end = vectorMath.add start, {
+				x: Math.round range * Math.cos a
+				y: -Math.round range * Math.sin a
+			}
+
+			@line {start, end, symbol, delay: 50}
+		)
+
 	line: ({start, end, time, delay, symbol}) ->
 		points = bresenhamLine start, end
 		

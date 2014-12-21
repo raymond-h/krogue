@@ -277,6 +277,11 @@ class exports.Gun extends Item
 				return
 
 		'spread': (creature, offset) ->
+			currentAmmo = @pullCurrentAmmo()
+			if not currentAmmo?
+				game.emit 'game.creature.fire.empty', creature, @, offset
+				return
+
 			game.emit 'game.creature.fire', creature, @, offset
 
 			if _.isString offset
@@ -290,26 +295,32 @@ class exports.Gun extends Item
 
 			spread = @spread ? (10 / 180 * Math.PI)
 
-			targets = creature.map.listEntities (e) =>
-				# we don't want to hit ourselves
-				return no if e is creature
-				return if e.type isnt 'creature'
+			game.effects.shootSpread {
+				start: creature, symbol: currentAmmo.symbol
+				angle, spread, @range
+			}
 
-				diff = vectorMath.sub e, creature
-				a = Math.atan2 -diff.y, diff.x
+			.then =>
+				targets = creature.map.listEntities (e) =>
+					# we don't want to hit ourselves
+					return no if e is creature
+					return if e.type isnt 'creature'
 
-				(compareAngles angle, a) <= spread/2 and
-					(creature.distanceSqTo e) <= (@range*@range) and
-					creature.canSee e
+					diff = vectorMath.sub e, creature
+					a = Math.atan2 -diff.y, diff.x
 
-			if targets.length > 0
-				for target in targets
-					dmg = calc.gunDamage creature, @, target
+					(compareAngles angle, a) <= spread/2 and
+						(creature.distanceSqTo e) <= (@range*@range) and
+						creature.canSee e
 
-					game.emit 'game.creature.fire.hit.creature',
-						creature, @, offset, target
+				if targets.length > 0
+					for target in targets
+						dmg = calc.gunDamage creature, @, target
 
-					target.damage dmg, creature
+						game.emit 'game.creature.fire.hit.creature',
+							creature, @, offset, target
 
-			else
-				game.emit 'game.creature.fire.hit.none', creature, @, offset
+						target.damage dmg, creature
+
+				else
+					game.emit 'game.creature.fire.hit.none', creature, @, offset
