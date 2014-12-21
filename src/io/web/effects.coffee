@@ -12,7 +12,7 @@ module.exports = class WebEffects
 	shootLine: ({start, end, symbol}) ->
 		@line {start, end, symbol, delay: 50}
 
-	line: (data) ->
+	line: ({start, end, time, delay, symbol}) ->
 		points = bresenhamLine start, end
 		
 		if time? and not delay?
