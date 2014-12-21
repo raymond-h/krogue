@@ -246,6 +246,3 @@ module.exports = class TtyRenderer
 
 	renderEffects: (ox, oy) ->
 		@io.effects.renderEffects ox, oy
-
-	doEffect: (data) ->
-		@io.effects.doEffect data

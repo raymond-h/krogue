@@ -312,6 +312,3 @@ module.exports = class WebRenderer
 
 	renderEffects: (ox, oy) ->
 		@io.effects.renderEffects ox, oy
-
-	# doEffect: (data) ->
-	# 	@io.effects.doEffect data
