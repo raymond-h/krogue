@@ -1,12 +1,11 @@
 Q = require 'q'
 
+Effects = require '../effects'
+
 vectorMath = require '../../vector-math'
-{bresenhamLine, whilst, arrayRemove} = require '../../util'
+{bresenhamLine, whilst} = require '../../util'
 
 module.exports = class WebEffects
-	constructor: (@io) ->
-		@effects = []
-
 	throw: ({start, end, symbol}) ->
 		@line {start, end, symbol, delay: 50}
 
@@ -29,22 +28,8 @@ module.exports = class WebEffects
 
 					.delay delay
 
-	doEffect: (data) ->
-		@[data.type]? data
-
-	_performEffect: (data, cb) ->
-		@effects.push data
-
-		Q cb.call @, data
-
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
-
 	renderEffects: (ox, oy) ->
 		for e in @effects then switch e.type
 			when 'line'
 				{x, y} = e.current
 				@io.renderer.renderGraphicAtSlot x+ox, y+oy, e.symbol
-
-	invalidate: -> @io.renderer.invalidate()

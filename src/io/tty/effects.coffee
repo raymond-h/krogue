@@ -1,12 +1,11 @@
 Q = require 'q'
 
+Effects = require '../effects'
+
 vectorMath = require '../../vector-math'
-{bresenhamLine, whilst, arrayRemove} = require '../../util'
+{bresenhamLine, whilst} = require '../../util'
 
-module.exports = class TtyEffects
-	constructor: (@io) ->
-		@effects = []
-
+module.exports = class TtyEffects extends Effects
 	throw: ({start, end, symbol}) ->
 		@line {start, end, symbol, delay: 50}
 
@@ -29,18 +28,6 @@ module.exports = class TtyEffects
 
 					.delay delay
 
-	doEffect: (data) ->
-		@[data.type]? data
-
-	_performEffect: (data, cb) ->
-		@effects.push data
-
-		Q cb.call @, data
-
-		.then =>
-			arrayRemove @effects, data
-			@invalidate()
-
 	renderEffects: (x, y) ->
 		c = @io.renderer.camera
 		[ox, oy] = [x - c.x, y - c.y]
@@ -49,5 +36,3 @@ module.exports = class TtyEffects
 			when 'line'
 				{x, y} = e.current
 				@io.renderer.putGraphic x+ox, y+oy, e.symbol
-
-	invalidate: -> @io.renderer.invalidate()
