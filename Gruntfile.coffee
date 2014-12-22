@@ -21,6 +21,12 @@ module.exports = (grunt) ->
 				no_tabs: level: 'ignore' # this is tab land, boy
 				indentation: value: 1 # single tabs
 		
+		connect:
+			dev:
+				options:
+					port: 80
+					base: 'public'
+					livereload: yes
 
 		mochaTest:
 			test:
@@ -64,4 +70,4 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'dev', ['lint', 'test']
 
-	grunt.registerTask 'watch-dev', ['watch:dev']
+	grunt.registerTask 'watch-dev', ['connect:dev', 'watch:dev']
