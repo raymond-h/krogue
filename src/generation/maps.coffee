@@ -73,8 +73,8 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 	}
 
 	map.data = convertMapData data, [
-		{ collidable: no, symbol: 'floor' }
-		{ collidable: yes, symbol: 'wall' }
+		{ collidable: no, seeThrough: yes, symbol: 'floor' }
+		{ collidable: yes, seeThrough: no, symbol: 'wall' }
 	]
 
 	exports.generateExits map, path, level, connections

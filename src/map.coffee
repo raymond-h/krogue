@@ -35,9 +35,7 @@ class exports.Map
 	collidable: (x, y) ->
 		if _.isObject x then {x, y} = x
 
-		return true unless 0 <= x < @w and 0 <= y < @h
-
-		@data[y][x].collidable
+		@data[y]?[x]?.collidable ? no
 
 	hasBlockingEntities: (x, y) ->
 		for e in @entities when e.x is x and e.y is y
@@ -48,7 +46,7 @@ class exports.Map
 	seeThrough: (x, y) ->
 		if _.isObject x then {x, y} = x
 		
-		not @collidable x, y # temporary
+		@data[y]?[x]?.seeThrough ? yes
 
 	loadFromJSON: ({@id, @w, @h, @data, @positions, entities}) ->
 		@addEntity entities...
