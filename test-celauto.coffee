@@ -2,7 +2,7 @@ Q = require 'q'
 _ = require 'lodash'
 MersenneTwister = require 'mersennetwister'
 
-{createMapData, mapGen: {border, borderThick, randomTiles}, cellularAutomataGeneration} = require './src/generation/maps'
+MapGenerator = require './src/generation/cellular-automata'
 {repeat} = require './src/util'
 
 printMap = (map) ->
@@ -55,20 +55,11 @@ rules = _.flatten [
 # 	repeat 2, (..., neighbours) -> neighbours >= 7
 # ]
 
-w = 100
-h = 40
-
-_randomTiles = randomTiles((-> MersenneTwister.random()), initProb)
+width = 100
+height = 40
 
 console.time 'mapgen'
 
-map = createMapData w, h, (a...) -> (borderThick(2) a...) ? (_randomTiles a...)
-
-for rule in rules
-	printMap map
-	console.log '-----'
-	map = cellularAutomataGeneration map, w, h, rule
-	null
+printMap MapGenerator.createMap {width, height, initProbability: initProb, rules}
 
 console.timeEnd 'mapgen'
-printMap map

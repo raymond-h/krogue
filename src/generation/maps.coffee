@@ -5,6 +5,8 @@ game = require '../game'
 {Stairs} = require '../entities'
 {repeat} = require '../util'
 
+cellAuto = require './cellular-automata'
+
 tileAt = (map, x, y) -> map[y]?[x] ? '#'
 
 exports.generatePos = generatePos = (w, h, data) ->
@@ -20,28 +22,6 @@ exports.generatePos = generatePos = (w, h, data) ->
 exports.mapGen =
 	border: (x,y, w,h) ->
 		return '#' if not (0 < x < w-1 and 0 < y < h-1)
-
-	borderThick: (bw) ->
-		(x,y, w,h) ->
-			return '#' if not (bw <= x < (w-bw) and bw <= y < (h-bw))
-
-	randomTiles: (random, prob) ->
-		(x,y, w,h) ->
-			if random() <= prob then '#' else '.'
-
-exports.neighbourCount = (map, x, y) ->
-	tiles =
-		for i in [x-1..x+1]
-			for j in [y-1..y+1]
-				tileAt map, i, j
-
-	(t for t in (_.flatten tiles) when t is '#').length
-
-exports.cellularAutomataGeneration = (map, w, h, ruleFunc) ->
-	tileCb = (x, y, w, h) ->
-		if (ruleFunc map, x, y, (exports.neighbourCount map, x, y)) then '#' else '.'
-
-	exports.createMapData w, h, tileCb
 
 exports.createMapData = (w, h, tileCb) ->
 	((tileCb x,y,w,h for x in [0...w]) for y in [0...h])
@@ -79,9 +59,6 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	map
 
 exports.generateCellularAutomata = (path, level, connections, w, h) ->
-	{border, randomTiles} = exports.mapGen
-	generation = exports.cellularAutomataGeneration
-
 	map = new Map w, h
 
 	initProb = 0.44
@@ -90,13 +67,16 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 		repeat 3, (..., neighbours) -> neighbours >= 4
 	]
 
-	_randomTile = randomTiles (-> game.random.rnd()), initProb
+	data = cellAuto.createMap {
+		width: w, height: h
+		initProbability: initProb
+		rules
+		randomFn: -> game.random.rnd()
+	}
 
-	map.data = exports.createMapData w, h,
-		(a...) -> (border a...) ? (_randomTile a...)
-
-	for rule in rules
-		map.data = generation map.data, w, h, rule
+	map.data = for row, y in data
+		for tile, x in row
+			if tile is 1 then '#' else '.'
 
 	exports.generateExits map, path, level, connections
 
