@@ -47,8 +47,8 @@ module.exports = class Player
 
 				.then (doLoad) ->
 					if doLoad
-						game.load 'test-save.json'
-						game.message "Loaded."
+						Q game.load 'test-save.json'
+						.then -> game.message "Loaded."
 
 			when 'possess'
 				nextEntity = (map) ->
