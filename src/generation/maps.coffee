@@ -48,8 +48,8 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	data = exports.createMapData map.w, map.h, tileCb
 
 	map.data = convertMapData data, [
-		{ collidable: no, symbol: 'floor' }
-		{ collidable: yes, symbol: 'wall' }
+		{ collidable: no, seeThrough: yes, symbol: 'floor' }
+		{ collidable: yes, seeThrough: no, symbol: 'wall' }
 	]
 
 	exports.generateExits map, path, level, connections
