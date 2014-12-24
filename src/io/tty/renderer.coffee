@@ -182,14 +182,10 @@ module.exports = class TtyRenderer
 		c.bounds map
 		c.update()
 
-		mapSymbols =
-			'#': graphics.get 'wall'
-			'.': graphics.get 'floor'
-
 		graphicAt = (x, y) ->
 			if c.target.canSee {x, y}
 				t = map.data[y][x]
-				mapSymbols[t]
+				graphics.get t.symbol
 
 			else ' '
 

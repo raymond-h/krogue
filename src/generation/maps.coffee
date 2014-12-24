@@ -47,7 +47,10 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	
 	data = exports.createMapData map.w, map.h, tileCb
 
-	map.data = convertMapData data, ['.', '#']
+	map.data = convertMapData data, [
+		{ collidable: no, symbol: 'floor' }
+		{ collidable: yes, symbol: 'wall' }
+	]
 
 	exports.generateExits map, path, level, connections
 
@@ -69,7 +72,10 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 		randomFn: -> game.random.rnd()
 	}
 
-	map.data = convertMapData data, ['.', '#']
+	map.data = convertMapData data, [
+		{ collidable: no, symbol: 'floor' }
+		{ collidable: yes, symbol: 'wall' }
+	]
 
 	exports.generateExits map, path, level, connections
 

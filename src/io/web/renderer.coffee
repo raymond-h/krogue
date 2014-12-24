@@ -243,14 +243,10 @@ module.exports = class WebRenderer
 		@camera.x //= 1
 		@camera.y //= 1
 
-		mapSymbols =
-			'#': 'wall'
-			'.': 'floor'
-
 		graphicAt = (x, y) =>
 			if @camera.target.canSee {x, y}
 				t = map.data[y][x]
-				mapSymbols[t]
+				t.symbol
 
 		for cx in [0...map.w]
 			for cy in [0...map.h]
