@@ -7,8 +7,6 @@ game = require '../game'
 
 cellAuto = require './cellular-automata'
 
-tileAt = (map, x, y) -> map[y]?[x] ? '#'
-
 exports.generatePos = generatePos = (w, h, data) ->
 	if not h? then {w, h, data} = w
 
@@ -16,12 +14,8 @@ exports.generatePos = generatePos = (w, h, data) ->
 		x = game.random.range 0, w
 		y = game.random.range 0, h
 
-		break if data[y][x] isnt '#'
+		break if not ( (data[y][x].collidable) ? (data[y][x] is '#') )
 	{x, y}
-
-exports.mapGen =
-	border: (x,y, w,h) ->
-		return '#' if not (0 < x < w-1 and 0 < y < h-1)
 
 exports.createMapData = (w, h, tileCb) ->
 	((tileCb x,y,w,h for x in [0...w]) for y in [0...h])
@@ -45,14 +39,15 @@ exports.generateExits = (map, path, level, connections) ->
 		map.addEntity stairs
 
 exports.generateBigRoom = (path, level, connections, w, h) ->
-	{border} = exports.mapGen
-
 	map = new Map w, h
 
 	# generate map itself ('.' everywhere, '#' surrounding entire room)
-	tileCb = (a...) -> (border a...) ? '.'
+	tileCb = (x, y, w, h) ->
+		if not (0 < x < w-1 and 0 < y < h-1) then 1 else 0
 	
-	map.data = exports.createMapData map.w, map.h, tileCb
+	data = exports.createMapData map.w, map.h, tileCb
+
+	map.data = convertMapData data, ['.', '#']
 
 	exports.generateExits map, path, level, connections
 
@@ -74,10 +69,19 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 		randomFn: -> game.random.rnd()
 	}
 
-	map.data = for row, y in data
-		for tile, x in row
-			if tile is 1 then '#' else '.'
+	map.data = convertMapData data, ['.', '#']
 
 	exports.generateExits map, path, level, connections
 
 	map
+
+recursiveMap = (data, fn) ->
+	map = (a...) -> if _.isArray a[0] then a[0].map map else fn a...
+
+	data.map map
+
+convertMapData = (data, values = ['.', '#']) ->
+	recursiveMap data, (v) ->
+		switch
+			when _.isArray values then values[v]
+			when _.isFunction values then values v

@@ -37,7 +37,7 @@ class exports.Map
 
 		return true unless 0 <= x < @w and 0 <= y < @h
 
-		@data[y][x] is '#'
+		(@data[y][x].collidable) ? (@data[y][x] is '#')
 
 	hasBlockingEntities: (x, y) ->
 		for e in @entities when e.x is x and e.y is y
