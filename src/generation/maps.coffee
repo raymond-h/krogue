@@ -14,7 +14,7 @@ exports.generatePos = generatePos = (w, h, data) ->
 		x = game.random.range 0, w
 		y = game.random.range 0, h
 
-		break if not ( (data[y][x].collidable) ? (data[y][x] is '#') )
+		break if not (data[y][x].collidable ? no)
 	{x, y}
 
 exports.createMapData = (w, h, tileCb) ->
@@ -86,7 +86,7 @@ recursiveMap = (data, fn) ->
 
 	data.map map
 
-convertMapData = (data, values = ['.', '#']) ->
+convertMapData = (data, values) ->
 	recursiveMap data, (v) ->
 		switch
 			when _.isArray values then values[v]
