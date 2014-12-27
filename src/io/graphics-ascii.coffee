@@ -26,6 +26,17 @@ exports.graphics = graphics =
 	peculiarObject: 'O'
 	pokeBall: '*'
 
+	honeycombWall:
+		symbol: '#'
+		color: 'yellow'
+
+	honeycombFloor:
+		symbol: '.'
+		color: 'yellow'
+
+	spaceBee: 'd'
+	spaceBeeMonarch: 'Q'
+
 	bullet: '*'
 
 	_default:

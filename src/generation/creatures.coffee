@@ -55,3 +55,10 @@ exports.generateSpaceAnemone = (x, y) ->
 	]...
 
 	c
+
+exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
+	c = new Creature null, x, y, new species.SpaceBee monarch, group
+
+	c.personalities.push []...
+
+	c

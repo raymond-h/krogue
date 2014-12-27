@@ -3,6 +3,7 @@ _ = require 'lodash'
 MapGen = require './maps'
 CreatureGen = require './creatures'
 ItemGen = require './items'
+FeatureGen = require './features'
 
 class exports.GenerationManager
 	constructor: (@connections = {}) ->
@@ -26,6 +27,7 @@ class exports.GenerationManager
 
 		map.id = id
 
+		FeatureGen.generateFeatures path, level, map
 		@handleCreatures map, path, level
 
 		map
@@ -51,7 +53,9 @@ class exports.GenerationManager
 		MapGen.generateBigRoom path, level, connections, 80, 21
 
 	generateCave: (path, level, connections) ->
-		MapGen.generateCellularAutomata path, level, connections, 100, 50
+		map = MapGen.generateCellularAutomata path, level, connections, 100, 50
+
+		map
 
 	handleCreatures: (map, path, level) ->
 		if level > 1

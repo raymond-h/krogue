@@ -12,5 +12,11 @@
 	"stairsDown": { "x": 32, "y": 0 },
 	"stairsUp": { "x": 48, "y": 0 },
 
+	"honeycombWall": { "x": 0, "y": 112 },
+	"honeycombFloor": { "x": 16, "y": 112 },
+
+	"spaceBee": { "x": 32, "y": 112 },
+	"spaceBeeMonarch": { "x": 48, "y": 96 },
+
 	"_default": { "x": 0, "y": 32 }
 }

@@ -77,3 +77,20 @@ class exports.SpaceAnemone extends Species
 			when 'agility' then stat / 2.0
 
 			else stat
+
+class exports.SpaceBee extends Species
+	name: 'space bee'
+	symbol: 'spaceBee'
+	weight: 1 / 10000
+
+	constructor: (@monarch = no, @group = null) ->
+		if @monarch
+			@weight = 2 / 10000
+			@symbol = 'spaceBeeMonarch'
+
+	equipSlotNum @,
+		hand: 0
+		foot: 6
+
+	modifyStat: (creature, stat, name) ->
+		stat
