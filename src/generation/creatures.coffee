@@ -57,8 +57,21 @@ exports.generateSpaceAnemone = (x, y) ->
 	c
 
 exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
+	monarch ?= no
+
 	c = new Creature null, x, y, new species.SpaceBee monarch, group
 
-	c.personalities.push []...
+	if not monarch
+		c.personalities.push [
+			(new personality.NoMonarchOutrage 20).withMultiplier 10
+			(new personality.FendOffFromQueen).withMultiplier 6
+			(new personality.HateOpposingBees).withMultiplier 3
+			new personality.RandomWalk
+		]...
+
+	else
+		c.personalities.push [
+			new personality.RandomWalk 0.2
+		]...
 
 	c

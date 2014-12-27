@@ -44,8 +44,11 @@ class exports.Human extends Species
 		new skills.TentacleWhip
 	]
 
-	# modifyStat: (stat, name) ->
-	# 	stat * 100 if name is 'strength'
+	# modifyStat: (creature, stat, name) ->
+	# 	if name in ['agility', 'strength', 'endurance']
+	# 		stat * 10
+
+	# 	else stat
 
 class exports.ViolentDonkey extends Species
 	name: 'violent donkey'
@@ -85,12 +88,20 @@ class exports.SpaceBee extends Species
 
 	constructor: (@monarch = no, @group = null) ->
 		if @monarch
-			@weight = 2 / 10000
+			@name = 'space bee monarch'
 			@symbol = 'spaceBeeMonarch'
+			@weight = 2 / 10000
 
 	equipSlotNum @,
 		hand: 0
 		foot: 6
 
 	modifyStat: (creature, stat, name) ->
-		stat
+		switch name
+			when 'strength' then stat * 0.01
+
+			when 'agility' then stat * 4
+
+			when 'endurance' then stat * 0.01
+
+			else stat

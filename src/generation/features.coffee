@@ -58,14 +58,14 @@ exports.generateSpaceBeeHive = (path, level, map) ->
 			map.data[y][x] =
 				if map.data[y][x].collidable then wall else floor
 
-	group = 'test'
+	group = "#{game.random.range 0, 100000}"
 
 	bees = []
 
 	p = randomPoint {top, left, right, bottom}, ({x, y}) -> not map.collidable x, y
 	bees.push CreatureGen.generateSpaceBee p.x, p.y, {monarch: yes, group}
 
-	for i in [1..game.random.range 5, 9]
+	for i in [1..game.random.range 20, 30]
 		p = randomPoint {top, left, right, bottom}, ({x, y}) ->
 			not map.collidable x, y
 
@@ -73,4 +73,4 @@ exports.generateSpaceBeeHive = (path, level, map) ->
 
 	map.addEntity bees...
 
-	log.info "Generated space bee hive @", {top, left, right, bottom}
+	log.info "Generated space bee hive (#{group}) @", {top, left, right, bottom}

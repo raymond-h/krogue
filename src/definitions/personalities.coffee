@@ -36,13 +36,15 @@ class exports.FleeFromPlayer extends Personality
 		12
 
 class exports.RandomWalk extends Personality
+	constructor: (@probability = 1) ->
+
 	weight: (creature) ->
 		100
 
 	tick: (creature) ->
 		direction = require '../direction'
 
-		creature.move game.random.direction 8
+		creature.move game.random.direction 8 if game.random.chance @probability
 
 		12
 
@@ -153,5 +155,122 @@ class exports.Attacker extends Personality
 				creature.attack creature.directionTo target
 
 			else creature.moveTo target
+
+		12
+
+class exports.NoMonarchOutrage extends Personality
+	constructor: (@range = 12) ->
+		Object.defineProperty @, 'target',
+			enumerable: no
+			writable: yes
+
+		Object.defineProperty @, 'monarch',
+			enumerable: no
+			writable: yes
+
+	weight: (creature) ->
+		[@monarch] = creature.map.listEntities (e) ->
+			e.type is 'creature' and
+			e.species.constructor is creature.species.constructor and
+			e.species.group is creature.species.group and
+			e.species.monarch
+
+		if not @monarch? then 100 else 0
+
+	tick: (creature) ->
+		@target = creature.findNearest @range,
+			(e) ->
+				e.type is 'creature' and (
+					e.species.constructor isnt creature.species.constructor or
+					e.species.group isnt creature.species.group
+				)
+
+		if @target?
+			if (
+				Math.abs(creature.x - @target.x) <= 1 and
+				Math.abs(creature.y - @target.y) <= 1
+			)
+
+				creature.attack creature.directionTo @target
+
+			else creature.moveTo @target
+
+		else
+			direction = require '../direction'
+
+			creature.move game.random.direction 8
+
+		4
+
+class exports.HateOpposingBees extends Personality
+	constructor: (@range = 12) ->
+		Object.defineProperty @, 'target',
+			enumerable: no
+			writable: yes
+
+	weight: (creature) ->
+		@target = creature.findNearest @range,
+			(e) ->
+				e.type is 'creature' and
+				e.species.constructor is creature.species.constructor and
+				e.species.group isnt creature.species.group
+
+		if @target? then 100 else 0
+
+	tick: (creature) ->
+		# target is guaranteed to exist
+
+		if (
+			Math.abs(creature.x - @target.x) <= 1 and
+			Math.abs(creature.y - @target.y) <= 1
+		)
+
+			creature.attack creature.directionTo @target
+
+		else creature.moveTo @target
+
+		12
+
+class exports.FendOffFromQueen extends Personality
+	constructor: (@range = 6) ->
+		Object.defineProperty @, 'target',
+			enumerable: no
+			writable: yes
+
+		Object.defineProperty @, 'monarch',
+			enumerable: no
+			writable: yes
+
+	weight: (creature) ->
+		weight = do =>
+			[@monarch] = creature.map.listEntities (e) ->
+				e.type is 'creature' and
+				e.species.constructor is creature.species.constructor and
+				e.species.group is creature.species.group and
+				e.species.monarch
+
+			return 0 if not @monarch?
+
+			@target = @monarch.findNearest @range,
+				(e) =>
+					e.type is 'creature' and
+					(not e.species.group? or e.species.group isnt @monarch.species.group)
+
+			if @target? then 100 else 0
+
+		console.log @target, weight
+		weight
+
+	tick: (creature) ->
+		# target is guaranteed to exist
+
+		if (
+			Math.abs(creature.x - @target.x) <= 1 and
+			Math.abs(creature.y - @target.y) <= 1
+		)
+
+			creature.attack creature.directionTo @target
+
+		else creature.moveTo @target
 
 		12
