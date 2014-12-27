@@ -1,5 +1,6 @@
 _ = require 'lodash'
-{arrayRemove} = require './util'
+{arrayRemove, repeat} = require './util'
+log = require './log'
 
 filter = (e, filter) ->
 	switch
@@ -48,11 +49,64 @@ class exports.Map
 		
 		@data[y]?[x]?.seeThrough ? yes
 
-	loadFromJSON: ({@id, @w, @h, @data, @positions, entities}) ->
+	@compressData: (data) ->
+		tileTable = []
+		tileData = []
+
+		findInTable = (tile) =>
+			_.findIndex tileTable, ((t) -> _.isEqual t, tile), @
+
+		currentTile = -1
+		currentCount = 0
+
+		for row, y in data
+			for tile, x in row
+				tti = findInTable tile
+
+				if tti < 0
+					tti = tileTable.length
+					tileTable.push tile
+
+				if tti isnt currentTile
+					tileData.push [currentTile, currentCount] if currentTile >= 0
+
+					currentTile = tti
+					currentCount = 1
+
+				else currentCount++
+
+		tileData.push [currentTile, currentCount]
+
+		{tileTable, tileData, rleWidth: data[0].length}
+
+	@decompressData: ({tileTable, tileData, rleWidth}) ->
+		if rleWidth?
+			data = _.flatten(
+				for [tti, count] in tileData
+					repeat count, tileTable[tti]
+			)
+
+			tileData = for i in [0...data.length] by rleWidth
+				data[i...i+rleWidth]
+
+			tileData
+
+		else
+			for row, y in tileData
+				for tti, x in row
+					tileTable[tti]
+
+	loadFromJSON: ({@id, @w, @h, data, @positions, entities}) ->
+		if data.tileTable? and data.tileData?
+			@data = Map.decompressData data
+
+		else @data = data
+
 		@addEntity entities...
 
 	toJSON: ->
 		{
-			@id, @w, @h, @data, @positions
+			@id, @w, @h, @positions
+			data: Map.compressData @data
 			entities: @entities.filter (e) -> not e.isPlayer()
 		}
