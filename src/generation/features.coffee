@@ -58,7 +58,7 @@ exports.generateSpaceBeeHive = (path, level, map) ->
 			map.data[y][x] =
 				if map.data[y][x].collidable then wall else floor
 
-	group = "#{game.random.range 0, 100000}"
+	group = "space-bee-#{game.random.range 0, 100000}"
 
 	bees = []
 
