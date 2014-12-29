@@ -29,7 +29,7 @@ module.exports = class Creature extends Entity
 			@xp, level
 		} = data
 
-		@species ?= new creatureSpecies.StrangeGoo
+		@species ?= creatureSpecies.strangeGoo
 
 		@health ?= new RangedValue max: 30
 		if @health? and not (@health instanceof RangedValue)

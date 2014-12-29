@@ -24,7 +24,7 @@ classManager = new ClassManager
 
 classManager.add {
 	items: require './definitions/items'
-	species: require './definitions/creature-species'
+	species: (require './definitions/creature-species').classes
 	personalities: require './definitions/personalities'
 	skills: require './definitions/skills'
 	entities: require './entities'

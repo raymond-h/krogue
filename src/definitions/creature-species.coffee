@@ -11,6 +11,11 @@ Species = class exports.Species
 
 	skills: -> [] # by default, species have no skills at all
 
+	loadFromJSON: (json) -> # do nothing, not even default load
+	
+	# return empty object, we don't want to save data on species objects
+	toJSON: -> {}
+
 equipSlotNum = (Clazz, slots) ->
 	Clazz::equipSlotNum = _.assign {}, (Species::equipSlotNum), slots
 
@@ -24,14 +29,16 @@ quadrupedSlots =
 	hand: 0
 	foot: 4
 
-class exports.StrangeGoo extends Species
+exports.classes = classes = {}
+
+class classes.StrangeGoo extends Species
 	name: 'strange goo'
 	symbol: 'strangeGoo'
 
 	modifyStat: (creature, stat, name) ->
 		stat / 3 if name is 'agility'
 
-class exports.Human extends Species
+class classes.Human extends Species
 	name: 'human'
 	symbol: 'human'
 	weight: 60 # kg
@@ -44,27 +51,27 @@ class exports.Human extends Species
 		new skills.TentacleWhip
 	]
 
-	# modifyStat: (creature, stat, name) ->
-	# 	if name in ['agility', 'strength', 'endurance']
-	# 		stat * 10
+	modifyStat: (creature, stat, name) ->
+		if name in ['agility', 'strength', 'endurance']
+			stat * 20
 
-	# 	else stat
+		else stat
 
-class exports.ViolentDonkey extends Species
+class classes.ViolentDonkey extends Species
 	name: 'violent donkey'
 	symbol: 'violentDonkey'
 	weight: 120
 
 	equipSlotNum @, quadrupedSlots
 
-class exports.TinyAlien extends Species
+class classes.TinyAlien extends Species
 	name: 'tiny alien'
 	symbol: 'tinyAlien'
 	weight: 20
 
 	equipSlotNum @, humanoidSlots
 
-class exports.SpaceAnemone extends Species
+class classes.SpaceAnemone extends Species
 	name: 'space anemone'
 	symbol: 'spaceAnemone'
 	weight: 300
@@ -81,16 +88,10 @@ class exports.SpaceAnemone extends Species
 
 			else stat
 
-class exports.SpaceBee extends Species
+class classes.SpaceBee extends Species
 	name: 'space bee'
 	symbol: 'spaceBee'
 	weight: 1 / 10000
-
-	constructor: (@monarch = no, @group = null) ->
-		if @monarch
-			@name = 'space bee monarch'
-			@symbol = 'spaceBeeMonarch'
-			@weight = 2 / 10000
 
 	equipSlotNum @,
 		hand: 0
@@ -105,3 +106,14 @@ class exports.SpaceBee extends Species
 			when 'endurance' then stat * 0.01
 
 			else stat
+
+class classes.SpaceBeeMonarch extends classes.SpaceBee
+	name: 'space bee monarch'
+	symbol: 'spaceBeeMonarch'
+	weight: 2 / 10000
+
+makeName = (className) ->
+	className[0].toLowerCase() + className[1..]
+
+for className, Clazz of classes
+	exports[makeName className] = new Clazz

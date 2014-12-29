@@ -158,7 +158,7 @@ class exports.Attacker extends Personality
 
 		12
 
-class exports.NoMonarchOutrage extends Personality
+class exports.NoLeaderOutrage extends Personality
 	constructor: (@range = 12) ->
 		Object.defineProperty @, 'target',
 			enumerable: no
@@ -171,9 +171,8 @@ class exports.NoMonarchOutrage extends Personality
 	weight: (creature) ->
 		[@monarch] = creature.map.listEntities (e) ->
 			e.type is 'creature' and
-			e.species.constructor is creature.species.constructor and
-			e.species.group is creature.species.group and
-			e.species.monarch
+			e.group is creature.group and
+			e.leader
 
 		if not @monarch? then 100 else 0
 
@@ -181,8 +180,7 @@ class exports.NoMonarchOutrage extends Personality
 		@target = creature.findNearest @range,
 			(e) ->
 				e.type is 'creature' and (
-					e.species.constructor isnt creature.species.constructor or
-					e.species.group isnt creature.species.group
+					e.group isnt creature.group
 				)
 
 		if @target?
@@ -212,8 +210,8 @@ class exports.HateOpposingBees extends Personality
 		@target = creature.findNearest @range,
 			(e) ->
 				e.type is 'creature' and
-				e.species.constructor is creature.species.constructor and
-				e.species.group isnt creature.species.group
+				e.species is creature.species and
+				e.group isnt creature.group
 
 		if @target? then 100 else 0
 
@@ -231,7 +229,7 @@ class exports.HateOpposingBees extends Personality
 
 		12
 
-class exports.FendOffFromQueen extends Personality
+class exports.FendOffFromLeader extends Personality
 	constructor: (@range = 6) ->
 		Object.defineProperty @, 'target',
 			enumerable: no
@@ -245,20 +243,18 @@ class exports.FendOffFromQueen extends Personality
 		weight = do =>
 			[@monarch] = creature.map.listEntities (e) ->
 				e.type is 'creature' and
-				e.species.constructor is creature.species.constructor and
-				e.species.group is creature.species.group and
-				e.species.monarch
+				e.group is creature.group and
+				e.leader?
 
 			return 0 if not @monarch?
 
 			@target = @monarch.findNearest @range,
 				(e) =>
 					e.type is 'creature' and
-					(not e.species.group? or e.species.group isnt @monarch.species.group)
+					(not e.group? or e.group isnt @monarch.group)
 
 			if @target? then 100 else 0
 
-		console.log @target, weight
 		weight
 
 	tick: (creature) ->
@@ -271,6 +267,12 @@ class exports.FendOffFromQueen extends Personality
 
 			creature.attack creature.directionTo @target
 
-		else creature.moveTo @target
+		else
+			pathFinding = require '../path-finding'
+
+			{status, path: [start, next]} =
+				pathFinding.aStar creature.map, creature, @target
+
+			creature.move vectorMath.sub next, creature
 
 		12

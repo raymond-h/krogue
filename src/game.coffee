@@ -74,9 +74,9 @@ class Game extends EventEmitter2
 
 	createPlayerCreature: ->
 		{Creature} = require './entities'
-		{Human} = require './definitions/creature-species'
+		{human} = require './definitions/creature-species'
 
-		creature = new Creature null, 0, 0, new Human
+		creature = new Creature null, 0, 0, human
 
 		gun = (require './generation/items').generateStartingGun()
 
