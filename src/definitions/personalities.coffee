@@ -170,18 +170,13 @@ class exports.NoLeaderOutrage extends Personality
 
 	weight: (creature) ->
 		[@monarch] = creature.map.listEntities (e) ->
-			e.type is 'creature' and
-			e.group is creature.group and
-			e.leader
+			e.type is 'creature' and e.isGroupLeader creature
 
 		if not @monarch? then 100 else 0
 
 	tick: (creature) ->
-		@target = creature.findNearest @range,
-			(e) ->
-				e.type is 'creature' and (
-					e.group isnt creature.group
-				)
+		@target = creature.findNearest @range, (e) ->
+			e.type is 'creature' and not e.belongsToGroup creature
 
 		if @target?
 			if (
@@ -211,7 +206,7 @@ class exports.HateOpposingBees extends Personality
 			(e) ->
 				e.type is 'creature' and
 				e.species is creature.species and
-				e.group isnt creature.group
+				not e.belongsToGroup creature
 
 		if @target? then 100 else 0
 
@@ -242,16 +237,13 @@ class exports.FendOffFromLeader extends Personality
 	weight: (creature) ->
 		weight = do =>
 			[@monarch] = creature.map.listEntities (e) ->
-				e.type is 'creature' and
-				e.group is creature.group and
-				e.leader?
+				e.type is 'creature' and e.isGroupLeader creature
 
 			return 0 if not @monarch?
 
 			@target = @monarch.findNearest @range,
 				(e) =>
-					e.type is 'creature' and
-					(not e.group? or e.group isnt @monarch.group)
+					e.type is 'creature' and not e.belongsToGroup creature
 
 			if @target? then 100 else 0
 

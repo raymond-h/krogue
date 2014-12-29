@@ -142,6 +142,15 @@ module.exports = class Creature extends Entity
 		@equipment.filter (item) => (item.getEquipSlotUse slot, @) > 0
 		# []
 
+	belongsToGroup: (other) ->
+		if _.isString other
+			return @group? and @group is other
+
+		@group? and other.group? and @group is other.group
+
+	isGroupLeader: (other) ->
+		@leader? and @belongsToGroup other
+
 	damage: (dmg, cause) ->
 		game.emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
