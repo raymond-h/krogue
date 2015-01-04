@@ -260,11 +260,6 @@ class exports.FendOffFromLeader extends Personality
 			creature.attack creature.directionTo @target
 
 		else
-			pathFinding = require '../path-finding'
-
-			{status, path: [start, next]} =
-				pathFinding.aStarOverDistanceMap creature.map, creature, @target
-
-			creature.move vectorMath.sub next, creature
+			creature.moveTo @target, yes
 
 		12

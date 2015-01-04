@@ -8,6 +8,7 @@ game = require '../game'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
 vectorMath = require '../vector-math'
+pathFinding = require '../path-finding'
 
 creatureSpecies = require '../definitions/creature-species'
 items = require '../definitions/items'
@@ -286,8 +287,17 @@ module.exports = class Creature extends Entity
 
 		canMoveThere
 
-	moveTo: (p) ->
-		@move @directionTo p
+	moveTo: (p, pathfind = no) ->
+		if not pathfind
+			@move @directionTo p
+
+		else
+			{status, path} = pathFinding.aStarOverDistanceMap @map, @, p
+
+			if status is 'success'
+				@move vectorMath.sub path[1], @
+
+			else no
 
 	moveAwayFrom: (p) ->
 		@move direction.opposite @directionTo p

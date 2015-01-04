@@ -59,7 +59,7 @@ exports.getDistanceMap = (map, goals, tileFn) ->
 
 	distMaps = distanceMaps[map.id] ?= {}
 
-	if distMaps[goalId]? then return distMap
+	if distMaps[goalId]? then return distMaps[goalId]
 
 	distMaps[goalId] = distMap =
 		for y in [0...map.h]
