@@ -29,6 +29,25 @@ exports.aStar = (map, start, end, tileFn) ->
 
 	aStar opts
 
+exports.aStarOverDistanceMap = (map, start, end, tileFn) ->
+	distMap = exports.getDistanceMap map, [end], tileFn
+
+	opts =
+		start: start
+		isEnd: (node) -> node.x is end.x and node.y is end.y
+		neighbor: (node) ->
+			[
+				'up', 'down', 'left', 'right'
+				'up-left', 'up-right', 'down-left', 'down-right'
+			]
+			.map (dir) -> vectorMath.add node, direction.parse(dir)
+
+		distance: (a, b) -> Math.max Math.abs(a.x - b.x), Math.abs(a.y - b.y)
+		heuristic: ({x, y}) -> distMap[y][x]
+		hash: ({x, y}) -> "#{x};#{y}"
+
+	aStar opts
+
 distanceMaps = {}
 
 exports.getDistanceMap = (map, goals, tileFn) ->
