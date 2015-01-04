@@ -28,3 +28,51 @@ exports.aStar = (map, start, end, tileFn) ->
 		hash: ({x, y}) -> "#{x};#{y}"
 
 	aStar opts
+
+distanceMaps = {}
+
+exports.getDistanceMap = (map, goals, tileFn) ->
+	tileFn ?= (map, {x, y}, data) ->
+		not data.collidable
+
+	goals = goals.map ({x, y}) -> "#{x};#{y}"
+	goalId = goals.join '_'
+
+	distMaps = distanceMaps[map.id] ?= {}
+
+	if distMaps[goalId]? then return distMap
+
+	distMaps[goalId] = distMap =
+		for y in [0...map.h]
+			for x in [0...map.w]
+				if "#{x};#{y}" in goals then 0 else Infinity
+
+	smallestNeighbour = (ox, oy) ->
+		smallest = Infinity
+
+		for i in [-1..1]
+			for j in [-1..1]
+				smallest = Math.min smallest, (distMap[i + oy]?[j + ox]) ? Infinity
+
+		smallest
+
+	iteration = ->
+		changedOccured = no
+
+		for x in [0...map.w]
+			for y in [0...map.h]
+				if not tileFn map, {x, y}, map.data[y]?[x]
+					continue
+
+				smallest = smallestNeighbour x, y
+
+				if distMap[y][x] > smallest+2
+					distMap[y][x] = smallest+1
+
+					changedOccured = yes
+
+		changedOccured
+
+	while iteration() then
+
+	distMap
