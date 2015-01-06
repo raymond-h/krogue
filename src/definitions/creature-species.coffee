@@ -112,6 +112,11 @@ class classes.SpaceBeeMonarch extends classes.SpaceBee
 	symbol: 'spaceBeeMonarch'
 	weight: 2 / 10000
 
+class classes.Haithera extends classes.Species
+	name: 'haithera'
+	symbol: 'haithera'
+	weight: 400
+
 makeName = (className) ->
 	className[0].toLowerCase() + className[1..]
 
