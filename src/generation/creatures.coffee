@@ -83,8 +83,8 @@ exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
 
 	c
 
-exports.generateHaitheran = (x, y) ->
-	c = new Creature null, x, y, species.haitheran
+exports.generateHaithera = (x, y) ->
+	c = new Creature null, x, y, species.haithera
 
 	c.personalities.push [
 		(new personality.Attacker 10).withMultiplier 2
