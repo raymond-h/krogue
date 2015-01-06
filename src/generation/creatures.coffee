@@ -82,3 +82,13 @@ exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
 		]...
 
 	c
+
+exports.generateHaitheran = (x, y) ->
+	c = new Creature null, x, y, species.haitheran
+
+	c.personalities.push [
+		(new personality.Attacker 10).withMultiplier 2
+		new personality.RandomWalk
+	]...
+
+	c
