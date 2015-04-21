@@ -4,7 +4,7 @@ Q = require 'q'
 log = require '../log'
 game = require '../game'
 
-{bresenhamLine, arrayRemove, distanceSq} = require '../util'
+{bresenhamLine, arrayRemove} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
 vectorMath = require '../vector-math'
@@ -328,18 +328,6 @@ module.exports = class Creature extends Entity
 			else
 				game.emit 'game.creature.attack.none', @, dir
 				no
-
-	distanceSqTo: (to) ->
-		distanceSq @, to
-
-	distanceTo: (to) ->
-		Math.sqrt @distanceSqTo to
-
-	inRange: (range, to) ->
-		(@distanceSqTo to) <= (range*range)
-
-	directionTo: (to) ->
-		direction.getDirection @, to
 
 	findNearest: (maxRange = Infinity, cb) ->
 		minDist = maxRange * maxRange

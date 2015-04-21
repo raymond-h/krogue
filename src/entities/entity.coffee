@@ -4,6 +4,8 @@ log = require '../log'
 game = require '../game'
 direction = require '../direction'
 
+{distanceSq} = require '../util'
+
 class exports.Entity
 	symbol: '-'
 	blocking: no
@@ -22,6 +24,18 @@ class exports.Entity
 		if _.isObject x then {x, y} = x
 
 		@setPos @x+x, @y+y
+
+	distanceSqTo: (to) ->
+		distanceSq @, to
+
+	distanceTo: (to) ->
+		Math.sqrt @distanceSqTo to
+
+	inRange: (range, to) ->
+		(@distanceSqTo to) <= (range*range)
+
+	directionTo: (to) ->
+		direction.getDirection @, to
 
 	isPlayer: -> no
 
