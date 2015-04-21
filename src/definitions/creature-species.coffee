@@ -112,7 +112,7 @@ class classes.SpaceBeeMonarch extends classes.SpaceBee
 	symbol: 'spaceBeeMonarch'
 	weight: 2 / 10000
 
-class classes.Haithera extends classes.Species
+class classes.Haithera extends Species
 	name: 'haithera'
 	symbol: 'haithera'
 	weight: 400
