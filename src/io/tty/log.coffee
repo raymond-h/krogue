@@ -1,4 +1,5 @@
 winston = require 'winston'
+util = require 'util'
 
 winston
 	.remove winston.transports.Console
@@ -8,4 +9,4 @@ winston
 		json: no
 
 exports.log = (level, params...) ->
-	winston.log level, params...
+	winston.log level, (params.map util.inspect)...
