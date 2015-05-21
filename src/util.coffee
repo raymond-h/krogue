@@ -36,19 +36,12 @@ exports.makePromise = exports.p = (val) ->
 	Promise.resolve val
 
 exports.whilst = (test, fn) ->
-	poisonPill = {}
-
-	iteration = ->
+	do iteration = ->
 		Promise.resolve(test())
 		.then (doLoop) ->
 			if doLoop
 				Promise.resolve(fn())
 				.then iteration
-
-			else throw poisonPill
-
-	iteration()
-	.catch (e) -> if e isnt poisonPill then throw e
 
 exports.edge = (r, edge) ->
 	switch edge
