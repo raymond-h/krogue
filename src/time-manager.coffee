@@ -1,8 +1,9 @@
 _ = require 'lodash'
-Q = require 'q'
 
 log = require './log'
 {whilst, arrayRemove} = require './util'
+
+{p} = require './util'
 
 module.exports = class TimeManager
 	constructor: ->
@@ -33,7 +34,7 @@ module.exports = class TimeManager
 				#{target.x},#{target.y}
 			"
 
-			Q target.tick()
+			p target.tick()
 			.then (cost = 0) =>
 				rate = _.result target, 'tickRate'
 

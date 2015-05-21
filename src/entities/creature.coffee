@@ -1,10 +1,10 @@
 _ = require 'lodash'
-Q = require 'q'
 
 log = require '../log'
 game = require '../game'
 
 {bresenhamLine, arrayRemove} = require '../util'
+{p} = require '../util'
 direction = require '../direction'
 RangedValue = require '../ranged-value'
 vectorMath = require '../vector-math'
@@ -394,7 +394,7 @@ module.exports = class Creature extends Entity
 	tickRate: -> @calc 'speed'
 
 	tick: (a...) ->
-		Q(
+		p(
 			# check if this creature is controlled by player
 			if @isPlayer() then game.player.tick a...
 

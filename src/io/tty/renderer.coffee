@@ -3,7 +3,6 @@ program = blessed.program.global
 
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
-Q = require 'q'
 
 log = require '../../log'
 

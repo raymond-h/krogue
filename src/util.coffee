@@ -32,6 +32,9 @@ exports.bresenhamLine = (p0, p1, callback) ->
 
 	result
 
+exports.makePromise = exports.p = (val) ->
+	Q val
+
 exports.whilst = (test, fn, callback) ->
 	Q.ninvoke async, 'whilst',
 		test,

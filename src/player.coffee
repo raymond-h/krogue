@@ -10,6 +10,8 @@ vectorMath = require './vector-math'
 {whilst, arrayRemove} = require './util'
 prompts = game.prompts
 
+{p} = require './util'
+
 module.exports = class Player
 	constructor: (@creature) ->
 
@@ -25,7 +27,7 @@ module.exports = class Player
 			d = Q.defer()
 
 			game.once 'action.**', (action, params...) =>
-				Q @doAction action, params...
+				p @doAction action, params...
 
 				.then (cost) -> if _.isNumber cost then cost else 0
 				.nodeify d.makeNodeResolver()
@@ -47,7 +49,7 @@ module.exports = class Player
 
 				.then (doLoad) ->
 					if doLoad
-						Q game.load 'test-save.json'
+						p game.load 'test-save.json'
 						.then -> game.message "Loaded."
 
 			when 'possess'
@@ -196,7 +198,7 @@ module.exports = class Player
 						"
 						2
 					else
-						Q item.fire @creature, offset
+						p item.fire @creature, offset
 						.thenResolve 6
 
 			when 'attack'
@@ -220,7 +222,7 @@ module.exports = class Player
 
 						offset = vectorMath.sub pos, @creature
 
-						Q @creature.throw item, offset
+						p @creature.throw item, offset
 						.thenResolve 6
 
 			when 'use-skill'
@@ -238,7 +240,7 @@ module.exports = class Player
 
 					skill = choice.value
 
-					Q.fcall =>
+					p do =>
 						return null if not skill.askParams?
 
 						skill.askParams @creature

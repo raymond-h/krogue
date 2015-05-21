@@ -2,15 +2,14 @@ fs = require 'fs'
 path = require 'path'
 mkdirp = require 'mkdirp'
 
-Q = require 'q'
-
 serialization = require '../../serialization'
+{p} = require '../../util'
 
 exports.save = (game, filename) ->
 	filename = path.join 'saves', filename
 	mkdirp.sync 'saves'
 
-	Q serialization.stringify game.saveToJSON()
+	p serialization.stringify game.saveToJSON()
 
 	.then (json) ->
 		fs.writeFileSync filename, json
@@ -18,7 +17,7 @@ exports.save = (game, filename) ->
 exports.load = (game, filename) ->
 	filename = path.join 'saves', filename
 
-	Q serialization.parse (fs.readFileSync filename, encoding: 'utf-8')
+	p serialization.parse (fs.readFileSync filename, encoding: 'utf-8')
 
 	.then (obj) ->
 		game.loadFromJSON obj

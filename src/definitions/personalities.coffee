@@ -1,10 +1,9 @@
-Q = require 'q'
-
 game = require '../game'
 
 items = require './items'
 direction = require '../direction'
 vectorMath = require '../vector-math'
+{p} = require '../util'
 
 Personality = class exports.Personality
 	constructor: ->
@@ -128,7 +127,7 @@ class exports.Gunman extends Personality
 				12
 
 			else
-				Q gun.fire creature, vectorMath.sub target, creature
+				p gun.fire creature, vectorMath.sub target, creature
 				.thenResolve 6
 
 		else 12

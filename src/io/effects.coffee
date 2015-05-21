@@ -1,6 +1,5 @@
-Q = require 'q'
-
 {arrayRemove} = require '../util'
+{p} = require '../util'
 
 module.exports = class Effects
 	constructor: (@io) ->
@@ -12,7 +11,7 @@ module.exports = class Effects
 	_performEffect: (data, cb) ->
 		@effects.push data
 
-		Q cb.call @, data
+		p cb.call @, data
 
 		.then =>
 			arrayRemove @effects, data
