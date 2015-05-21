@@ -23,12 +23,11 @@ class exports.GenerationManager
 		[path, level] = id.split '-'
 		level = Number level
 
+		@generateConnections id, path, level
+		
 		map = @handleMap id, path, level
 
 		map.id = id
-
-		FeatureGen.generateFeatures path, level, map
-		@handleCreatures map, path, level
 
 		map
 
@@ -40,14 +39,18 @@ class exports.GenerationManager
 			@addConnection thisMap, name, map, target
 
 	handleMap: (id, path, level) ->
-		@generateConnections id, path, level
 		connections = @getConnections id
 
-		if level is 1
-			@generateStart path, 1, connections
+		map =
+			if level is 1
+				@generateStart path, 1, connections
 
-		else if level > 1
-			@generateCave path, (level - 1), connections
+			else if level > 1
+				@generateCave path, (level - 1), connections
+
+		FeatureGen.generateFeatures path, level, map
+
+		map
 
 	generateStart: (path, level, connections) ->
 		MapGen.generateBigRoom path, level, connections, 80, 21
@@ -55,11 +58,9 @@ class exports.GenerationManager
 	generateCave: (path, level, connections) ->
 		map = MapGen.generateCellularAutomata path, level, connections, 100, 50
 
-		map
+		@generateCaveEntities map, path, level
 
-	handleCreatures: (map, path, level) ->
-		if level > 1
-			@generateCaveEntities map, path, (level - 1)
+		map
 
 	generateCaveEntities: (map, path, level) ->
 		## Creatures
