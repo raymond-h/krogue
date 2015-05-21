@@ -49,6 +49,7 @@ class classes.Human extends Species
 		super...
 		new skills.SenseLasagna
 		new skills.TentacleWhip
+		new skills.Blink
 	]
 
 	modifyStat: (creature, stat, name) ->

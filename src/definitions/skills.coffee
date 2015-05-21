@@ -36,3 +36,33 @@ class exports.SenseLasagna extends Skill
 		game.message "
 			You feel no presence of any lasagna aura in your vicinity. Disappointing.
 		"
+
+class exports.Blink extends Skill
+	name: 'blink'
+
+	askParams: (creature) ->
+		Promise.try =>
+			prompts.position 'Teleport where?', default: creature
+
+		.then (position) =>
+			if not creature.canSee position
+				prompts.yesNo 'This is a terrible idea. Do it anyway?'
+				.then (doIt) -> [position, doIt]
+
+			else Promise.resolve [position, yes]
+
+		.then ([position, doIt]) => {position, doIt}
+
+	use: (creature, {position, doIt}) ->
+		if not doIt
+			game.message "
+				Cancelled blinking.
+			"
+
+		else
+			game.message "
+				*BZOOM*
+			"
+
+			creature.setPos position
+			2
