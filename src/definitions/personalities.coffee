@@ -128,7 +128,7 @@ class exports.Gunman extends Personality
 
 			else
 				p gun.fire creature, vectorMath.sub target, creature
-				.thenResolve 6
+				.then -> 6
 
 		else 12
 

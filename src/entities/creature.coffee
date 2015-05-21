@@ -403,7 +403,7 @@ module.exports = class Creature extends Entity
 		# .then (cost) ->
 		# 	game.renderer.doEffects()
 
-		# 	.thenResolve cost
+		# 	.then -> cost
 
 	aiTick: ->
 		# no personalities => brainless

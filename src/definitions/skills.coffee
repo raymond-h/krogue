@@ -23,7 +23,7 @@ class exports.TentacleWhip extends Skill
 		prompts.position 'Whip towards where?', default: creature
 		.then (pos) -> params.position = pos
 
-		.thenResolve params
+		.then -> params
 
 	use: (creature, params) ->
 		console.log 'whip:', params

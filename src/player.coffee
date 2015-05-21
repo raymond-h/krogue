@@ -197,7 +197,7 @@ module.exports = class Player
 						2
 					else
 						p item.fire @creature, offset
-						.thenResolve 6
+						.then -> 6
 
 			when 'attack'
 				prompts.direction 'Attack in what direction?'
@@ -221,7 +221,7 @@ module.exports = class Player
 						offset = vectorMath.sub pos, @creature
 
 						p @creature.throw item, offset
-						.thenResolve 6
+						.then -> 6
 
 			when 'use-skill'
 				skills = @creature.skills()

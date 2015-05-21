@@ -5,12 +5,15 @@ argv = (require 'yargs').argv
 
 log = require './log'
 
-process.on 'uncaughtException', (err) ->
+errorHandler = (err) ->
 	log.error 'Uncaught exception:', err.stack
 
 	setTimeout (->
 		process.exit 1
 	), 1000
+
+process.on 'uncaughtException', errorHandler
+process.on 'unhandledRejection', errorHandler
 
 logLevel = argv.log ? 'info'
 
