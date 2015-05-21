@@ -243,7 +243,7 @@ module.exports = class Player
 
 						skill.askParams @creature
 
-					.then (params) ->
+					.then (params) =>
 						skill.use @creature, params
 
 			when 'test-dir'
