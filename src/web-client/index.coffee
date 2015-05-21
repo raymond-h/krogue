@@ -1,5 +1,5 @@
 Promise = require 'bluebird'
-Promise.longStackTraces()
+# Promise.longStackTraces()
 
 log = require '../log'
 
