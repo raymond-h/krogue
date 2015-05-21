@@ -127,11 +127,7 @@ class exports.Gunman extends Personality
 				12
 
 			else
-<<<<<<< HEAD
 				p gun.fire creature, vectorMath.sub target, creature
-=======
-				Promise.resolve(gun.fire creature, vectorMath.sub target, creature)
->>>>>>> Use Bluebird instead of Q for promises
 				.thenResolve 6
 
 		else 12

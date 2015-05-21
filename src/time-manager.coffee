@@ -34,11 +34,7 @@ module.exports = class TimeManager
 				#{target.x},#{target.y}
 			"
 
-<<<<<<< HEAD
 			p target.tick()
-=======
-			Promise.resolve(target.tick())
->>>>>>> Use Bluebird instead of Q for promises
 			.then (cost = 0) =>
 				rate = _.result target, 'tickRate'
 

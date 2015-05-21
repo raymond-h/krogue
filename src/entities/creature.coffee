@@ -394,11 +394,7 @@ module.exports = class Creature extends Entity
 	tickRate: -> @calc 'speed'
 
 	tick: (a...) ->
-<<<<<<< HEAD
 		p(
-=======
-		Promise.resolve(
->>>>>>> Use Bluebird instead of Q for promises
 			# check if this creature is controlled by player
 			if @isPlayer() then game.player.tick a...
 

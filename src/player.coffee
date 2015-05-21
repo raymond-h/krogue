@@ -47,11 +47,7 @@ module.exports = class Player
 
 				.then (doLoad) ->
 					if doLoad
-<<<<<<< HEAD
 						p game.load 'test-save.json'
-=======
-						Promise.resolve(game.load 'test-save.json')
->>>>>>> Use Bluebird instead of Q for promises
 						.then -> game.message "Loaded."
 
 			when 'possess'
@@ -200,11 +196,7 @@ module.exports = class Player
 						"
 						2
 					else
-<<<<<<< HEAD
 						p item.fire @creature, offset
-=======
-						Promise.resolve(item.fire @creature, offset)
->>>>>>> Use Bluebird instead of Q for promises
 						.thenResolve 6
 
 			when 'attack'
@@ -228,11 +220,7 @@ module.exports = class Player
 
 						offset = vectorMath.sub pos, @creature
 
-<<<<<<< HEAD
 						p @creature.throw item, offset
-=======
-						Promise.resolve(@creature.throw item, offset)
->>>>>>> Use Bluebird instead of Q for promises
 						.thenResolve 6
 
 			when 'use-skill'
@@ -250,11 +238,7 @@ module.exports = class Player
 
 					skill = choice.value
 
-<<<<<<< HEAD
 					p do =>
-=======
-					Promise.try =>
->>>>>>> Use Bluebird instead of Q for promises
 						return null if not skill.askParams?
 
 						skill.askParams @creature
