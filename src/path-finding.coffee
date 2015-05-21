@@ -1,8 +1,30 @@
+_ = require 'lodash'
 aStar = require 'a-star'
 
 direction = require './direction'
 vectorMath = require './vector-math'
 {distance} = require './util'
+
+offsets = [
+	'up', 'down', 'left', 'right'
+	'up-left', 'up-right', 'down-left', 'down-right'
+].map (dir) -> direction.parse(dir)
+
+posToStr = ({x, y}) -> "#{x};#{y}"
+
+getNeighbouringTiles = ({x, y}, map, tileFn) ->
+	if tileFn?
+		result = []
+
+		for {x: i, y: j} in offsets
+			pos = {x: x+i, y: y+j}
+
+			if tileFn(map, pos)
+				result.push pos
+
+		result
+
+	else offsets.map ({x: i, y: j}) -> {x: x+i, y: y+j}
 
 exports.aStar = (map, start, end, tileFn) ->
 	tileFn ?= (map, {x, y}, data) ->
@@ -12,11 +34,7 @@ exports.aStar = (map, start, end, tileFn) ->
 		start: start
 		isEnd: (node) -> node.x is end.x and node.y is end.y
 		neighbor: (node) ->
-			a = [
-				'up', 'down', 'left', 'right'
-				'up-left', 'up-right', 'down-left', 'down-right'
-			]
-			.map (dir) -> vectorMath.add node, direction.parse(dir)
+			a = getNeighbouringTiles node
 			.filter ({x, y}) ->
 				(0 <= x < map.w and 0 <= y < map.h) and
 				tileFn map, {x, y}, map.data[y][x]
@@ -25,7 +43,7 @@ exports.aStar = (map, start, end, tileFn) ->
 
 		distance: distance
 		heuristic: (node) -> distance node, end
-		hash: ({x, y}) -> "#{x};#{y}"
+		hash: posToStr
 
 	aStar opts
 
@@ -35,63 +53,41 @@ exports.aStarOverDistanceMap = (map, start, end, tileFn) ->
 	opts =
 		start: start
 		isEnd: (node) -> node.x is end.x and node.y is end.y
-		neighbor: (node) ->
-			[
-				'up', 'down', 'left', 'right'
-				'up-left', 'up-right', 'down-left', 'down-right'
-			]
-			.map (dir) -> vectorMath.add node, direction.parse(dir)
+		neighbor: (node) -> getNeighbouringTiles node
 
 		distance: (a, b) -> Math.max Math.abs(a.x - b.x), Math.abs(a.y - b.y)
 		heuristic: ({x, y}) -> distMap[y][x]
-		hash: ({x, y}) -> "#{x};#{y}"
+		hash: posToStr
 
 	aStar opts
 
 distanceMaps = {}
 
 exports.getDistanceMap = (map, goals, tileFn) ->
-	tileFn ?= (map, {x, y}, data) ->
-		not data.collidable
-
-	goals = goals.map ({x, y}) -> "#{x};#{y}"
-	goalId = goals.join '_'
+	tileFn ?= (map, {x, y}) ->
+		not map.data[y]?[x].collidable
 
 	distMaps = distanceMaps[map.id] ?= {}
 
+	goalId = goals.map(posToStr).join '_'
 	if distMaps[goalId]? then return distMaps[goalId]
 
-	distMaps[goalId] = distMap =
+	distMaps[goalId] = nodes =
 		for y in [0...map.h]
 			for x in [0...map.w]
-				if "#{x};#{y}" in goals then 0 else Infinity
+				Infinity
 
-	smallestNeighbour = (ox, oy) ->
-		smallest = Infinity
+	pending = for goal in goals
+		nodes[goal.y][goal.x] = 0
+		[goal, 0]
 
-		for i in [-1..1]
-			for j in [-1..1]
-				smallest = Math.min smallest, (distMap[i + oy]?[j + ox]) ? Infinity
+	while pending.length > 0
+		[pos, dist] = pending.shift()
+		calcDist = dist+1
 
-		smallest
+		for {x, y} in getNeighbouringTiles pos, map, tileFn
+			if nodes[y][x] > calcDist
+				nodes[y][x] = calcDist
+				pending.push [{x, y}, calcDist]
 
-	iteration = ->
-		changedOccured = no
-
-		for x in [0...map.w]
-			for y in [0...map.h]
-				if not tileFn map, {x, y}, map.data[y]?[x]
-					continue
-
-				smallest = smallestNeighbour x, y
-
-				if distMap[y][x] > smallest+2
-					distMap[y][x] = smallest+1
-
-					changedOccured = yes
-
-		changedOccured
-
-	while iteration() then
-
-	distMap
+	nodes
