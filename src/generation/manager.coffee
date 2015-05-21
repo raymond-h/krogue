@@ -1,8 +1,5 @@
 _ = require 'lodash'
 
-MapGen = require './maps'
-CreatureGen = require './creatures'
-ItemGen = require './items'
 FeatureGen = require './features'
 
 class exports.GenerationManager
@@ -24,7 +21,7 @@ class exports.GenerationManager
 		level = Number level
 
 		@generateConnections id, path, level
-		
+
 		map = @handleMap id, path, level
 
 		map.id = id
@@ -53,38 +50,7 @@ class exports.GenerationManager
 		map
 
 	generateStart: (path, level, connections) ->
-		MapGen.generateBigRoom path, level, connections, 80, 21
+		(require './generator-start').generateMap path, level, connections
 
 	generateCave: (path, level, connections) ->
-		map = MapGen.generateCellularAutomata path, level, connections, 100, 50
-
-		@generateCaveEntities map, path, level
-
-		map
-
-	generateCaveEntities: (map, path, level) ->
-		## Creatures
-		for i in [1..20]
-			{x, y} = MapGen.generatePos map
-			map.addEntity CreatureGen.generateStrangeGoo x, y
-
-		for i in [1..3]
-			{x, y} = MapGen.generatePos map
-			map.addEntity CreatureGen.generateViolentDonkey x, y
-
-		# for i in [1..1]
-		# 	{x, y} = MapGen.generatePos map
-		# 	map.addEntity CreatureGen.generateTinyAlien x, y
-
-		for i in [1..3]
-			{x, y} = MapGen.generatePos map
-			map.addEntity CreatureGen.generateSpaceAnemone x, y
-
-		## Items
-		for i in [1..3]
-			{x, y} = MapGen.generatePos map
-
-			map.addEntity ItemGen.generatePeculiarObject().asMapItem x, y
-
-		{x, y} = MapGen.generatePos map
-		map.addEntity ItemGen.generateGun().asMapItem x, y
+		(require './generator-cave').generateMap path, level, connections
