@@ -23,14 +23,11 @@ module.exports = class Player
 				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
-		.then =>
-			new Promise (resolve, reject) =>
-				game.once 'action.**', (action, params...) =>
-					Promise.resolve( @doAction action, params... )
+		.then -> game.waitOnEvent 'action.**'
 
-					.then (cost) -> if _.isNumber cost then cost else 0
+		.then ([action, params...]) => @doAction action, params...
 
-					.then resolve
+		.then (cost) -> if _.isNumber cost then cost else 0
 
 	doAction: (action, params...) ->
 		switch action

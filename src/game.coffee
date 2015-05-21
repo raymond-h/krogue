@@ -2,6 +2,7 @@ async = require 'async'
 {EventEmitter2} = require 'eventemitter2'
 MersenneTwister = require 'mersennetwister'
 _ = require 'lodash'
+Promise = require 'bluebird'
 
 log = require './log'
 
@@ -24,6 +25,13 @@ class Game extends EventEmitter2
 
 		@mapIdCounter = 0
 		@maps = {}
+
+	waitOnEvent: (event) ->
+		new Promise (resolve, reject) =>
+			@once event, (params...) =>
+				resolve params
+
+		.cancellable()
 
 	generateMapId: ->
 		"map-#{@mapIdCounter++}"
