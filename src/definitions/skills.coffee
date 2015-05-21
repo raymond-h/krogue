@@ -1,4 +1,5 @@
 _ = require 'lodash'
+Promise = require 'bluebird'
 
 game = require '../game'
 log = require '../log'
@@ -18,12 +19,11 @@ class exports.TentacleWhip extends Skill
 	askParams: (creature) ->
 		# only called for player, to populate params to pass to #use()
 
-		params = {}
+		Promise.all [
+			prompts.position 'Whip towards where?', default: creature
+		]
 
-		prompts.position 'Whip towards where?', default: creature
-		.then (pos) -> params.position = pos
-
-		.then -> params
+		.then ([position]) -> {position}
 
 	use: (creature, params) ->
 		console.log 'whip:', params
