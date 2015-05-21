@@ -1,4 +1,4 @@
-Q = require 'q'
+Promise = require 'bluebird'
 _ = require 'lodash'
 
 game = require '../game'
@@ -18,22 +18,20 @@ exports.listOptions = listOptions = [
 ]
 
 exports.generic = (message, event, matcher, opts) ->
-	d = Q.defer()
-	event = [].concat event
+	new Promise (resolve, reject) ->
+		event = [].concat event
 
-	handler = (a...) ->
-		if matcher @event, a...
-			(game.off e, handler) for e in event
+		handler = (a...) ->
+			if matcher @event, a...
+				(game.off e, handler) for e in event
 
-			d.resolve [@event, a...]
+				resolve [@event, a...]
 
-	(game.on e, handler) for e in event
+		(game.on e, handler) for e in event
 
-	if message?
-		game.message message
-		game.renderer.showMoreLogs()
-
-	d.promise
+		if message?
+			game.message message
+			game.renderer.showMoreLogs()
 
 exports.keys = (message, keys, opts) ->
 	{showKeys, shownKeys, separator} = _.defaults {}, opts,

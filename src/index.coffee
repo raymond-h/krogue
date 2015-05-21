@@ -1,15 +1,16 @@
-Q = require 'q'
+Promise = require 'bluebird'
+Promise.longStackTraces()
+
 argv = (require 'yargs').argv
 
 log = require './log'
 
-Q.longStackSupport = yes
-
 process.on 'uncaughtException', (err) ->
 	log.error 'Uncaught exception:', err.stack
 
-	Q.delay(1000).then ->
+	setTimeout (->
 		process.exit 1
+	), 1000
 
 logLevel = argv.log ? 'info'
 

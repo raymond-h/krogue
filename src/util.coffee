@@ -1,6 +1,6 @@
-async = require 'async'
-Q = require 'q'
 _ = require 'lodash'
+
+Promise = require 'bluebird'
 
 exports.bresenhamLine = (p0, p1, callback) ->
 	{x: x0, y: y0} = p0
@@ -33,14 +33,22 @@ exports.bresenhamLine = (p0, p1, callback) ->
 	result
 
 exports.makePromise = exports.p = (val) ->
-	Q val
+	Promise.resolve val
 
-exports.whilst = (test, fn, callback) ->
-	Q.ninvoke async, 'whilst',
-		test,
-		((next) -> fn().nodeify next)
+exports.whilst = (test, fn) ->
+	poisonPill = {}
 
-	.nodeify callback
+	iteration = ->
+		Promise.resolve(test())
+		.then (doLoop) ->
+			if doLoop
+				Promise.resolve(fn())
+				.then iteration
+
+			else throw poisonPill
+
+	iteration()
+	.catch (e) -> if e isnt poisonPill then throw e
 
 exports.edge = (r, edge) ->
 	switch edge

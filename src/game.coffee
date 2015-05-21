@@ -1,7 +1,6 @@
 async = require 'async'
 {EventEmitter2} = require 'eventemitter2'
 MersenneTwister = require 'mersennetwister'
-Q = require 'q'
 _ = require 'lodash'
 
 log = require './log'
@@ -95,7 +94,7 @@ class Game extends EventEmitter2
 	quit: ->
 		@io.deinitialize @ if @io.initialized
 
-		Q.delay(100).then -> process.exit 0
+		setTimeout (-> process.exit 0), 100
 
 	goTo: (mapId, position) ->
 		map = @maps[mapId] ?

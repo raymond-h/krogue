@@ -1,4 +1,4 @@
-Q = require 'q'
+Promise = require 'bluebird'
 
 Effects = require '../effects'
 
@@ -15,7 +15,7 @@ module.exports = class TtyEffects extends Effects
 	shootSpread: ({start, angle, spread, range, symbol}) ->
 		angles = (angle + spread*i for i in [-1..1])
 
-		Q.all (for i in [-1..1]
+		Promise.all (for i in [-1..1]
 			a = angle + spread*i
 
 			end = vectorMath.add start, {
@@ -36,7 +36,7 @@ module.exports = class TtyEffects extends Effects
 
 			whilst (-> points.length > 0),
 				=>
-					Q.fcall =>
+					Promise.try =>
 						data.current = points.shift()
 						@invalidate()
 

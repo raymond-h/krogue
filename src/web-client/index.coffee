@@ -1,5 +1,5 @@
-Q = require 'q'
-Q.longStackTraces = yes
+Promise = require 'bluebird'
+Promise.longStackTraces()
 
 log = require '../log'
 
