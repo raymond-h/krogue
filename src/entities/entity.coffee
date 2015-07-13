@@ -48,7 +48,14 @@ class exports.Entity
 			(_.has o, k) and not (k in ['map'])
 
 exports.Creature = require './creature'
-exports.MapItem = require './map-item'
+
+class exports.MapItem extends Entity
+	symbol: -> @item.symbol
+	type: 'item'
+	blocking: no
+
+	constructor: (m, x, y, @item) ->
+		super
 
 class exports.Stairs extends exports.Entity
 	symbol: -> if @down then 'stairsDown' else 'stairsUp'
