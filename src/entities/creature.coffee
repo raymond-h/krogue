@@ -119,7 +119,6 @@ module.exports = class Creature extends Entity
 		@equipment
 		.map (item) => item.getEquipSlotUse slot, @
 		.reduce ((prev, curr) -> prev + curr), 0
-		# 0
 
 	maxSpacesInSlot: (slot) ->
 		@species.equipSlotNum[slot]
@@ -128,20 +127,16 @@ module.exports = class Creature extends Entity
 		maxSpaces = @maxSpacesInSlot slot
 
 		((@equipSlotCount slot) + (item.getEquipSlotUse slot, @)) <= maxSpaces
-		# no
 
 	hasItemEquipped: (item) ->
 		item in @equipment
-		# no
 
 	hasItemInSlot: (slot, extraCheck) ->
 		_.any @equipment, (item) =>
 			(item.getEquipSlotUse slot, @) > 0 and (extraCheck?(item, slot) ? yes)
-		# no
 
 	getItemsForSlot: (slot) ->
 		@equipment.filter (item) => (item.getEquipSlotUse slot, @) > 0
-		# []
 
 	belongsToGroup: (other) ->
 		if _.isString other
@@ -212,9 +207,7 @@ module.exports = class Creature extends Entity
 
 	equip: (item, silent = no) ->
 		notFit = (slot) =>
-			r = @equipSlotFits slot, item
-			# log.info "YO #{slot} = #{r}"
-			not r
+			not @equipSlotFits slot, item
 
 		if _.any creatureSpecies._equipSlots, notFit
 			return no
