@@ -1,7 +1,7 @@
 {
   "name": "krogue",
   "description": "A roguelike videogame",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "lib/index.js",
   "private": true,
