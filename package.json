@@ -7,19 +7,28 @@
   "private": true,
   "author": "Raymond Hammarling",
   "scripts": {
-    "prepublish": "grunt build",
-    "test": "grunt test"
+    "lint": "coffeelint src/",
+    "build": "coffee -c -o lib/ src/",
+    "build-web": "npm run build && mkdirp public/lib/ && browserify -d -o public/lib/main.js lib/web-client/index.js",
+    
+    "serve": "http-server -p 80",
+    "livereload": "livereload ./public",
+    "watch": "watch \"npm run build-web\" src/",
+
+    "dev": "parallelshell \"npm run watch\" \"npm run livereload\" \"npm run serve\"",
+    
+    "prepublish": "npm run build",
+    "start": "coffee ."
   },
   "devDependencies": {
-    "grunt": "*",
-    "load-grunt-tasks": "*",
-    "grunt-contrib-coffee": "*",
-    "grunt-coffeelint": "*",
-    "grunt-contrib-watch": "*",
-    "chai": "*",
-    "grunt-mocha-test": "*",
-    "grunt-browserify": "^3.0.1",
-    "grunt-contrib-connect": "^0.9.0"
+    "browserify": "^10.2.6",
+    "coffee-script": "^1.9.3",
+    "coffeelint": "^1.10.1",
+    "http-server": "^0.8.0",
+    "livereload": "^0.3.7",
+    "mkdirp": "^0.5.1",
+    "parallelshell": "^1.2.0",
+    "watch": "^0.16.0"
   },
   "dependencies": {
     "blessed": "^0.1.5",
