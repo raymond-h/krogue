@@ -10,39 +10,39 @@ exports.generateStrangeGoo = (x, y) ->
 
 	if game.random.chance 0.50
 		c.personalities.push [
-			new personality.FleeFromPlayer 5
-			(new personality.RandomWalk).withMultiplier 0.5
+			new personality.FleeFromPlayer c, 5
+			(new personality.RandomWalk c).withMultiplier 0.5
 		]...
 
 	else
 		c.personalities.push [
-			new personality.FleeFromPlayer 5
-			(new personality.WantItems 15).withMultiplier 0.5
+			new personality.FleeFromPlayer c, 5
+			(new personality.WantItems c, 15).withMultiplier 0.5
 		]...
 
 	c
 
 exports.generateViolentDonkey = (x, y) ->
-	m = new Creature null, x, y, species.violentDonkey
+	c = new Creature null, x, y, species.violentDonkey
 
-	m.personalities.push [
-		new personality.AttackAllButSpecies m.species.typeName
+	c.personalities.push [
+		new personality.AttackAllButSpecies c, c.species.typeName
 	]...
 
-	m
+	c
 
 exports.generateTinyAlien = (x, y) ->
 	c = new Creature null, x, y, species.tinyAlien
 
 	c.personalities.push [
-		(new personality.FleeIfWeak).withMultiplier 10
-		new personality.Attacker
+		(new personality.FleeIfWeak c).withMultiplier 10
+		new personality.Attacker c
 	]...
 
 	if game.random.chance 0.5
 		c.equip itemGen.generateGun()
 
-		c.personalities.push (new personality.Gunman).withMultiplier 2
+		c.personalities.push (new personality.Gunman c).withMultiplier 2
 
 	c
 
@@ -50,8 +50,8 @@ exports.generateSpaceAnemone = (x, y) ->
 	c = new Creature null, x, y, species.spaceAnemone
 
 	c.personalities.push [
-		new personality.RandomWalk
-		(new personality.Attacker 6).withMultiplier 2
+		new personality.RandomWalk c
+		(new personality.Attacker c, 6).withMultiplier 2
 	]...
 
 	c
@@ -68,17 +68,17 @@ exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
 
 	if not monarch
 		c.personalities.push [
-			(new personality.NoLeaderOutrage 20).withMultiplier 10
-			(new personality.FendOffFromLeader).withMultiplier 6
-			(new personality.HateOpposingBees).withMultiplier 3
-			new personality.RandomWalk
+			(new personality.NoLeaderOutrage c, 20).withMultiplier 10
+			(new personality.FendOffFromLeader c).withMultiplier 6
+			(new personality.HateOpposingBees c).withMultiplier 3
+			new personality.RandomWalk c
 		]...
 
 	else
 		c.leader = yes
 
 		c.personalities.push [
-			new personality.RandomWalk 0.2
+			new personality.RandomWalk c, 0.2
 		]...
 
 	c
@@ -87,8 +87,8 @@ exports.generateHaithera = (x, y) ->
 	c = new Creature null, x, y, species.haithera
 
 	c.personalities.push [
-		(new personality.Attacker 10).withMultiplier 2
-		new personality.RandomWalk
+		(new personality.Attacker c, 10).withMultiplier 2
+		new personality.RandomWalk c
 	]...
 
 	c
