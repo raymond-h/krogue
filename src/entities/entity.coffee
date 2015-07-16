@@ -49,7 +49,7 @@ class exports.Entity
 
 exports.Creature = require './creature'
 
-class exports.MapItem extends Entity
+class exports.MapItem extends exports.Entity
 	symbol: -> @item.symbol
 	type: 'item'
 	blocking: no

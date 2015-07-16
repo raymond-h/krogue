@@ -5,6 +5,7 @@ direction = require '../direction'
 vectorMath = require '../vector-math'
 calc = require '../calc'
 log = require '../log'
+{MapItem} = require '../entities'
 
 Item = class exports.Item
 	symbol: 'geneticItem'
@@ -35,8 +36,6 @@ Item = class exports.Item
 		.join ', '
 
 	asMapItem: (x, y) ->
-		MapItem = require '../entities/map-item'
-
 		new MapItem null, x, y, @
 
 class exports.PeculiarObject extends Item

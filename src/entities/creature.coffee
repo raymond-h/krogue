@@ -14,7 +14,7 @@ creatureSpecies = require '../definitions/creature-species'
 items = require '../definitions/items'
 calc = require '../calc'
 
-{Entity} = require './entity'
+{Entity, MapItem} = require './entity'
 
 module.exports = class Creature extends Entity
 	symbol: -> @species?.symbol ? '§'
@@ -176,8 +176,6 @@ module.exports = class Creature extends Entity
 		cause.level++ if cause.isPlayer?()
 
 	pickup: (item) ->
-		MapItem = require './map-item'
-
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
