@@ -7,14 +7,13 @@
   "private": true,
   "author": "Raymond Hammarling",
   "scripts": {
-    "lint": "coffeelint src/",
+    "lint": "coffeelint --reporter ./lint-reporter.coffee -q src/",
+    "build:all": "npm run build && npm run build:web",
     "build": "coffee -c -o lib/ src/",
-    "build-web": "mkdirp public/lib/ && browserify -t coffeeify --extension=\".coffee\" -d -o public/lib/main.js src/web-client/index.coffee",
-    
+    "build:web": "mkdirp public/lib/ && browserify -t coffeeify --extension=\".coffee\" -d -o public/lib/main.js src/web-client/index.coffee",
     "serve": "http-server -p 80",
     "livereload": "livereload ./public",
-    "watch": "watch \"npm run build-web\" src/",
-    
+    "watch": "watch \"npm run build:all && echo Done\" src/",
     "dev": "parallelshell \"npm run watch\" \"npm run livereload\" \"npm run serve\"",
     "prepublish": "npm run build",
     "start": "coffee ."
