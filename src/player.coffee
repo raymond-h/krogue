@@ -17,6 +17,7 @@ module.exports = class Player
 		Object.defineProperty @, 'lookPos',
 			enumerable: no
 			get: => @_lookPos ? @creature
+			set: (pos) => @_lookPos = pos
 
 		@_lookPos = null
 
