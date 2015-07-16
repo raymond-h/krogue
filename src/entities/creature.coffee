@@ -1,4 +1,5 @@
 _ = require 'lodash'
+RangedValue = require 'ranged-value'
 
 log = require '../log'
 game = require '../game'
@@ -6,7 +7,6 @@ game = require '../game'
 {bresenhamLine, arrayRemove} = require '../util'
 {p} = require '../util'
 direction = require '../direction'
-RangedValue = require '../ranged-value'
 vectorMath = require '../vector-math'
 pathFinding = require '../path-finding'
 
@@ -151,7 +151,7 @@ module.exports = class Creature extends Entity
 		game.emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
 
-		@die cause if @health.empty()
+		@die cause if @health.empty
 
 	die: (cause) ->
 		drop = (item) =>

@@ -3,6 +3,7 @@ async = require 'async'
 MersenneTwister = require 'mersennetwister'
 _ = require 'lodash'
 Promise = require 'bluebird'
+TimeManager = require 'rl-time-manager'
 
 log = require './log'
 
@@ -62,7 +63,6 @@ class Game extends EventEmitter2
 
 		Player = require './player'
 		{GenerationManager} = require './generation/manager'
-		TimeManager = require './time-manager'
 		Random = require './random'
 
 		@random = new Random(new MersenneTwister)
