@@ -9,7 +9,9 @@
   "scripts": {
     "lint": "coffeelint --reporter ./lint-reporter.coffee -q src/",
     "build:all": "npm run build && npm run build:web",
+    "prebuild": "npm run lint",
     "build": "coffee -c -o lib/ src/",
+    "prebuild:web": "npm run lint",
     "build:web": "mkdirp public/lib/ && browserify -t coffeeify --extension=\".coffee\" -d -o public/lib/main.js src/web-client/index.coffee",
     "serve": "http-server -p 80",
     "livereload": "livereload ./public",
