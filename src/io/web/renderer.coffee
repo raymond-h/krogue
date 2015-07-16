@@ -266,7 +266,7 @@ module.exports = class WebRenderer
 
 	renderEntities: (x, y, entities) ->
 		for e in entities when @camera.target.canSee e
-			
+
 			# graphic = graphics.get _.result e, 'symbol'
 			@renderGraphicAtSlot e.x, e.y, _.result e, 'symbol'
 

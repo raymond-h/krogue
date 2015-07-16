@@ -41,17 +41,17 @@ class exports.Blink extends Skill
 	name: 'blink'
 
 	askParams: (creature) ->
-		Promise.try =>
+		Promise.try ->
 			prompts.position 'Teleport where?', default: creature
 
-		.then (position) =>
+		.then (position) ->
 			if not creature.canSee position
 				prompts.yesNo 'This is a terrible idea. Do it anyway?'
 				.then (doIt) -> [position, doIt]
 
 			else Promise.resolve [position, yes]
 
-		.then ([position, doIt]) => {position, doIt}
+		.then ([position, doIt]) -> {position, doIt}
 
 	use: (creature, {position, doIt}) ->
 		if not doIt

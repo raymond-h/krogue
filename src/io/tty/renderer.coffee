@@ -103,7 +103,7 @@ module.exports = class TtyRenderer
 		else
 			@logs = @wrap(@pendingLogs.join ' ').split /(?:\r?\n|\r)/
 			@pendingLogs = []
-		
+
 		@invalidate()
 
 	invalidate: ->

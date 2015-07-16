@@ -35,7 +35,7 @@ exports.generateExits = (map, path, level, connections) ->
 		stairs = new Stairs map, x, y
 		stairs.target = {map: targetMap, position}
 		stairs.down = (name is 'exit')
-		
+
 		map.addEntity stairs
 
 exports.generateBigRoom = (path, level, connections, w, h) ->
@@ -44,7 +44,7 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	# generate map itself ('.' everywhere, '#' surrounding entire room)
 	tileCb = (x, y, w, h) ->
 		if not (0 < x < w-1 and 0 < y < h-1) then 1 else 0
-	
+
 	data = exports.createMapData map.w, map.h, tileCb
 
 	map.data = convertMapData data, [

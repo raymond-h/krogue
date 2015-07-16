@@ -16,7 +16,7 @@ exports.save = (game, filename) ->
 
 exports.load = (game, filename) ->
 	filename = path.join 'saves', filename
-	
+
 	p serialization.parse (fs.readFileSync filename, encoding: 'utf-8')
 
 	.then (obj) ->

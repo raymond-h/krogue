@@ -46,7 +46,7 @@ class exports.Map
 
 	seeThrough: (x, y) ->
 		if _.isObject x then {x, y} = x
-		
+
 		@data[y]?[x]?.seeThrough ? yes
 
 	@compressData: (data) ->

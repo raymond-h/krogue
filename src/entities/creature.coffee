@@ -259,13 +259,13 @@ module.exports = class Creature extends Entity
 				# if 'no' was returned, damage shouldn't be dealt
 				if r isnt no
 					dealDamage()
-				
+
 				hit = yes
 
 			mapItem = item.asMapItem endPos.x, endPos.y
 			@map.addEntity mapItem
 			game.timeManager.add mapItem
-			
+
 			item.onLand? @map, endPos, hit
 
 	move: (x, y) ->
@@ -273,7 +273,7 @@ module.exports = class Creature extends Entity
 		if _.isObject x then {x, y} = x
 
 		canMoveThere = not @collidable @x+x, @y+y
-		
+
 		@movePos x, y if canMoveThere
 
 		canMoveThere

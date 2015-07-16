@@ -28,7 +28,7 @@ class Game extends EventEmitter2
 
 	waitOnEvent: (event) ->
 		new Promise (resolve, reject) =>
-			@once event, (params...) =>
+			@once event, (params...) ->
 				resolve params
 
 		.cancellable()
@@ -41,7 +41,7 @@ class Game extends EventEmitter2
 
 		@io.initialize()
 		@io.initialized = yes
-		
+
 		@renderer = @io.renderer
 		@effects = @io.effects
 		@prompts = @io.prompts

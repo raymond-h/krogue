@@ -154,10 +154,10 @@ module.exports = class Player
 					else
 						prompts.multichoiceList 'Pick up which item?',
 							("#{i.item.name}" for i in items)
-						
+
 						.then (choices) =>
 							return game.message 'Never mind.' if not choices?
-							
+
 							for c in choices
 								@creature.pickup items[c.index]
 

@@ -270,7 +270,7 @@ class exports.Gun extends Item
 					mapItem = currentAmmo.asMapItem endPos.x, endPos.y
 					map.addEntity mapItem
 					game.timeManager.add mapItem
-				
+
 				currentAmmo.onLand? map, endPos, hit
 
 				return

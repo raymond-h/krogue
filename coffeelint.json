@@ -3,7 +3,7 @@
     "level": "ignore"
   },
   "no_trailing_whitespace": {
-    "allowed_in_empty_lines": true
+    "allowed_in_empty_lines": false
   },
   "indentation": {
     "value": 1

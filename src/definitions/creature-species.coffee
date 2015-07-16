@@ -12,7 +12,7 @@ Species = class exports.Species
 	skills: -> [] # by default, species have no skills at all
 
 	loadFromJSON: (json) -> # do nothing, not even default load
-	
+
 	# return empty object, we don't want to save data on species objects
 	toJSON: -> {}
 

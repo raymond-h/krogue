@@ -28,7 +28,7 @@ module.exports = class TtyEffects extends Effects
 
 	line: ({start, end, time, delay, symbol}) ->
 		points = bresenhamLine start, end
-		
+
 		if time? and not delay?
 			delay = time / points.length
 
