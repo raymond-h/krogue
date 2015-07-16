@@ -16,7 +16,8 @@
     "serve": "http-server -p 80",
     "livereload": "livereload ./public",
     "watch": "watch \"npm run build:all && echo Done\" src/",
-    "dev": "parallelshell \"npm run watch\" \"npm run livereload\" \"npm run serve\"",
+    "watch:web": "watch \"npm run build:web && echo Done\" src/",
+    "dev": "parallelshell \"npm run watch:web\" \"npm run livereload\" \"npm run serve\"",
     "prepublish": "npm run build",
     "start": "coffee ."
   },

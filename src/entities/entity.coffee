@@ -47,8 +47,6 @@ class exports.Entity
 		_.pick @, (v, k, o) ->
 			(_.has o, k) and not (k in ['map'])
 
-exports.Creature = require './creature'
-
 class exports.MapItem extends exports.Entity
 	symbol: -> @item.symbol
 	type: 'item'
