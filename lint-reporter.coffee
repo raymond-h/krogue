@@ -25,11 +25,6 @@ module.exports = class Reporter
             return "\u001b[" + map[s][0] + "m" + m + "\u001b[" + map[s][1] + "m"
         , message
 
-    hasWarning : () ->
-        for path of @errorReport.paths
-            return true if @errorReport.pathHasWarning(path)
-        return false
-
     publish : () ->
         paths = @errorReport.paths
 
