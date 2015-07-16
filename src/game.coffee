@@ -66,7 +66,7 @@ class Game extends EventEmitter2
 		Random = require './random'
 
 		@random = new Random(new MersenneTwister)
-		@timeManager = new TimeManager
+		@timeManager = new TimeManager(Promise.resolve.bind Promise)
 		@generationManager = new GenerationManager
 
 		creature = @createPlayerCreature()
