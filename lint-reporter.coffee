@@ -1,5 +1,5 @@
 # Taken from clutchski/coffeelint at Github, and modified
-# so warnings are shown in quiet mode
+# so warnings are shown in quiet mode and always print summary
 
 # Reports errors to the command line.
 module.exports = class Reporter
@@ -38,7 +38,7 @@ module.exports = class Reporter
         report += @reportSummary(@errorReport.getSummary())
         report += ""
 
-        @print report if not @quiet or @errorReport.hasError() or @hasWarning()
+        @print report
         return this
 
     reportSummary : (s) ->
