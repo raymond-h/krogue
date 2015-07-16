@@ -84,9 +84,7 @@ module.exports = class Player
 					@_lookPos = pos
 					game.renderer.invalidate()
 
-				prompts.position 'Look mode activated',
-					default: @creature, progress: handler
-
+				prompts.position null, default: @creature, progress: handler
 				.then (pos) =>
 					@_lookPos = null
 					game.renderer.invalidate()
