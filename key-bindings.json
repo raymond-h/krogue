@@ -25,6 +25,7 @@
   "S-s": "load",
   "p": "possess",
   ",": "pickup",
+  ";": "look",
   "d": "drop",
   "f": "fire",
   "k": "attack",

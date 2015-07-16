@@ -233,7 +233,7 @@ module.exports = class WebRenderer
 
 	renderMap: (x, y) ->
 		canvasSize = {x: @viewport.canvas.width, y: @viewport.canvas.height}
-		playerScreenPos = vectorMath.mult @game.player.creature, @tileSize
+		playerScreenPos = vectorMath.mult @game.player.lookPos, @tileSize
 
 		map = @game.currentMap
 		center = vectorMath.add playerScreenPos, {x: @tileSize/2, y: @tileSize/2}

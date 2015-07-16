@@ -106,6 +106,8 @@ exports.position = (message, opts = {}) ->
 	done = no
 	whilst (-> not done),
 		->
+			opts.progress?(pos)
+
 			game.renderer.setCursorPos pos.y - camera.y + 1, pos.x - camera.x + 0
 
 			exports.generic null, ['key.escape', 'key.enter', 'action.**'],

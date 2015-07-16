@@ -113,6 +113,7 @@ exports.position = (message, opts = {}) ->
 	updatePos = (newPos) ->
 		pos = newPos
 		snapPos()
+		opts.progress?(pos)
 		game.renderer.cursor = pos
 		game.renderer.invalidate()
 

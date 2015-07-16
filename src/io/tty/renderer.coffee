@@ -94,6 +94,12 @@ module.exports = class TtyRenderer
 
 		program.write @bufferToString()
 
+		if @game.player?
+			x = @game.player.lookPos.x - @camera.x
+			y = @game.player.lookPos.y - @camera.y + 1
+
+			@setCursorPos y, x
+
 	hasMoreLogs: ->
 		@logs.length > 1
 
@@ -177,12 +183,12 @@ module.exports = class TtyRenderer
 		c = @camera
 		map = @game.currentMap
 
-		c.target = @game.player.creature
+		c.target = @game.player.lookPos
 		c.bounds map
 		c.update()
 
-		graphicAt = (x, y) ->
-			if c.target.canSee {x, y}
+		graphicAt = (x, y) =>
+			if @game.player.creature.canSee {x, y}
 				t = map.data[y][x]
 				graphics.get t.symbol
 
@@ -206,7 +212,7 @@ module.exports = class TtyRenderer
 	renderEntities: (x, y, entities) ->
 		c = @camera
 
-		for e in entities when c.target.canSee e
+		for e in entities when @game.player.creature.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
 				graphicId = _.result e, 'symbol'
 				graphic = graphics.get graphicId

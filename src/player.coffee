@@ -14,6 +14,11 @@ prompts = game.prompts
 
 module.exports = class Player
 	constructor: (@creature) ->
+		Object.defineProperty @, 'lookPos',
+			enumerable: no
+			get: => @_lookPos ? @creature
+
+		@_lookPos = null
 
 	tick: ->
 		game.emit 'turn.player', 'player'
@@ -73,6 +78,19 @@ module.exports = class Player
 
 					{key, value} = choice
 					game.message "You picked #{key}: #{value}!"
+
+			when 'look'
+				handler = (pos) =>
+					@_lookPos = pos
+					game.renderer.invalidate()
+
+				prompts.position 'Look mode activated',
+					default: @creature, progress: handler
+
+				.then (pos) =>
+					@_lookPos = null
+					game.renderer.invalidate()
+					0
 
 			when 'equip'
 				prompts.list 'Equip which item?', @creature.inventory
