@@ -137,7 +137,8 @@ exports.position = (message, opts = {}) ->
 				when 'key.enter' then done no
 
 				else
-					updatePos (vectorMath.add pos, direction.parse dir)
+					if action is 'direction'
+						updatePos (vectorMath.add pos, direction.parse dir)
 
 		(game.on e, handler) for e in ['key.escape', 'key.enter', 'action.**']
 
