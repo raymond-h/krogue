@@ -1,16 +1,9 @@
 _ = require 'lodash'
-
-log = require './log'
-{whilst, arrayRemove} = require './util'
-
-{p} = require './util'
+Promise = require 'bluebird'
 
 module.exports = class TimeManager
 	constructor: ->
 		@targets = []
-
-		@targets.rotate = ->
-			@push @shift()
 
 	add: (targets...) ->
 		for target in targets
@@ -19,8 +12,7 @@ module.exports = class TimeManager
 			i = _.sortedIndex @targets, target, (t) -> -t.nextTick
 			@targets.splice i, 0, target
 
-	remove: (targets...) ->
-		arrayRemove @targets, t for t in targets
+	remove: (targets...) -> _.pull @targets, targets...
 
 	adjustNextTicks: (add) ->
 		(t.nextTick += add) for t in @targets
@@ -29,12 +21,7 @@ module.exports = class TimeManager
 		if @targets.length > 0
 			[..., target] = @targets
 
-			log.silly "
-				begin tick '#{target.name} #{target.constructor.name}'
-				#{target.x},#{target.y}
-			"
-
-			p target.tick()
+			Promise.resolve target.tick()
 			.then (cost = 0) =>
 				rate = _.result target, 'tickRate'
 
@@ -48,12 +35,6 @@ module.exports = class TimeManager
 				else target.nextTick = Infinity
 
 				@add @targets.pop() if rate is 0 or cost isnt 0
-
-			.then ->
-				log.silly "
-					end tick '#{target.name} #{target.constructor.name}'
-					#{target.x},#{target.y}
-				"
 
 			.nodeify callback
 

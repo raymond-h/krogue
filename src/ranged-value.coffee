@@ -1,5 +1,3 @@
-# _ = require 'lodash'
-
 module.exports = class RangedValue
 	constructor: ({@min, current: @_current, @max}) ->
 		@min ?= 0
