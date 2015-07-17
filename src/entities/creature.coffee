@@ -243,8 +243,8 @@ module.exports = class Creature extends Entity
 			endPos = found.checked[1]
 
 		game.effects.throw
+			item: item
 			start: @, end: endPos
-			symbol: _.result item, 'symbol'
 
 		.then =>
 			hit = no

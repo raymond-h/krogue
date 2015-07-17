@@ -237,8 +237,9 @@ class exports.Gun extends Item
 				endPos = found.checked[1]
 
 			game.effects.shootLine
+				gun: this
+				bullet: currentAmmo
 				start: creature, end: found
-				symbol: currentAmmo.symbol
 
 			.then =>
 				map = creature.map
@@ -294,10 +295,9 @@ class exports.Gun extends Item
 
 			spread = @spread ? (10 / 180 * Math.PI)
 
-			game.effects.shootSpread {
-				start: creature, symbol: currentAmmo.symbol
-				angle, spread, @range
-			}
+			game.effects.shootSpread
+				gun: @, bullet: currentAmmo
+				start: creature, angle
 
 			.then =>
 				targets = creature.map.listEntities (e) =>

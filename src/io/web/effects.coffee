@@ -6,41 +6,45 @@ vectorMath = require '../../vector-math'
 {bresenhamLine, whilst} = require '../../util'
 
 module.exports = class WebEffects extends Effects
-	throw: ({start, end, symbol}) ->
-		@line {start, end, symbol, delay: 50}
+	throw: ({item, start, end}) ->
+		Promise.resolve null
+		# @line {start, end, symbol, delay: 50}
 
-	shootLine: ({start, end, symbol}) ->
-		@line {start, end, symbol, delay: 50}
+	shootLine: ({gun, bullet, start, end}) ->
+		Promise.resolve null
+		# @line {start, end, symbol, delay: 50}
 
-	shootSpread: ({start, angle, spread, range, symbol}) ->
-		angles = (angle + spread*i for i in [-1..1])
+	shootSpread: ({gun, bullet, start, angle}) ->
+		Promise.resolve null
+		# angles = (angle + spread*i for i in [-1..1])
 
-		Promise.all (for i in [-1..1]
-			a = angle + spread*i
+		# Promise.all (for i in [-1..1]
+		# 	a = angle + spread*i
 
-			end = vectorMath.add start, {
-				x: Math.round range * Math.cos a
-				y: -Math.round range * Math.sin a
-			}
+		# 	end = vectorMath.add start, {
+		# 		x: Math.round range * Math.cos a
+		# 		y: -Math.round range * Math.sin a
+		# 	}
 
-			@line {start, end, symbol, delay: 50}
-		)
+		# 	@line {start, end, symbol, delay: 50}
+		# )
 
 	line: ({start, end, time, delay, symbol}) ->
-		points = bresenhamLine start, end
+		Promise.resolve null
+		# points = bresenhamLine start, end
 
-		if time? and not delay?
-			delay = time / points.length
+		# if time? and not delay?
+		# 	delay = time / points.length
 
-		@_performEffect {type: 'line', symbol}, (data) ->
+		# @_performEffect {type: 'line', symbol}, (data) ->
 
-			whilst (-> points.length > 0),
-				=>
-					Promise.try =>
-						data.current = points.shift()
-						@invalidate()
+		# 	whilst (-> points.length > 0),
+		# 		=>
+		# 			Promise.try =>
+		# 				data.current = points.shift()
+		# 				@invalidate()
 
-					.delay delay
+		# 			.delay delay
 
 	renderEffects: (ox, oy) ->
 		for e in @effects then switch e.type
