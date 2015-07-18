@@ -45,12 +45,12 @@ exports.generateSpaceBeeHive = (path, level, map) ->
 	wall = {
 		collidable: yes
 		seeThrough: no
-		symbol: 'honeycombWall'
+		type: 'honeycombWall'
 	}
 	floor = {
 		collidable: no
 		seeThrough: yes
-		symbol: 'honeycombFloor'
+		type: 'honeycombFloor'
 	}
 
 	for y in [top...bottom]

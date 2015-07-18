@@ -7,8 +7,6 @@ calc = require '../calc'
 log = require '../log'
 
 Item = class exports.Item
-	symbol: 'geneticItem'
-
 	getEquipSlotUse: (slot, creature) ->
 		if slot is 'hand' then calc.itemSlotUse creature, @
 		else 0
@@ -40,11 +38,9 @@ Item = class exports.Item
 
 class exports.PeculiarObject extends Item
 	name: 'peculiar object'
-	symbol: 'peculiarObject'
 
 class exports.Corpse extends Item
 	name: 'unknown corpse'
-	symbol: 'corpse'
 
 	constructor: (@creature) ->
 		Object.defineProperties @,
@@ -58,7 +54,6 @@ class exports.Corpse extends Item
 
 class exports.PokeBall extends Item
 	name: 'poké ball'
-	symbol: 'pokeBall'
 
 	rates:
 		'normal': 1
@@ -142,7 +137,6 @@ class exports.PokeBall extends Item
 
 class exports.Bullet extends Item
 	name: 'bullet'
-	symbol: 'bullet'
 	leaveWhenShot: no
 
 	constructor: (@type = 'medium') ->
@@ -157,7 +151,6 @@ class exports.Bullet extends Item
 
 class exports.BulletPack extends Item
 	name: 'pack of ammo'
-	symbol: 'gunAmmoPack'
 
 	constructor: (@ammo = new exports.Bullet, @amount = 1) ->
 		Object.defineProperty @, 'name',
@@ -176,7 +169,6 @@ class exports.BulletPack extends Item
 
 class exports.Gun extends Item
 	name: 'gun'
-	symbol: 'gun'
 
 	constructor: (@ammo = []) ->
 

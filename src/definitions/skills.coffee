@@ -11,7 +11,6 @@ calc = require '../calc'
 
 Skill = class exports.Skill
 	name: 'skill'
-	# symbol: 'skill' # allow symbols for skills (to show in list maybe)
 
 class exports.TentacleWhip extends Skill
 	name: 'tentacle whip'

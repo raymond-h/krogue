@@ -1,4 +1,5 @@
 _ = require 'lodash'
+log = require '../log'
 
 exports.graphics = graphics =
 	wall:
@@ -43,12 +44,12 @@ exports.graphics = graphics =
 		symbol: '§'
 		color: 'red'
 
-exports.get = (id = '_default') ->
-	graphic = graphics[id] ? graphics._default
-
+exports.transform = (graphic) ->
 	if _.isString graphic
-		graphic =
-			symbol: graphic
-			color: null
+		symbol: graphic
+		color: null
 
-	graphic
+	else graphic
+
+exports.get = (id = '_default') ->
+	exports.transform (graphics[id] ? graphics._default)

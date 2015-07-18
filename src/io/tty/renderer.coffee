@@ -5,6 +5,7 @@ wordwrap = require 'wordwrap'
 _ = require 'lodash'
 
 log = require '../../log'
+entityClasses = require '../../entities'
 
 Camera = require '../../camera'
 graphics = require '../graphics-ascii'
@@ -61,9 +62,6 @@ module.exports = class TtyRenderer
 			graphic = symbol: graphic
 
 		@buffer[y*80 + x] = graphic
-
-	putGraphic: (x, y, graphicId) ->
-		@bufferPut x, y, graphics.get graphicId
 
 	write: (x, y, str) ->
 		for c,i in str
@@ -164,8 +162,6 @@ module.exports = class TtyRenderer
 	renderLog: (x, y) ->
 		@fillArea x, y, 80, 1, ' '
 
-		log @promptMessage, @logs
-
 		if @promptMessage?
 			@write x, y, @promptMessage
 
@@ -205,8 +201,7 @@ module.exports = class TtyRenderer
 
 		graphicAt = (x, y) =>
 			if @game.player.creature.canSee {x, y}
-				t = map.data[y][x]
-				graphics.get t.symbol
+				@getGraphic map.data[y][x]
 
 			else ' '
 
@@ -230,8 +225,7 @@ module.exports = class TtyRenderer
 
 		for e in entities when @game.player.creature.canSee e
 			if (c.x <= e.x < c.x+c.viewport.w) and (c.y <= e.y < c.y+c.viewport.h)
-				graphicId = _.result e, 'symbol'
-				graphic = graphics.get graphicId
+				graphic = @getGraphic e
 
 				@bufferPut (e.x - c.x + x), (e.y - c.y + y), graphic
 
@@ -263,3 +257,27 @@ module.exports = class TtyRenderer
 
 	renderEffects: (ox, oy) ->
 		@io.effects.renderEffects ox, oy
+
+	getGraphic: (input) ->
+		id = @getGraphicId input
+		graphics.get id
+
+	getGraphicId: (input) ->
+		if _.isString input
+			input
+
+		else if _.isObject input
+			if _.isPlainObject input
+				input.symbol ? input.type
+
+			else if input instanceof entityClasses.Creature
+				@getGraphicId input.species
+
+			else if input instanceof entityClasses.MapItem
+				@getGraphicId input.item
+
+			else if input instanceof entityClasses.Stairs
+				if input.down then 'stairsDown' else 'stairsUp'
+
+			else
+				_.camelCase input.constructor.name

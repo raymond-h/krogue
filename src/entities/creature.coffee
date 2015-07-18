@@ -17,7 +17,6 @@ calc = require '../calc'
 {Entity, MapItem} = require './entity'
 
 module.exports = class Creature extends Entity
-	symbol: -> @species?.symbol ? '§'
 	type: 'creature'
 	blocking: yes
 

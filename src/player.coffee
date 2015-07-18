@@ -304,10 +304,10 @@ module.exports = class Player
 					{target: {map, position}} = stairs
 					game.goTo map, position
 
-			when 'line-effect'
-				target = @creature.findNearest null, (-> yes)
+			# when 'line-effect'
+			# 	target = @creature.findNearest null, (-> yes)
 
-				game.renderer.effectLine @creature, target, time: 500, symbol: '*'
+			# 	game.renderer.effectLine @creature, target, time: 500, symbol: '*'
 
 			when 'test-pos'
 				prompts.position 'Test position!', default: @creature

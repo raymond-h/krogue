@@ -48,8 +48,8 @@ exports.generateBigRoom = (path, level, connections, w, h) ->
 	data = exports.createMapData map.w, map.h, tileCb
 
 	map.data = convertMapData data, [
-		{ collidable: no, seeThrough: yes, symbol: 'floor' }
-		{ collidable: yes, seeThrough: no, symbol: 'wall' }
+		{ collidable: no, seeThrough: yes, type: 'floor' }
+		{ collidable: yes, seeThrough: no, type: 'wall' }
 	]
 
 	exports.generateExits map, path, level, connections
@@ -73,8 +73,8 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 	}
 
 	map.data = convertMapData data, [
-		{ collidable: no, seeThrough: yes, symbol: 'floor' }
-		{ collidable: yes, seeThrough: no, symbol: 'wall' }
+		{ collidable: no, seeThrough: yes, type: 'floor' }
+		{ collidable: yes, seeThrough: no, type: 'wall' }
 	]
 
 	exports.generateExits map, path, level, connections

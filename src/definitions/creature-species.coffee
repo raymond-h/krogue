@@ -33,14 +33,12 @@ exports.classes = classes = {}
 
 class classes.StrangeGoo extends Species
 	name: 'strange goo'
-	symbol: 'strangeGoo'
 
 	modifyStat: (creature, stat, name) ->
 		stat / 3 if name is 'agility'
 
 class classes.Human extends Species
 	name: 'human'
-	symbol: 'human'
 	weight: 60 # kg
 
 	equipSlotNum @, humanoidSlots
@@ -60,21 +58,18 @@ class classes.Human extends Species
 
 class classes.ViolentDonkey extends Species
 	name: 'violent donkey'
-	symbol: 'violentDonkey'
 	weight: 120
 
 	equipSlotNum @, quadrupedSlots
 
 class classes.TinyAlien extends Species
 	name: 'tiny alien'
-	symbol: 'tinyAlien'
 	weight: 20
 
 	equipSlotNum @, humanoidSlots
 
 class classes.SpaceAnemone extends Species
 	name: 'space anemone'
-	symbol: 'spaceAnemone'
 	weight: 300
 
 	equipSlotNum @,
@@ -91,7 +86,6 @@ class classes.SpaceAnemone extends Species
 
 class classes.SpaceBee extends Species
 	name: 'space bee'
-	symbol: 'spaceBee'
 	weight: 1 / 10000
 
 	equipSlotNum @,
@@ -110,12 +104,10 @@ class classes.SpaceBee extends Species
 
 class classes.SpaceBeeMonarch extends classes.SpaceBee
 	name: 'space bee monarch'
-	symbol: 'spaceBeeMonarch'
 	weight: 2 / 10000
 
 class classes.Haithera extends Species
 	name: 'haithera'
-	symbol: 'haithera'
 	weight: 400
 
 makeName = (className) ->

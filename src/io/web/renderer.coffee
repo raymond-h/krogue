@@ -3,6 +3,7 @@ _ = require 'lodash'
 log = require '../../log'
 
 vectorMath = require '../../vector-math'
+entityClasses = require '../../entities'
 
 tileGraphics = require '../graphics-tiles'
 graphics = require '../graphics-ascii'
@@ -28,6 +29,9 @@ module.exports = class WebRenderer
 		@logBox = document.getElementById 'log'
 
 		@game
+		.on 'turn.player.start', =>
+			@invalidate()
+
 		.on 'log.add', (str) =>
 			$(@logBox).append "<p>#{str}</p>"
 
@@ -69,8 +73,7 @@ module.exports = class WebRenderer
 
 		@tilesImg = document.getElementById 'tiles'
 
-		@graphics = @preRenderAscii()
-		log @graphics
+		@graphics = preRenderAscii @asciiCtx, graphics, @tileSize
 
 		@useTiles = no # ascii by default
 
@@ -181,24 +184,6 @@ module.exports = class WebRenderer
 
 		return (-> canvas.unbind 'click', handler)
 
-	preRenderAscii: ->
-		dim =
-			x: 4
-			y: 8
-
-		i = 0
-
-		_.zipObject (
-			for name of graphics.graphics
-				g = graphics.get name
-				[x, y] = [i % dim.x, i // dim.x]
-				i++
-				# render to @asciiCtx
-				@renderSymbolAtSlot @asciiCtx, x, y, g.symbol, g.color
-				# assemble [name, {x, y}]
-				[name, {x, y, graphics: g}]
-		)
-
 	render: ->
 		@viewport.fillStyle = '#000000'
 		@viewport.fillRect 0, 0, @viewport.canvas.width, @viewport.canvas.height
@@ -250,8 +235,7 @@ module.exports = class WebRenderer
 
 		graphicAt = (x, y) =>
 			if @camera.target.canSee {x, y}
-				t = map.data[y][x]
-				t.symbol
+				@getGraphicId map.data[y][x]
 
 		for cx in [0...map.w]
 			for cy in [0...map.h]
@@ -273,7 +257,7 @@ module.exports = class WebRenderer
 		for e in entities when @camera.target.canSee e
 
 			# graphic = graphics.get _.result e, 'symbol'
-			@renderGraphicAtSlot e.x, e.y, _.result e, 'symbol'
+			@renderGraphicAtSlot e.x, e.y, @getGraphicId e
 
 	renderGraphicAtSlot: (x, y, graphicId) ->
 		c = @camera
@@ -294,22 +278,61 @@ module.exports = class WebRenderer
 				x*@tileSize - c.x, y*@tileSize - c.y, @tileSize, @tileSize
 			)
 
-	renderSymbolAtSlot: (ctx, x, y, symbol, color) ->
-		@renderSymbol(
-			ctx,
-			x * @tileSize, y * @tileSize,
-			symbol, color
-		)
+	getGraphicId: (input) ->
+		if _.isString input
+			input
 
-	renderSymbol: (ctx, x, y, symbol, color = 'white') ->
-		ctx.fillStyle = 'black'
-		ctx.fillRect x, y, @tileSize, @tileSize
+		else if _.isObject input
+			if _.isPlainObject input
+				input.symbol ? input.type
 
-		ctx.font = "#{@tileSize}px consolas"
-		ctx.fillStyle = color
-		ctx.textAlign = 'center'
-		ctx.textBaseline = 'bottom'
-		ctx.fillText symbol, x + @tileSize/2, y + @tileSize
+			else if input instanceof entityClasses.Creature
+				@getGraphicId input.species
+
+			else if input instanceof entityClasses.MapItem
+				@getGraphicId input.item
+
+			else if input instanceof entityClasses.Stairs
+				if input.down then 'stairsDown' else 'stairsUp'
+
+			else
+				_.camelCase input.constructor.name
 
 	renderEffects: (ox, oy) ->
 		@io.effects.renderEffects ox, oy
+
+
+
+preRenderAscii = (ctx, graphics, tileSize, dim) ->
+	renderSymbolAtSlot = (x, y, symbol, color) ->
+		renderSymbol(
+			x * tileSize, y * tileSize,
+			symbol, color
+		)
+
+	renderSymbol = (x, y, symbol, color = 'white') ->
+		ctx.fillStyle = 'black'
+		ctx.fillRect x, y, tileSize, tileSize
+
+		ctx.font = "#{tileSize}px consolas"
+		ctx.fillStyle = color
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'bottom'
+		ctx.fillText symbol, x + tileSize/2, y + tileSize
+
+	dim ?=
+		x: 4
+		y: 8
+
+	i = 0
+
+	_.zipObject (
+		for name of graphics.graphics
+			g = graphics.get name
+			[x, y] = [i % dim.x, i // dim.x]
+			i++
+			# render to ctx
+			renderSymbolAtSlot x, y, g.symbol, g.color
+			# assemble [name, {x, y}]
+			[name, {x, y, graphics: g}]
+	)

@@ -7,7 +7,6 @@ direction = require '../direction'
 {distanceSq} = require '../util'
 
 class exports.Entity
-	symbol: '-'
 	blocking: no
 
 	constructor: (@map, @x, @y) ->
@@ -47,7 +46,6 @@ class exports.Entity
 			(_.has o, k) and not (k in ['map'])
 
 class exports.MapItem extends exports.Entity
-	symbol: -> @item.symbol
 	type: 'item'
 	blocking: no
 
@@ -55,7 +53,6 @@ class exports.MapItem extends exports.Entity
 		super
 
 class exports.Stairs extends exports.Entity
-	symbol: -> if @down then 'stairsDown' else 'stairsUp'
 	type: 'stairs'
 	blocking: no
 
