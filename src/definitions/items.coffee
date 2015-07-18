@@ -285,11 +285,10 @@ class exports.Gun extends Item
 			compareAngles = (a0, a1) ->
 				Math.PI - Math.abs(Math.abs(a0-a1) - Math.PI)
 
-			spread = @spread ? (10 / 180 * Math.PI)
-
 			game.effects.shootSpread
-				gun: @, bullet: currentAmmo
-				start: creature, angle
+				gun: this
+				bullet: currentAmmo
+				start: creature, angle: angle
 
 			.then =>
 				targets = creature.map.listEntities (e) =>
@@ -300,7 +299,7 @@ class exports.Gun extends Item
 					diff = vectorMath.sub e, creature
 					a = Math.atan2 -diff.y, diff.x
 
-					(compareAngles angle, a) <= spread/2 and
+					(compareAngles angle, a) <= @spread/2 and
 						(creature.distanceSqTo e) <= (@range*@range) and
 						creature.canSee e
 
