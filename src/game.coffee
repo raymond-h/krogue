@@ -129,8 +129,6 @@ class Game extends EventEmitter2
 		if x? and y?
 			@player.creature.setPos x, y
 
-		@renderer.invalidate()
-
 	save: (filename) ->
 		@renderer.saveData.save @, filename
 
@@ -141,8 +139,6 @@ class Game extends EventEmitter2
 		@emit "state.exit.#{@state}", 'exit', @state
 		@state = state
 		@emit "state.enter.#{@state}", 'enter', @state
-
-		@renderer.invalidate()
 
 	message: (str) ->
 		@logs.push str

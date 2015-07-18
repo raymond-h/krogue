@@ -19,6 +19,8 @@ module.exports = class WebRenderer
 			x: 0
 			y: 0
 
+		@promptMessage = null
+
 		@tileSize = 32
 
 		@cursor = null
@@ -92,6 +94,9 @@ module.exports = class WebRenderer
 				@invalidated = no
 
 				@render()
+
+	setPromptMessage: (@promptMessage) ->
+		@game.message @promptMessage
 
 	hasMoreLogs: -> no
 

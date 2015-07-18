@@ -181,7 +181,6 @@ module.exports = class Creature extends Entity
 				@map.removeEntity item
 				game.timeManager.remove item
 
-				game.renderer.invalidate()
 				yes
 
 			else no
@@ -200,7 +199,6 @@ module.exports = class Creature extends Entity
 		game.timeManager.add mapItem
 
 		game.emit 'game.creature.drop', @, item
-		game.renderer.invalidate()
 		yes
 
 	equip: (item, silent = no) ->

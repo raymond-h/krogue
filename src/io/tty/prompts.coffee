@@ -85,9 +85,7 @@ exports.multichoiceList = (header, choices, opts) ->
 			}
 
 exports.position = (message, opts = {}) ->
-	if message?
-		game.message message
-		game.renderer.showMoreLogs()
+	game.renderer.setPromptMessage message
 
 	bounds = null
 	if not bounds?

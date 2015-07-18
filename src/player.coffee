@@ -22,10 +22,11 @@ module.exports = class Player
 		@_lookPos = null
 
 	tick: ->
-		game.emit 'turn.player', 'player'
+		game.emit 'turn.player.start'
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
+				log 'MORE LOGS AHOY'
 				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
@@ -33,7 +34,9 @@ module.exports = class Player
 
 		.then ([action, params...]) => @doAction action, params...
 
-		.then (cost) -> if _.isNumber cost then cost else 0
+		.then (cost) ->
+			if not _.isNumber cost then cost = 0
+			game.emit 'turn.player.end'
 
 	doAction: (action, params...) ->
 		switch action
@@ -62,7 +65,6 @@ module.exports = class Player
 					else nextEntity map
 
 				@creature = nextEntity @creature.map
-				game.renderer.invalidate()
 
 			when 'inventory'
 				choices = [
@@ -83,12 +85,10 @@ module.exports = class Player
 			when 'look'
 				handler = (pos) =>
 					@_lookPos = pos
-					game.renderer.invalidate()
 
 				prompts.position null, default: @creature, progress: handler
 				.then (pos) =>
 					@_lookPos = null
-					game.renderer.invalidate()
 					0
 
 			when 'equip'

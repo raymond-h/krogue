@@ -100,9 +100,7 @@ exports.multichoiceList = (header, choices, opts) ->
 					updateChecked mapDisplayed[key]
 
 exports.position = (message, opts = {}) ->
-	if message?
-		game.message message
-		game.renderer.showMoreLogs()
+	game.renderer.setPromptMessage message
 
 	pos = null
 

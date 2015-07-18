@@ -29,9 +29,7 @@ exports.generic = (message, event, matcher, opts) ->
 
 		(game.on e, handler) for e in event
 
-		if message?
-			game.message message
-			game.renderer.showMoreLogs()
+		game.renderer.setPromptMessage message
 
 exports.keys = (message, keys, opts) ->
 	{showKeys, shownKeys, separator} = _.defaults {}, opts,

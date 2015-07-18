@@ -34,11 +34,18 @@ module.exports = class TtyRenderer
 
 		@logs = []
 		@pendingLogs = []
+		@promptMessage = null
 
 		@logWidth = 80 - TtyRenderer.strMore.length
 
 		@game
-		.on 'turn.player', => @showMoreLogs()
+		.on 'turn.player.start', =>
+			@startShowLog()
+			@invalidate()
+
+		.on 'turn.player.end', =>
+			@promptMessage = null
+			@showList null
 
 		.on 'log.add', (str) => @pendingLogs.push str
 
@@ -94,22 +101,15 @@ module.exports = class TtyRenderer
 
 		program.write @bufferToString()
 
-		if @game.player?
-			x = @game.player.lookPos.x - @camera.x
-			y = @game.player.lookPos.y - @camera.y + 1
-
-			@setCursorPos y, x
-
 	hasMoreLogs: ->
 		@logs.length > 1
 
+	startShowLog: ->
+		@logs = @wrap(@pendingLogs.join ' ').split /(?:\r?\n|\r)/
+		@pendingLogs = []
+
 	showMoreLogs: ->
-		if @hasMoreLogs() then @logs.shift()
-
-		else
-			@logs = @wrap(@pendingLogs.join ' ').split /(?:\r?\n|\r)/
-			@pendingLogs = []
-
+		@logs.shift()
 		@invalidate()
 
 	invalidate: ->
@@ -120,6 +120,11 @@ module.exports = class TtyRenderer
 				@invalidated = no
 
 				@render()
+
+	setPromptMessage: (promptMessage) ->
+		if promptMessage?
+			@promptMessage = promptMessage
+			@invalidate()
 
 	showList: (@menu) ->
 		@invalidate()
@@ -143,6 +148,12 @@ module.exports = class TtyRenderer
 
 		@flipBuffer()
 
+		if @game.player?
+			x = @game.player.lookPos.x - @camera.x
+			y = @game.player.lookPos.y - @camera.y + 1
+
+			@setCursorPos y, x
+
 	renderDeath: ->
 		@fillArea 0, 0, 80, 25, ' '
 
@@ -153,7 +164,12 @@ module.exports = class TtyRenderer
 	renderLog: (x, y) ->
 		@fillArea x, y, 80, 1, ' '
 
-		if @logs.length > 0
+		log @promptMessage, @logs
+
+		if @promptMessage?
+			@write x, y, @promptMessage
+
+		else if @logs.length > 0 and @logs[0] isnt ''
 			str = @logs[0]
 
 			if @hasMoreLogs()

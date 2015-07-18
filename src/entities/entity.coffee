@@ -17,7 +17,6 @@ class exports.Entity
 
 		@x = x
 		@y = y
-		game.renderer.invalidate()
 
 	movePos: (x, y) ->
 		if _.isString x then x = direction.parse x
