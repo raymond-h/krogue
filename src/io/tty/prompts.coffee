@@ -16,7 +16,7 @@ module.exports = class TtyPrompts extends Prompts
 			index: i
 
 		mapDisplayed = _.zipObject (
-			[(pressedKey v.key), v] for v in _choices
+			[(@pressedKey v.key), v] for v in _choices
 		)
 
 		@game.renderer.showList
@@ -45,7 +45,7 @@ module.exports = class TtyPrompts extends Prompts
 			checked: no
 
 		mapDisplayed = _.zipObject (
-			[(pressedKey v.key), v] for v in _choices
+			[(@pressedKey v.key), v] for v in _choices
 		)
 
 		updateList = =>

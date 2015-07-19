@@ -1,6 +1,7 @@
 keyHandling = require './keyhandling'
 Renderer = require './renderer'
 Effects = require './effects'
+Prompts = require './prompts'
 
 module.exports = class Web
 	constructor: (@game) ->
@@ -17,7 +18,7 @@ module.exports = class Web
 
 		@renderer = new Renderer @, @game
 		@effects = new Effects @
-		@prompts = require './prompts'
+		@prompts = new Prompts @game
 
 		@game.on 'action.toggle-graphics', =>
 			@renderer.useTiles = not @renderer.useTiles

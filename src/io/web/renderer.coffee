@@ -99,7 +99,7 @@ module.exports = class WebRenderer
 				@render()
 
 	setPromptMessage: (@promptMessage) ->
-		@game.message @promptMessage
+		@game.message @promptMessage if @promptMessage?
 
 	hasMoreLogs: -> no
 

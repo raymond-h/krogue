@@ -37,7 +37,7 @@ module.exports = class Prompts
 		if message? and showKeys
 			message = "#{message} [#{(shownKeys ? keys).join separator}]"
 
-		exports.generic message, 'key.*',
+		@generic message, 'key.*',
 			(event, ch, key) -> key.full in keys
 		, opts
 
@@ -53,7 +53,7 @@ module.exports = class Prompts
 		if message? and showActions
 			message = "#{message} [#{(shownActions ? actions).join separator}]"
 
-		exports.generic message, ['key.escape', 'action.**'],
+		@generic message, ['key.escape', 'action.**'],
 			(event, action, params...) ->
 				return yes if cancelable and event is 'key.escape'
 
@@ -72,7 +72,7 @@ module.exports = class Prompts
 		if opts.cancelable
 			choices.push 'escape'
 
-		exports.keys message, choices, opts
+		@keys message, choices, opts
 		.then (reply) ->
 			switch reply
 				when 'escape' then null
@@ -82,7 +82,7 @@ module.exports = class Prompts
 	direction: (message, opts = {}) ->
 		opts.shownActions ?= ['direction','escape'] if opts.cancelable
 
-		exports.actions message, ['direction'], opts
+		@actions message, ['direction'], opts
 
 		.then (reply) ->
 			return null if not reply?
