@@ -26,7 +26,6 @@ module.exports = class Player
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
-				log 'MORE LOGS AHOY'
 				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
@@ -303,11 +302,6 @@ module.exports = class Player
 				if stairs?
 					{target: {map, position}} = stairs
 					game.goTo map, position
-
-			# when 'line-effect'
-			# 	target = @creature.findNearest null, (-> yes)
-
-			# 	game.renderer.effectLine @creature, target, time: 500, symbol: '*'
 
 			when 'test-pos'
 				prompts.position 'Test position!', default: @creature

@@ -15,7 +15,7 @@
     "build:web": "mkdirp public/lib/ && browserify -t coffeeify --extension=\".coffee\" -d -o public/lib/main.js src/web-client/index.coffee",
     "serve": "http-server -p 80",
     "livereload": "livereload ./public",
-    "watch": "onchange src/ -- npm run build:all && echo Done",
+    "watch": "onchange src/ -- npm run build && echo Done",
     "watch:web": "onchange src/ -- npm run build:web && echo Done",
     "dev": "parallelshell \"npm run watch:web\" \"npm run livereload\" \"npm run serve\"",
     "prepublish": "npm run build",

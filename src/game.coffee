@@ -130,10 +130,10 @@ class Game extends EventEmitter2
 			@player.creature.setPos x, y
 
 	save: (filename) ->
-		@renderer.saveData.save @, filename
+		@io.saveData.save @, filename
 
 	load: (filename) ->
-		@renderer.saveData.load @, filename
+		@io.saveData.load @, filename
 
 	goState: (state) ->
 		@emit "state.exit.#{@state}", 'exit', @state

@@ -382,16 +382,10 @@ module.exports = class Creature extends Entity
 	tickRate: -> @calc 'speed'
 
 	tick: (a...) ->
-		p(
-			# check if this creature is controlled by player
-			if @isPlayer() then game.player.tick a...
+		# check if this creature is controlled by player
+		if @isPlayer() then game.player.tick a...
 
-			else @aiTick a...
-		)
-		# .then (cost) ->
-		# 	game.renderer.doEffects()
-
-		# 	.then -> cost
+		else @aiTick a...
 
 	aiTick: ->
 		# no personalities => brainless

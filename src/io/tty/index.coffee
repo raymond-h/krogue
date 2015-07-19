@@ -3,6 +3,7 @@ program = blessed.program()
 
 Renderer = require './renderer'
 Effects = require './effects'
+Prompts = require './prompts'
 
 module.exports = class Tty
 	constructor: (@game) ->
@@ -19,7 +20,8 @@ module.exports = class Tty
 
 		@renderer = new Renderer @, @game
 		@effects = new Effects @
-		@prompts = require './prompts'
+		@prompts = new Prompts @game
+		@saveData = require './save-data'
 
 	deinitialize: ->
 		program.clear()
