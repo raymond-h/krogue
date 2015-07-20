@@ -3,6 +3,7 @@ program = blessed.program.global
 
 wordwrap = require 'wordwrap'
 _ = require 'lodash'
+LineMan = require '../line-man'
 
 log = require '../../log'
 entityClasses = require '../../entities'
@@ -33,24 +34,16 @@ module.exports = class TtyRenderer
 
 		@invalidate() # initial render
 
-		@logs = []
-		@pendingLogs = []
-		@promptMessage = null
+		logWidth = 80 - TtyRenderer.strMore.length
 
-		@logWidth = 80 - TtyRenderer.strMore.length
+		@lineMan = new LineMan @logWidth
 
 		@game
-		.on 'turn.player.start', =>
-			@startShowLog()
-			@invalidate()
+		.on 'turn.player.start', => @invalidate()
+		.on 'log.add', (str) => @lineMan.add str
 
-		.on 'turn.player.end', =>
-			@promptMessage = null
-			@showList null
-
-		.on 'log.add', (str) => @pendingLogs.push str
-
-		@wrap = wordwrap.hard @logWidth
+		@lineMan
+		.on 'update', => @invalidate()
 
 		@effects = new Effects @
 		@camera = new Camera { w: 80, h: 21 }, { x: 30, y: 9 }
@@ -98,14 +91,10 @@ module.exports = class TtyRenderer
 		program.write @bufferToString()
 
 	hasMoreLogs: ->
-		@logs.length > 1
-
-	startShowLog: ->
-		@logs = @wrap(@pendingLogs.join ' ').split /(?:\r?\n|\r)/
-		@pendingLogs = []
+		@lineMan.lines.length > 1
 
 	showMoreLogs: ->
-		@logs.shift()
+		@lineMan.lines.shift()
 		@invalidate()
 
 	invalidate: ->
@@ -119,8 +108,8 @@ module.exports = class TtyRenderer
 
 	setPromptMessage: (promptMessage) ->
 		if promptMessage?
-			@promptMessage = promptMessage
-			@invalidate()
+			@lineMan.add '\n' + promptMessage
+			@showMoreLogs()
 
 	showList: (@menu) ->
 		@invalidate()
@@ -160,11 +149,8 @@ module.exports = class TtyRenderer
 	renderLog: (x, y) ->
 		@fillArea x, y, 80, 1, ' '
 
-		if @promptMessage?
-			@write x, y, @promptMessage
-
-		else if @logs.length > 0 and @logs[0] isnt ''
-			str = @logs[0]
+		if @lineMan.lines.length > 0
+			str = @lineMan.lines[0]
 
 			if @hasMoreLogs()
 				str += TtyRenderer.strMore
