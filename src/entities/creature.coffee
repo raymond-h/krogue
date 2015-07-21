@@ -21,8 +21,9 @@ module.exports = class Creature extends Entity
 	type: 'creature'
 	blocking: yes
 
-	constructor: (m, x, y, @species, data = {}) ->
+	constructor: ({@species, data}) ->
 		super
+		data ?= {}
 
 		{
 			@personalities

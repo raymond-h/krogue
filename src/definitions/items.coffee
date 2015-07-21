@@ -34,7 +34,7 @@ Item = class exports.Item
 
 	asMapItem: (x, y) ->
 		{MapItem} = require '../entities'
-		new MapItem null, x, y, @
+		new MapItem {x, y, item: @}
 
 class exports.PeculiarObject extends Item
 	name: 'peculiar object'

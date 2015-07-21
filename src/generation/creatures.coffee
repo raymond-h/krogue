@@ -6,7 +6,7 @@ species = require '../definitions/creature-species'
 itemGen = require './items'
 
 exports.generateStrangeGoo = (x, y) ->
-	c = new Creature null, x, y
+	c = new Creature {x, y}
 
 	if game.random.chance 0.50
 		c.personalities.push [
@@ -23,7 +23,7 @@ exports.generateStrangeGoo = (x, y) ->
 	c
 
 exports.generateViolentDonkey = (x, y) ->
-	c = new Creature null, x, y, species.violentDonkey
+	c = new Creature {x, y, species: species.violentDonkey}
 
 	c.personalities.push [
 		new personality.AttackAllButSpecies c, c.species.typeName
@@ -32,7 +32,7 @@ exports.generateViolentDonkey = (x, y) ->
 	c
 
 exports.generateTinyAlien = (x, y) ->
-	c = new Creature null, x, y, species.tinyAlien
+	c = new Creature {x, y, species: species.tinyAlien}
 
 	c.personalities.push [
 		(new personality.FleeIfWeak c).withMultiplier 10
@@ -47,7 +47,7 @@ exports.generateTinyAlien = (x, y) ->
 	c
 
 exports.generateSpaceAnemone = (x, y) ->
-	c = new Creature null, x, y, species.spaceAnemone
+	c = new Creature {x, y, species: species.spaceAnemone}
 
 	c.personalities.push [
 		new personality.RandomWalk c
@@ -60,9 +60,12 @@ exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
 	monarch ?= no
 	group ?= null
 
-	c = new Creature null, x, y,
-		if monarch then species.spaceBeeMonarch
-		else species.spaceBee
+	c = new Creature {
+		x, y,
+		species:
+			if monarch then species.spaceBeeMonarch
+			else species.spaceBee
+	}
 
 	c.group = group
 
@@ -84,7 +87,7 @@ exports.generateSpaceBee = (x, y, {monarch, group} = {}) ->
 	c
 
 exports.generateHaithera = (x, y) ->
-	c = new Creature null, x, y, species.haithera
+	c = new Creature {x, y, species: species.haithera}
 
 	c.personalities.push [
 		(new personality.Attacker c, 10).withMultiplier 2

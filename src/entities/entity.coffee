@@ -9,7 +9,7 @@ direction = require '../direction'
 class exports.Entity
 	blocking: no
 
-	constructor: (@map, @x, @y) ->
+	constructor: ({@map, @x, @y}) ->
 
 	setPos: (x, y) ->
 		if _.isObject x then {x, y} = x
@@ -49,13 +49,14 @@ class exports.MapItem extends exports.Entity
 	type: 'item'
 	blocking: no
 
-	constructor: (m, x, y, @item) ->
+	constructor: ({@item}) ->
 		super
 
 class exports.Stairs extends exports.Entity
 	type: 'stairs'
 	blocking: no
 
-	constructor: (m, x, y, @target = {}) ->
+	constructor: ({@target}) ->
 		super
+		@target ?= {}
 		@down = no

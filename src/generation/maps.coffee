@@ -32,7 +32,7 @@ exports.generateExits = (map, path, level, connections) ->
 	for name, [targetMap, position] of connections
 		{x, y} = map.positions[name] ? generatePos map
 
-		stairs = new Stairs map, x, y
+		stairs = new Stairs {map, x, y}
 		stairs.target = {map: targetMap, position}
 		stairs.down = (name is 'exit')
 
