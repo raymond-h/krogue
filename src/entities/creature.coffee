@@ -12,6 +12,7 @@ pathFinding = require '../path-finding'
 
 creatureSpecies = require '../definitions/creature-species'
 items = require '../definitions/items'
+buffs = require '../definitions/buffs'
 calc = require '../calc'
 
 {Entity, MapItem} = require './entity'
@@ -54,6 +55,8 @@ module.exports = class Creature extends Entity
 		@inventory ?= []
 		@equipment ?= []
 
+		@buffs ?= []
+
 		@_skills ?= []
 
 		@recalculateStats()
@@ -92,6 +95,8 @@ module.exports = class Creature extends Entity
 		val = (@species.modifyStat? @, val, stat, params...) ? val
 		for item in @equipment
 			val = (item.modifyStat? @, val, stat, slot, params...) ? val
+		for buff in @buffs
+			val = (item.modifyStat? @, val, stat, params...) ? val
 
 		val
 
@@ -417,5 +422,7 @@ module.exports = class Creature extends Entity
 		defLoad()
 
 		@health = new RangedValue json.health
+		@buffs = json.buffs
+			.map (json) -> buffs.fromJSON json
 
 		@
