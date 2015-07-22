@@ -8,7 +8,7 @@ eventBus = require './event-bus'
 message = require './message'
 random = require './random'
 
-(require './messages')(eventBus)
+require './messages'
 require './key-handling'
 
 aliasFns = (Clazz, obj, fns) ->
