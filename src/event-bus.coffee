@@ -5,7 +5,7 @@ class EventBus extends EventEmitter2
     constructor: ->
         super { wildcard: yes, newListener: no }
 
-    waitOnEvent: (event) ->
+    waitOn: (event) ->
         (
         	new Promise (resolve, reject) =>
         		@once event, (params...) ->

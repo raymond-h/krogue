@@ -30,7 +30,7 @@ module.exports = class Player
 				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
-		.then -> game.waitOnEvent 'action.**'
+		.then -> game.waitOn 'action.**'
 
 		.then ([action, params...]) => @doAction action, params...
 

@@ -26,7 +26,7 @@ class Game
 		@mapIdCounter = 0
 		@maps = {}
 
-	aliasFns @, eventBus, ['waitOnEvent', 'on', 'off', 'emit']
+	aliasFns @, eventBus, ['waitOn', 'on', 'off', 'emit']
 	message: message
 
 	generateMapId: ->
