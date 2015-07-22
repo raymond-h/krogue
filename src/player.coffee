@@ -5,7 +5,7 @@ game = require './game'
 log = require './log'
 
 {Stairs} = require './entities'
-direction = require './direction'
+direction = require 'rl-directions'
 vectorMath = require './vector-math'
 {whilst, arrayRemove} = require './util'
 prompts = game.prompts

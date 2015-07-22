@@ -6,7 +6,7 @@ game = require '../game'
 
 {bresenhamLine, arrayRemove} = require '../util'
 {p} = require '../util'
-direction = require '../direction'
+direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 pathFinding = require '../path-finding'
 

@@ -1,5 +1,5 @@
 _ = require 'lodash'
-direction = require './direction'
+direction = require 'rl-directions'
 
 bindings = require '../key-bindings.json'
 

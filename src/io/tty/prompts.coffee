@@ -2,7 +2,7 @@ _ = require 'lodash'
 
 {whilst, snapToRange} = require '../../util'
 
-direction = require '../../direction'
+direction = require 'rl-directions'
 vectorMath = require '../../vector-math'
 
 Prompts = require '../prompts'

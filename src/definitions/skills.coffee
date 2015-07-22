@@ -5,7 +5,7 @@ game = require '../game'
 log = require '../log'
 prompts = game.prompts
 
-direction = require '../direction'
+direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 calc = require '../calc'
 

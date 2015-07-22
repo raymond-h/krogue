@@ -1,7 +1,7 @@
 _ = require 'lodash'
 
 game = require '../game'
-direction = require '../direction'
+direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 calc = require '../calc'
 log = require '../log'

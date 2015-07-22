@@ -3,7 +3,7 @@ _ = require 'lodash'
 game = require '../game'
 
 items = require './items'
-direction = require '../direction'
+direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 {p} = require '../util'
 
@@ -47,8 +47,6 @@ class exports.RandomWalk extends Personality
 		100
 
 	tick: ->
-		direction = require '../direction'
-
 		@creature.move game.random.direction 8 if game.random.chance @probability
 
 		12
@@ -199,8 +197,6 @@ class exports.NoLeaderOutrage extends Personality
 			else @creature.moveTo @target
 
 		else
-			direction = require '../direction'
-
 			@creature.move game.random.direction 8
 
 		4

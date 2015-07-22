@@ -1,7 +1,7 @@
 _ = require 'lodash'
 aStar = require 'a-star'
 
-direction = require './direction'
+direction = require 'rl-directions'
 vectorMath = require './vector-math'
 {distance} = require './util'
 
