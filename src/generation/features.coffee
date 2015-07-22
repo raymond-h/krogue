@@ -1,4 +1,4 @@
-game = require '../game'
+random = require '../random'
 log = require '../log'
 
 CreatureGen = require './creatures'
@@ -12,12 +12,12 @@ randomPoint = (map, pred) ->
 		return p
 
 	if map.top? and map.bottom? and map.left? and map.right?
-		x: game.random.range map.left, map.right
-		y: game.random.range map.top, map.bottom
+		x: random.range map.left, map.right
+		y: random.range map.top, map.bottom
 
 	else
-		x: game.random.range 0, map.w
-		y: game.random.range 0, map.h
+		x: random.range 0, map.w
+		y: random.range 0, map.h
 
 randomArea = (map) ->
 	p1 = randomPoint map
@@ -36,7 +36,7 @@ randomArea = (map) ->
 exports.generateFeatures = (path, level, map) ->
 	log.info 'Generating features...'
 
-	if game.random.chance 1
+	if random.chance 1
 		exports.generateSpaceBeeHive path, level, map
 
 exports.generateSpaceBeeHive = (path, level, map) ->
@@ -58,14 +58,14 @@ exports.generateSpaceBeeHive = (path, level, map) ->
 			map.data[y][x] =
 				if map.data[y][x].collidable then wall else floor
 
-	group = "space-bee-#{game.random.range 0, 100000}"
+	group = "space-bee-#{random.range 0, 100000}"
 
 	bees = []
 
 	p = randomPoint {top, left, right, bottom}, ({x, y}) -> not map.collidable x, y
 	bees.push CreatureGen.generateSpaceBee p.x, p.y, {monarch: yes, group}
 
-	for i in [1..game.random.range 20, 30]
+	for i in [1..random.range 20, 30]
 		p = randomPoint {top, left, right, bottom}, ({x, y}) ->
 			not map.collidable x, y
 

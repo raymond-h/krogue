@@ -2,6 +2,7 @@ Promise = require 'bluebird'
 _ = require 'lodash'
 
 game = require './game'
+random = require './random'
 log = require './log'
 
 {Stairs} = require './entities'
@@ -193,7 +194,7 @@ module.exports = class Player
 				prompts.position 'Fire where?', default: @creature
 				.then (pos) =>
 					offset = vectorMath.sub pos, @creature
-					item = game.random.sample @creature.getItemsForSlot 'hand'
+					item = random.sample @creature.getItemsForSlot 'hand'
 
 					if not item?
 						game.message 'Your hand is surprisingly bad at firing bullets.'

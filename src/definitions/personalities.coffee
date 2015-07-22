@@ -1,6 +1,7 @@
 _ = require 'lodash'
 
 game = require '../game'
+random = require '../random'
 
 items = require './items'
 direction = require 'rl-directions'
@@ -47,7 +48,7 @@ class exports.RandomWalk extends Personality
 		100
 
 	tick: ->
-		@creature.move game.random.direction 8 if game.random.chance @probability
+		@creature.move random.direction 8 if random.chance @probability
 
 		12
 
@@ -120,7 +121,7 @@ class exports.Gunman extends Personality
 		else 0
 
 	tick: ->
-		gun = game.random.sample @creature.getItemsForSlot 'hand'
+		gun = random.sample @creature.getItemsForSlot 'hand'
 
 		range = gun.range
 
@@ -197,7 +198,7 @@ class exports.NoLeaderOutrage extends Personality
 			else @creature.moveTo @target
 
 		else
-			@creature.move game.random.direction 8
+			@creature.move random.direction 8
 
 		4
 

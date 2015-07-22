@@ -3,6 +3,7 @@ RangedValue = require 'ranged-value'
 
 log = require '../log'
 game = require '../game'
+random = require '../random'
 
 {bresenhamLine} = require '../util'
 {p} = require '../util'
@@ -313,7 +314,7 @@ module.exports = class Creature extends Entity
 				target = creatures[0]
 				game.emit 'game.creature.attack.creature', @, dir, target
 
-				item = game.random.sample @getItemsForSlot 'hand'
+				item = random.sample @getItemsForSlot 'hand'
 
 				dmg = calc.meleeDamage @, item, target
 				target.damage dmg, @

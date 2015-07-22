@@ -28,7 +28,6 @@ class Game
 
 	aliasFns @, eventBus, ['waitOnEvent', 'on', 'off', 'emit']
 	message: message
-	random: random
 
 	generateMapId: ->
 		"map-#{@mapIdCounter++}"

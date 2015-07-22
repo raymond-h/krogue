@@ -1,4 +1,4 @@
-game = require '../game'
+random = require '../random'
 personality = require '../definitions/personalities'
 species = require '../definitions/creature-species'
 {Creature} = require '../entities'
@@ -8,7 +8,7 @@ itemGen = require './items'
 exports.generateStrangeGoo = (x, y) ->
 	c = new Creature {x, y}
 
-	if game.random.chance 0.50
+	if random.chance 0.50
 		c.personalities.push [
 			new personality.FleeFromPlayer c, 5
 			(new personality.RandomWalk c).withMultiplier 0.5
@@ -39,7 +39,7 @@ exports.generateTinyAlien = (x, y) ->
 		new personality.Attacker c
 	]...
 
-	if game.random.chance 0.5
+	if random.chance 0.5
 		c.equip itemGen.generateGun()
 
 		c.personalities.push (new personality.Gunman c).withMultiplier 2

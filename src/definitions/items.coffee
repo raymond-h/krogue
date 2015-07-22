@@ -1,6 +1,7 @@
 _ = require 'lodash'
 
 game = require '../game'
+random = require '../random'
 direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 calc = require '../calc'
@@ -97,7 +98,7 @@ class exports.PokeBall extends Item
 		if not @creature?
 			catchProb = @catchProb target
 
-			if game.random.chance catchProb
+			if random.chance catchProb
 				map.removeEntity target
 				game.timeManager.remove target
 				@creature = target
@@ -113,7 +114,7 @@ class exports.PokeBall extends Item
 					'Aargh! Almost had it!'
 					'Shoot! It was so close, too!'
 				]
-				game.message game.random.sample lines
+				game.message random.sample lines
 
 			no
 
@@ -130,7 +131,7 @@ class exports.PokeBall extends Item
 			]
 
 			game.message "
-				#{game.random.sample lines} #{@creature.name ? @creature.species.name}!
+				#{random.sample lines} #{@creature.name ? @creature.species.name}!
 			"
 
 			@creature = null

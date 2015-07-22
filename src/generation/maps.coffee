@@ -1,6 +1,6 @@
 _ = require 'lodash'
 
-game = require '../game'
+random = require '../random'
 {Map} = require '../map'
 {Stairs} = require '../entities'
 {repeat} = require '../util'
@@ -11,8 +11,8 @@ exports.generatePos = generatePos = (w, h, data) ->
 	if not h? then {w, h, data} = w
 
 	loop
-		x = game.random.range 0, w
-		y = game.random.range 0, h
+		x = random.range 0, w
+		y = random.range 0, h
 
 		break if not (data[y][x].collidable ? no)
 	{x, y}
@@ -69,7 +69,7 @@ exports.generateCellularAutomata = (path, level, connections, w, h) ->
 		width: w, height: h
 		initProbability: initProb
 		rules
-		randomFn: -> game.random.rnd()
+		randomFn: -> random.rnd()
 	}
 
 	map.data = convertMapData data, [
