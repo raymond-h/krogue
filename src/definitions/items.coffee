@@ -102,7 +102,6 @@ class exports.PokeBall extends Item
 
 			if random.chance catchProb
 				map.removeEntity target
-				game.timeManager.remove target
 				@creature = target
 
 				name = target.name ? 'The ' + target.species.name
@@ -124,7 +123,6 @@ class exports.PokeBall extends Item
 		if @creature? and not hit
 			map.addEntity @creature
 			@creature.setPos pos
-			game.timeManager.add @creature
 
 			lines = [
 				'Go'
@@ -265,7 +263,6 @@ class exports.Gun extends Item
 				if (currentAmmo.leaveWhenShot ? yes)
 					mapItem = currentAmmo.asMapItem endPos.x, endPos.y
 					map.addEntity mapItem
-					game.timeManager.add mapItem
 
 				currentAmmo.onLand? map, endPos, hit
 

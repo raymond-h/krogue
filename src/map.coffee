@@ -1,4 +1,7 @@
 _ = require 'lodash'
+TimeManager = require 'rl-time-manager'
+Promise = require 'bluebird'
+
 {repeat} = require './util'
 log = require './log'
 
@@ -13,15 +16,18 @@ class exports.Map
 	constructor: (@w, @h, @data = []) ->
 		@entities = []
 		@positions = {}
+		@timeManager = new TimeManager(Promise.resolve.bind Promise)
 
 	addEntity: (entities...) ->
 		e.map = @ for e in entities
 		@entities.push entities...
+		@timeManager.add entities...
 		@
 
 	removeEntity: (e) ->
 		e.map = null
 		_.pull @entities, e
+		@timeManager.remove e
 		@
 
 	entitiesAt: (x, y, f) ->

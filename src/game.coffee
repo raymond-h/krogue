@@ -56,13 +56,12 @@ class Game
 		log "Init game"
 
 		Player = require './player'
+
 		{GenerationManager} = require './generation/manager'
-		@timeManager = new TimeManager(Promise.resolve.bind Promise)
 		@generationManager = new GenerationManager
 
 		creature = @createPlayerCreature()
 		@player = new Player creature
-		@timeManager.add creature
 
 		@goTo 'main-1', 'entrance'
 
@@ -104,14 +103,12 @@ class Game
 	transitionToMap: (map, x, y) ->
 		if @currentMap?
 			@currentMap.removeEntity @player.creature
-			@timeManager.remove @currentMap.entities...
 
 		map.id ?= @generateMapId()
 		@maps[map.id] = map
 
 		@currentMap = map
 
-		@timeManager.add map.entities...
 		map.addEntity @player.creature
 
 		if _.isString x
@@ -141,36 +138,36 @@ class Game
 							next()
 
 					when 'game'
-						@timeManager.tick next
+						@currentMap.timeManager.tick next
 
 			(err) =>
 				log.error err.stack if err?
 				@quit()
 
 	loadFromJSON: (json) ->
-		@generationManager[k] = v for k,v of json.generationManager
-
-		@logs = json.logs
-
-		@timeManager.remove @player.creature
-
-		@player.creature = json.player.creature
-
-		@timeManager.add @player.creature
-
-		@maps = json.maps
-
-		@transitionToMap @maps[json.currentMap]
+		# @generationManager[k] = v for k,v of json.generationManager
+		#
+		# @logs = json.logs
+		#
+		# @timeManager.remove @player.creature
+		#
+		# @player.creature = json.player.creature
+		#
+		# @timeManager.add @player.creature
+		#
+		# @maps = json.maps
+		#
+		# @transitionToMap @maps[json.currentMap]
 
 	saveToJSON: ->
-		{
-			player:
-				creature: @player.creature
-			@logs
-			@generationManager
-			currentMap: @currentMap.id
-			@maps
-		}
+		# {
+		# 	player:
+		# 		creature: @player.creature
+		# 	@logs
+		# 	@generationManager
+		# 	currentMap: @currentMap.id
+		# 	@maps
+		# }
 
 module.exports = new Game
 

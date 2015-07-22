@@ -164,7 +164,6 @@ module.exports = class Creature extends Entity
 		drop = (item) =>
 			mapItem = item.asMapItem @x, @y
 			@map.addEntity mapItem
-			game.timeManager.add mapItem
 
 		if not @isPlayer()
 			drop item for item in @inventory
@@ -177,7 +176,6 @@ module.exports = class Creature extends Entity
 			drop corpse
 
 			@map.removeEntity @
-			game.timeManager.remove @
 
 		eventBus.emit 'game.creature.dead', @, cause
 		cause.level++ if cause.isPlayer?()
@@ -186,7 +184,6 @@ module.exports = class Creature extends Entity
 		if item instanceof MapItem
 			return if @pickup item.item
 				@map.removeEntity item
-				game.timeManager.remove item
 
 				yes
 
@@ -203,7 +200,6 @@ module.exports = class Creature extends Entity
 
 		mapItem = item.asMapItem @x, @y
 		@map.addEntity mapItem
-		game.timeManager.add mapItem
 
 		eventBus.emit 'game.creature.drop', @, item
 		yes
@@ -269,7 +265,6 @@ module.exports = class Creature extends Entity
 
 			mapItem = item.asMapItem endPos.x, endPos.y
 			@map.addEntity mapItem
-			game.timeManager.add mapItem
 
 			item.onLand? @map, endPos, hit
 
