@@ -6,6 +6,7 @@ _ = require 'lodash'
 LineMan = require '../line-man'
 
 log = require '../../log'
+eventBus = require '../../event-bus'
 entityClasses = require '../../entities'
 
 Camera = require '../../camera'
@@ -37,7 +38,7 @@ module.exports = class TtyRenderer
 
 		@lineMan = new LineMan @logWidth
 
-		@game
+		eventBus
 		.on 'turn.player.start', => @invalidate()
 		.on 'log.add', (str) => @lineMan.add str
 

@@ -26,7 +26,6 @@ class Game
 		@mapIdCounter = 0
 		@maps = {}
 
-	aliasFns @, eventBus, ['waitOn', 'on', 'off', 'emit']
 	message: message
 
 	generateMapId: ->
@@ -85,7 +84,7 @@ class Game
 
 		items = require './definitions/items'
 		creature.inventory = for i in [1..5]
-			new items.PokeBall @random.sample ['normal', 'great', 'ultra', 'master']
+			new items.PokeBall random.sample ['normal', 'great', 'ultra', 'master']
 
 		creature.inventory.push new items.BulletPack (new items.Bullet 'medium'), 20
 		creature.inventory.push new items.BulletPack (new items.Bullet 'medium'), 5

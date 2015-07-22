@@ -3,6 +3,7 @@ _ = require 'lodash'
 
 game = require './game'
 random = require './random'
+eventBus = require './event-bus'
 log = require './log'
 
 {Stairs} = require './entities'
@@ -23,20 +24,20 @@ module.exports = class Player
 		@_lookPos = null
 
 	tick: ->
-		game.emit 'turn.player.start'
+		eventBus.emit 'turn.player.start'
 
 		whilst (-> game.renderer.hasMoreLogs()),
 			->
 				prompts.actions null, ['more-logs']
 				.then -> game.renderer.showMoreLogs()
 
-		.then -> game.waitOn 'action.**'
+		.then -> eventBus.waitOn 'action.**'
 
 		.then ([action, params...]) => @doAction action, params...
 
 		.then (cost) ->
 			if not _.isNumber cost then cost = 0
-			game.emit 'turn.player.end'
+			eventBus.emit 'turn.player.end'
 
 	doAction: (action, params...) ->
 		switch action

@@ -1,6 +1,8 @@
 Promise = require 'bluebird'
 _ = require 'lodash'
 
+eventBus = require '../event-bus'
+
 charRange = (start, end) ->
 	[start.charCodeAt(0)..end.charCodeAt(0)]
 	.map (i) -> String.fromCharCode i
@@ -17,15 +19,14 @@ module.exports = class Prompts
 	generic: (message, event, matcher, opts) ->
 		new Promise (resolve, reject) =>
 			event = [].concat event
-			self = @
 
 			handler = (a...) ->
 				if matcher @event, a...
-					(self.game.off e, handler) for e in event
+					(eventBus.off e, handler) for e in event
 
 					resolve [@event, a...]
 
-			(@game.on e, handler) for e in event
+			(eventBus.on e, handler) for e in event
 
 			@game.renderer.setPromptMessage message
 

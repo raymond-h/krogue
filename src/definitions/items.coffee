@@ -2,6 +2,7 @@ _ = require 'lodash'
 
 game = require '../game'
 random = require '../random'
+eventBus = require '../event-bus'
 direction = require 'rl-directions'
 vectorMath = require '../vector-math'
 calc = require '../calc'
@@ -211,10 +212,10 @@ class exports.Gun extends Item
 		'line': (creature, offset) ->
 			currentAmmo = @pullCurrentAmmo()
 			if not currentAmmo?
-				game.emit 'game.creature.fire.empty', creature, @, offset
+				eventBus.emit 'game.creature.fire.empty', creature, @, offset
 				return
 
-			game.emit 'game.creature.fire', creature, @, offset
+			eventBus.emit 'game.creature.fire', creature, @, offset
 
 			if _.isString offset
 				offset = vectorMath.mult (direction.parse offset), @range
@@ -240,10 +241,10 @@ class exports.Gun extends Item
 
 				switch found.type
 					when 'none'
-						game.emit 'game.creature.fire.hit.none', creature, @, offset
+						eventBus.emit 'game.creature.fire.hit.none', creature, @, offset
 
 					when 'wall'
-						game.emit 'game.creature.fire.hit.wall',
+						eventBus.emit 'game.creature.fire.hit.wall',
 							creature, @, offset, found
 
 					when 'creature'
@@ -253,7 +254,7 @@ class exports.Gun extends Item
 						dealDamage = ->
 							target.damage dmg, creature
 
-						game.emit 'game.creature.fire.hit.creature', creature, @, offset, target
+						eventBus.emit 'game.creature.fire.hit.creature', creature, @, offset, target
 
 						r = currentAmmo.onHit? map, found, target, dealDamage
 						if r isnt no then dealDamage()
@@ -272,10 +273,10 @@ class exports.Gun extends Item
 		'spread': (creature, offset) ->
 			currentAmmo = @pullCurrentAmmo()
 			if not currentAmmo?
-				game.emit 'game.creature.fire.empty', creature, @, offset
+				eventBus.emit 'game.creature.fire.empty', creature, @, offset
 				return
 
-			game.emit 'game.creature.fire', creature, @, offset
+			eventBus.emit 'game.creature.fire', creature, @, offset
 
 			if _.isString offset
 				offset = direction.parse offset
@@ -308,10 +309,10 @@ class exports.Gun extends Item
 					for target in targets
 						dmg = calc.gunDamage creature, @, target
 
-						game.emit 'game.creature.fire.hit.creature',
+						eventBus.emit 'game.creature.fire.hit.creature',
 							creature, @, offset, target
 
 						target.damage dmg, creature
 
 				else
-					game.emit 'game.creature.fire.hit.none', creature, @, offset
+					eventBus.emit 'game.creature.fire.hit.none', creature, @, offset

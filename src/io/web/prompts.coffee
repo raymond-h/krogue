@@ -2,6 +2,7 @@ Promise = require 'bluebird'
 _ = require 'lodash'
 
 {whilst, snapToRange} = require '../../util'
+eventBus = require '../../event-bus'
 direction = require 'rl-directions'
 vectorMath = require '../../vector-math'
 
@@ -137,12 +138,12 @@ module.exports = class WebPrompts extends Prompts
 						if action is 'direction'
 							updatePos (vectorMath.add pos, direction.parse dir)
 
-			(@game.on e, handler) for e in ['key.escape', 'key.enter', 'action.**']
+			(eventBus.on e, handler) for e in ['key.escape', 'key.enter', 'action.**']
 
 			# Done
 			done = (cancelled) =>
 				unbindClick()
-				(@game.off e, handler) for e in ['key.escape', 'key.enter', 'action.**']
+				(eventBus.off e, handler) for e in ['key.escape', 'key.enter', 'action.**']
 
 				@game.renderer.cursor = null
 				@game.renderer.invalidate()

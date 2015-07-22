@@ -3,8 +3,10 @@ direction = require 'rl-directions'
 
 bindings = require '../key-bindings.json'
 
+eventBus = require './event-bus'
+
 module.exports = exports = (game) ->
-	game.on 'key.*', (ch, key) ->
+	eventBus.on 'key.*', (ch, key) ->
 		action = bindings[key.full] ? bindings[key.name]
 
 		if action?
@@ -13,6 +15,6 @@ module.exports = exports = (game) ->
 			if parts[0] is 'direction'
 				parts[1] = direction.normalize parts[1], 1
 
-			game.emit "action.#{parts.join '.'}", parts...
+			eventBus.emit "action.#{parts.join '.'}", parts...
 
 exports.bindings = bindings

@@ -1,6 +1,8 @@
 blessed = require 'blessed'
 program = blessed.program()
 
+eventBus = require '../../event-bus'
+
 Renderer = require './renderer'
 Effects = require './effects'
 Prompts = require './prompts'
@@ -16,7 +18,7 @@ module.exports = class Tty
 		program.alternateBuffer()
 
 		program.on 'keypress', (ch, key) =>
-			@game.emit "key.#{key.name}", ch, key
+			eventBus.emit "key.#{key.name}", ch, key
 
 		@renderer = new Renderer @, @game
 		@effects = new Effects @

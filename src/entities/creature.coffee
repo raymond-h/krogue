@@ -4,6 +4,7 @@ RangedValue = require 'ranged-value'
 log = require '../log'
 game = require '../game'
 random = require '../random'
+eventBus = require '../event-bus'
 
 {bresenhamLine} = require '../util'
 {p} = require '../util'
@@ -75,7 +76,7 @@ module.exports = class Creature extends Entity
 			dlvl = newLvl - oldLvl
 
 			@recalculateStats()
-			game.emit 'game.creature.level-change', @, newLvl, oldLvl
+			eventBus.emit 'game.creature.level-change', @, newLvl, oldLvl
 
 	addXp: (dxp) ->
 		@setXp @xp + dxp
@@ -154,7 +155,7 @@ module.exports = class Creature extends Entity
 		@leader? and @belongsToGroup other
 
 	damage: (dmg, cause) ->
-		game.emit 'game.creature.hurt', @, dmg, cause
+		eventBus.emit 'game.creature.hurt', @, dmg, cause
 		@health.current -= dmg
 
 		@die cause if @health.empty
@@ -178,7 +179,7 @@ module.exports = class Creature extends Entity
 			@map.removeEntity @
 			game.timeManager.remove @
 
-		game.emit 'game.creature.dead', @, cause
+		eventBus.emit 'game.creature.dead', @, cause
 		cause.level++ if cause.isPlayer?()
 
 	pickup: (item) ->
@@ -192,7 +193,7 @@ module.exports = class Creature extends Entity
 			else no
 
 		@inventory.push item
-		game.emit 'game.creature.pickup', @, item
+		eventBus.emit 'game.creature.pickup', @, item
 		yes
 
 	drop: (item) ->
@@ -204,7 +205,7 @@ module.exports = class Creature extends Entity
 		@map.addEntity mapItem
 		game.timeManager.add mapItem
 
-		game.emit 'game.creature.drop', @, item
+		eventBus.emit 'game.creature.drop', @, item
 		yes
 
 	equip: (item, silent = no) ->
@@ -216,7 +217,7 @@ module.exports = class Creature extends Entity
 
 		_.pull @inventory, item
 		@equipment.push item
-		if not silent then game.emit 'game.creature.equip', @, item
+		if not silent then eventBus.emit 'game.creature.equip', @, item
 		yes
 
 	unequip: (item, silent = no) ->
@@ -225,7 +226,7 @@ module.exports = class Creature extends Entity
 		if @hasItemEquipped item
 			_.pull @equipment, item
 			@inventory.push item
-			game.emit 'game.creature.unequip', @, item
+			eventBus.emit 'game.creature.unequip', @, item
 			yes
 
 		else no
@@ -303,7 +304,7 @@ module.exports = class Creature extends Entity
 
 		if @map.collidable x, y
 			# attacking a wall
-			game.emit 'game.creature.attack.wall', @, dir
+			eventBus.emit 'game.creature.attack.wall', @, dir
 
 			@damage 3, 'attacking a wall'
 			yes
@@ -312,7 +313,7 @@ module.exports = class Creature extends Entity
 			creatures = @map.entitiesAt x, y, 'creature'
 			if creatures.length > 0
 				target = creatures[0]
-				game.emit 'game.creature.attack.creature', @, dir, target
+				eventBus.emit 'game.creature.attack.creature', @, dir, target
 
 				item = random.sample @getItemsForSlot 'hand'
 
@@ -321,7 +322,7 @@ module.exports = class Creature extends Entity
 				yes
 
 			else
-				game.emit 'game.creature.attack.none', @, dir
+				eventBus.emit 'game.creature.attack.none', @, dir
 				no
 
 	findNearest: (maxRange = Infinity, cb) ->

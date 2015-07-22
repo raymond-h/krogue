@@ -1,4 +1,5 @@
 log = require '../../log'
+eventBus = require '../../event-bus'
 
 events = []
 
@@ -36,7 +37,7 @@ processEvents = (game, events) ->
 		(if key.shift then 'S-' else '') +
 		(key.name ? key.ch)
 
-	game.emit "key.#{key.name}", key.ch, key
+	eventBus.emit "key.#{key.name}", key.ch, key
 
 mapKey = (which) -> keys[which]
 

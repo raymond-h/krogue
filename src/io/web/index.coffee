@@ -1,3 +1,5 @@
+eventBus = require '../../event-bus'
+
 keyHandling = require './keyhandling'
 Renderer = require './renderer'
 Effects = require './effects'
@@ -20,7 +22,7 @@ module.exports = class Web
 		@effects = new Effects @
 		@prompts = new Prompts @game
 
-		@game.on 'action.toggle-graphics', =>
+		eventBus.on 'action.toggle-graphics', =>
 			@renderer.useTiles = not @renderer.useTiles
 			@renderer.invalidate()
 
