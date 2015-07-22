@@ -1,7 +1,6 @@
 _ = require 'lodash'
 
 log = require '../log'
-game = require '../game'
 direction = require 'rl-directions'
 
 {distanceSq} = require '../util'

@@ -5,7 +5,7 @@ bindings = require '../key-bindings.json'
 
 eventBus = require './event-bus'
 
-module.exports = exports = (game) ->
+module.exports = exports = ->
 	eventBus.on 'key.*', (ch, key) ->
 		action = bindings[key.full] ? bindings[key.name]
 

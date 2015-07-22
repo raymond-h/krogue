@@ -9,6 +9,7 @@ message = require './message'
 random = require './random'
 
 (require './messages')(eventBus)
+require './key-handling'
 
 aliasFns = (Clazz, obj, fns) ->
 	for fn in fns then do (fn) ->
@@ -18,8 +19,6 @@ aliasFns = (Clazz, obj, fns) ->
 class Game
 	constructor: ->
 		@state = 'main-menu'
-
-		(require './key-handling')(this)
 
 		@logs = []
 
