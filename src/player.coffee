@@ -7,7 +7,7 @@ log = require './log'
 {Stairs} = require './entities'
 direction = require 'rl-directions'
 vectorMath = require './vector-math'
-{whilst, arrayRemove} = require './util'
+{whilst} = require './util'
 prompts = game.prompts
 
 {p} = require './util'
@@ -143,7 +143,7 @@ module.exports = class Player
 						oldReloadItemName = reloadItem.name
 
 						if reloadItem.reload ammo
-							arrayRemove @creature.inventory, ammo
+							_.pull @creature.inventory, ammo
 							game.message "
 								Loaded #{oldReloadItemName} with #{ammo.name} - rock and roll!
 							"

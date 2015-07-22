@@ -11,7 +11,6 @@ entityClasses = require '../../entities'
 Camera = require '../../camera'
 graphics = require '../graphics-ascii'
 Effects = require './effects'
-{repeatStr: repeat} = require '../../util'
 
 parseAttrs = (graphic) ->
 	attrs = []
@@ -166,13 +165,13 @@ module.exports = class TtyRenderer
 			width = Math.max menu.header.length, width
 			width += 2
 
-		delimiter = (repeat '-', width-2)
+		delimiter = (_.repeat '-', width-2)
 		rows = [delimiter, menu.header, delimiter, menu.items..., delimiter]
 
 		height = menu.height ? rows.length
 
 		for row, i in rows
-			str = "|#{row}#{repeat ' ', (width - row.length - 2)}|"
+			str = "|#{row}#{_.repeat ' ', (width - row.length - 2)}|"
 			@write x, y+i, str
 
 	renderMap: (x, y) ->
@@ -237,7 +236,7 @@ module.exports = class TtyRenderer
 		currentWidth = Math.floor (current - min) / (max - min) * fullWidth
 		restWidth = fullWidth - currentWidth
 
-		@write x, y, "[#{repeat '=', currentWidth}#{repeat ' ', restWidth}]"
+		@write x, y, "[#{_.repeat '=', currentWidth}#{_.repeat ' ', restWidth}]"
 
 	renderEffects: (ox, oy) ->
 		@io.effects.renderEffects ox, oy

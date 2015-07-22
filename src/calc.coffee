@@ -1,11 +1,11 @@
 _ = require 'lodash'
 
-game = require './game'
+random = require './random'
 
 meleeDamage = (subject, item, target) ->
 	dmgDev = (-0.1107 * (subject.calc 'accuracy', item) + 3.32881) * 4
 
-	[meleeDmg] = game.random.gaussian (subject.calc 'attack', item), dmgDev
+	[meleeDmg] = random.gaussian (subject.calc 'attack', item), dmgDev
 	dmg = Math.round meleeDmg - (target.calc 'defense')
 
 	Math.max 0, dmg
@@ -13,7 +13,7 @@ meleeDamage = (subject, item, target) ->
 gunDamage = (subject, gun, target) ->
 	dmgDev = (-0.1107 * (subject.calc 'accuracy', gun) + 3.32881) * 4
 
-	[gunDmg] = game.random.gaussian gun.damage, dmgDev
+	[gunDmg] = random.gaussian gun.damage, dmgDev
 	dmg = Math.round gunDmg - (target.calc 'defense')
 
 	Math.max 0, dmg

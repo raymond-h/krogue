@@ -1,4 +1,5 @@
-{arrayRemove} = require '../util'
+_ = require 'lodash'
+
 {p} = require '../util'
 
 module.exports = class Effects
@@ -14,7 +15,7 @@ module.exports = class Effects
 		p cb.call @, data
 
 		.then =>
-			arrayRemove @effects, data
+			_.pull @effects, data
 			@invalidate()
 
 	invalidate: -> @io.renderer.invalidate()

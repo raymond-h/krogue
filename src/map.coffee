@@ -1,5 +1,5 @@
 _ = require 'lodash'
-{arrayRemove, repeat} = require './util'
+{repeat} = require './util'
 log = require './log'
 
 filter = (e, filter) ->
@@ -21,7 +21,7 @@ class exports.Map
 
 	removeEntity: (e) ->
 		e.map = null
-		arrayRemove @entities, e
+		_.pull @entities, e
 		@
 
 	entitiesAt: (x, y, f) ->

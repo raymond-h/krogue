@@ -4,7 +4,7 @@ RangedValue = require 'ranged-value'
 log = require '../log'
 game = require '../game'
 
-{bresenhamLine, arrayRemove} = require '../util'
+{bresenhamLine} = require '../util'
 {p} = require '../util'
 direction = require 'rl-directions'
 vectorMath = require '../vector-math'
@@ -197,7 +197,7 @@ module.exports = class Creature extends Entity
 	drop: (item) ->
 		return no if not (item? and item in @inventory)
 
-		arrayRemove @inventory, item
+		_.pull @inventory, item
 
 		mapItem = item.asMapItem @x, @y
 		@map.addEntity mapItem
@@ -213,7 +213,7 @@ module.exports = class Creature extends Entity
 		if _.any creatureSpecies._equipSlots, notFit
 			return no
 
-		arrayRemove @inventory, item
+		_.pull @inventory, item
 		@equipment.push item
 		if not silent then game.emit 'game.creature.equip', @, item
 		yes
@@ -222,7 +222,7 @@ module.exports = class Creature extends Entity
 		log.info "Is it equipped already? #{@hasItemEquipped item}"
 
 		if @hasItemEquipped item
-			arrayRemove @equipment, item
+			_.pull @equipment, item
 			@inventory.push item
 			game.emit 'game.creature.unequip', @, item
 			yes
@@ -235,7 +235,7 @@ module.exports = class Creature extends Entity
 
 		endPos = vectorMath.add @, offset
 
-		arrayRemove @inventory, item
+		_.pull @inventory, item
 
 		found = @raytraceUntilBlocked endPos, range: 15
 

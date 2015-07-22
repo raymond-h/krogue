@@ -1,5 +1,4 @@
 _ = require 'lodash'
-
 Promise = require 'bluebird'
 
 exports.bresenhamLine = (p0, p1, callback) ->
@@ -56,22 +55,9 @@ exports.snapToRange = (min, curr, max) ->
 exports.repeat = (n, item) ->
 	item for i in [1..n]
 
-exports.arrayRemove = (a, item) ->
-	i = a.indexOf item
-	a[i..i] = [] if ~i
-	i
-
 exports.distanceSq = (o0, o1) ->
 	[dx, dy] = [o1.x-o0.x, o1.y-o0.y]
 	dx*dx + dy*dy
 
 exports.distance = (o0, o1) ->
 	Math.sqrt exports.distanceSq o0, o1
-
-exports.dasherize = (className) ->
-	className
-	.replace /(\w)(?=[A-Z])/g, '$1-'
-	.toLowerCase()
-
-exports.repeatStr = (str, n) ->
-	(new Array n+1).join str
