@@ -4,6 +4,7 @@ _ = require 'lodash'
 game = require './game'
 random = require './random'
 eventBus = require './event-bus'
+message = require './message'
 log = require './log'
 
 {Stairs} = require './entities'
@@ -55,7 +56,7 @@ module.exports = class Player
 				.then (doLoad) ->
 					if doLoad
 						p game.load 'test-save.json'
-						.then -> game.message "Loaded."
+						.then -> message "Loaded."
 
 			when 'possess'
 				nextEntity = (map) ->
@@ -78,10 +79,10 @@ module.exports = class Player
 
 				prompts.list 'Inventory', choices
 				.then (choice) ->
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 
 					{key, value} = choice
-					game.message "You picked #{key}: #{value}!"
+					message "You picked #{key}: #{value}!"
 
 			when 'look'
 				handler = (pos) =>
@@ -95,14 +96,14 @@ module.exports = class Player
 			when 'equip'
 				prompts.list 'Equip which item?', @creature.inventory
 				.then (choice) =>
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 
 					{value: item} = choice
 
 					if @creature.equip item
 						6
 
-					else game.message "
+					else message "
 						If you do that, you're gonna overburden
 						yourself. So don't do that.
 					"
@@ -114,7 +115,7 @@ module.exports = class Player
 
 				prompts.list 'Put away which item?', equips
 				.then (choice) =>
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 
 					@creature.unequip choice.value.item
 					6
@@ -132,25 +133,25 @@ module.exports = class Player
 
 				prompts.list 'Reload which item?', reloadableItems
 				.then (choice) =>
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 					{value: {item: reloadItem}} = choice
 
 					invWithoutPicked = inventory.filter (v) -> v.item isnt reloadItem
 
 					prompts.list 'Reload with which item?', invWithoutPicked
 					.then (choice) =>
-						return game.message 'Never mind.' if not choice?
+						return message 'Never mind.' if not choice?
 						{value: {item: ammo}} = choice
 
 						oldReloadItemName = reloadItem.name
 
 						if reloadItem.reload ammo
 							_.pull @creature.inventory, ammo
-							game.message "
+							message "
 								Loaded #{oldReloadItemName} with #{ammo.name} - rock and roll!
 							"
 
-						else game.message "
+						else message "
 							Dangit! Can't fit #{ammo.name} into #{oldReloadItemName}, it seems...
 						"
 
@@ -159,7 +160,7 @@ module.exports = class Player
 
 				switch items.length
 					when 0
-						game.message 'There, frankly, is nothing here!'
+						message 'There, frankly, is nothing here!'
 
 					when 1
 						@creature.pickup items[0]
@@ -170,7 +171,7 @@ module.exports = class Player
 							("#{i.item.name}" for i in items)
 
 						.then (choices) =>
-							return game.message 'Never mind.' if not choices?
+							return message 'Never mind.' if not choices?
 
 							for c in choices
 								@creature.pickup items[c.index]
@@ -179,12 +180,12 @@ module.exports = class Player
 
 			when 'drop'
 				if @creature.inventory.length is 0
-					game.message 'You empty your empty inventory onto the ground.'
+					message 'You empty your empty inventory onto the ground.'
 
 				else
 					prompts.multichoiceList 'Drop which item?', @creature.inventory
 					.then (choices) =>
-						return game.message 'Never mind.' if not choices?
+						return message 'Never mind.' if not choices?
 
 						for c in choices
 							@creature.drop c.value
@@ -198,10 +199,10 @@ module.exports = class Player
 					item = random.sample @creature.getItemsForSlot 'hand'
 
 					if not item?
-						game.message 'Your hand is surprisingly bad at firing bullets.'
+						message 'Your hand is surprisingly bad at firing bullets.'
 						2
 					else if not item.fire?
-						game.message "
+						message "
 							You find the lack of bullets
 							from your #{item.name} disturbing.
 						"
@@ -221,13 +222,13 @@ module.exports = class Player
 			when 'throw'
 				prompts.list 'Throw which item?', @creature.inventory
 				.then (choice) =>
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 
 					{value: item} = choice
 
 					prompts.position 'Throw where?', default: @creature
 					.then (pos) =>
-						return game.message 'Never mind.' if not pos?
+						return message 'Never mind.' if not pos?
 
 						offset = vectorMath.sub pos, @creature
 
@@ -238,14 +239,14 @@ module.exports = class Player
 				skills = @creature.skills()
 
 				if skills.length is 0
-					game.message "
+					message "
 						You really don't have the skills to do that. Get better.
 					"
 					return
 
 				prompts.list 'Use which skill?', skills
 				.then (choice) =>
-					return game.message 'Never mind.' if not choice?
+					return message 'Never mind.' if not choice?
 
 					skill = choice.value
 
@@ -260,12 +261,12 @@ module.exports = class Player
 			when 'test-dir'
 				prompts.direction 'Pick a direction!', cancelable: yes
 
-				.then (dir) -> game.message "You answered: #{dir}"
+				.then (dir) -> message "You answered: #{dir}"
 
 			when 'test-yn'
 				prompts.yesNo 'Are you sure?', cancelable: yes
 
-				.then (reply) -> game.message "You answered: #{reply}"
+				.then (reply) -> message "You answered: #{reply}"
 
 			when 'test-multi'
 				choices = [
@@ -276,14 +277,14 @@ module.exports = class Player
 
 				prompts.multichoiceList 'Pick any fruits!', choices
 				.then (choices) ->
-					return game.message 'Cancelled.' if not choices?
+					return message 'Cancelled.' if not choices?
 
 					choices = choices.map (c) -> c.value
 
 					if choices.length > 0
-						game.message "You picked: #{choices.join ', '}"
+						message "You picked: #{choices.join ', '}"
 
-					else game.message 'You picked none!!'
+					else message 'You picked none!!'
 
 			when 'down-stairs'
 				[stairs] = @creature.map.entitiesAt @creature.x, @creature.y,
@@ -304,5 +305,5 @@ module.exports = class Player
 			when 'test-pos'
 				prompts.position 'Test position!', default: @creature
 				.then (pos) ->
-					game.message "You picked position: #{pos.x},#{pos.y}" if pos?
-					game.message "Never mind." if not pos?
+					message "You picked position: #{pos.x},#{pos.y}" if pos?
+					message "Never mind." if not pos?

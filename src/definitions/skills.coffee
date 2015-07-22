@@ -3,6 +3,7 @@ Promise = require 'bluebird'
 
 game = require '../game'
 log = require '../log'
+message = require '../message'
 prompts = game.prompts
 
 direction = require 'rl-directions'
@@ -32,7 +33,7 @@ class exports.SenseLasagna extends Skill
 	name: 'sense lasagna'
 
 	use: (creature) ->
-		game.message "
+		message "
 			You feel no presence of any lasagna aura in your vicinity. Disappointing.
 		"
 
@@ -54,12 +55,12 @@ class exports.Blink extends Skill
 
 	use: (creature, {position, doIt}) ->
 		if not doIt
-			game.message "
+			message "
 				Cancelled blinking.
 			"
 
 		else
-			game.message "
+			message "
 				*BZOOM*
 			"
 

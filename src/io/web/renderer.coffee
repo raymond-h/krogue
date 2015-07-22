@@ -3,6 +3,7 @@ _ = require 'lodash'
 log = require '../../log'
 
 vectorMath = require '../../vector-math'
+message = require '../../message'
 entityClasses = require '../../entities'
 
 tileGraphics = require '../graphics-tiles'
@@ -99,7 +100,7 @@ module.exports = class WebRenderer
 				@render()
 
 	setPromptMessage: (@promptMessage) ->
-		@game.message @promptMessage if @promptMessage?
+		@message @promptMessage if @promptMessage?
 
 	hasMoreLogs: -> no
 

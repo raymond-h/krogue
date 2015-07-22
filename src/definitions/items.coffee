@@ -1,9 +1,10 @@
 _ = require 'lodash'
+direction = require 'rl-directions'
 
 game = require '../game'
 random = require '../random'
 eventBus = require '../event-bus'
-direction = require 'rl-directions'
+message = require '../message'
 vectorMath = require '../vector-math'
 calc = require '../calc'
 log = require '../log'
@@ -106,7 +107,7 @@ class exports.PokeBall extends Item
 
 				name = target.name ? 'The ' + target.species.name
 
-				game.message "Gotcha! #{name} was caught!"
+				message "Gotcha! #{name} was caught!"
 
 			else
 				lines = [
@@ -115,7 +116,7 @@ class exports.PokeBall extends Item
 					'Aargh! Almost had it!'
 					'Shoot! It was so close, too!'
 				]
-				game.message random.sample lines
+				message random.sample lines
 
 			no
 
@@ -131,7 +132,7 @@ class exports.PokeBall extends Item
 				'The opponent is weak, finish them! Go'
 			]
 
-			game.message "
+			message "
 				#{random.sample lines} #{@creature.name ? @creature.species.name}!
 			"
 
@@ -207,7 +208,7 @@ class exports.Gun extends Item
 
 	fireHandlers:
 		'_dud': (creature, offset) ->
-			game.message 'Nothing happens; this gun is a dud.'
+			message 'Nothing happens; this gun is a dud.'
 
 		'line': (creature, offset) ->
 			currentAmmo = @pullCurrentAmmo()

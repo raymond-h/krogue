@@ -26,8 +26,6 @@ class Game
 		@mapIdCounter = 0
 		@maps = {}
 
-	message: message
-
 	generateMapId: ->
 		"map-#{@mapIdCounter++}"
 
