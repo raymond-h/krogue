@@ -96,11 +96,7 @@ module.exports = class Player
 					return game.message 'Never mind.' if not choice?
 
 					{value: item} = choice
-					# prompts.list 'To what slot?', @creature.species.equipSlots
-					# .then (choice) =>
-					# 	return game.message 'Never mind.' if not choice?
 
-					# 	{value: slot} = choice
 					if @creature.equip item
 						6
 
