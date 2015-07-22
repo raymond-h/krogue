@@ -14,10 +14,10 @@ the = (cause) ->
 
 	else "the #{cause.species.name}"
 
-module.exports = (game) ->
-	msg = (m) -> game.message m
+module.exports = (ee) ->
+	msg = require './message'
 
-	game
+	ee
 
 	.on 'game.creature.hurt', (target, dmg, cause) ->
 		It_was =

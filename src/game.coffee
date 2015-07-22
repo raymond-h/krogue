@@ -1,24 +1,23 @@
 async = require 'async'
-{EventEmitter2} = require 'eventemitter2'
-MersenneTwister = require 'mersennetwister'
 _ = require 'lodash'
 Promise = require 'bluebird'
 TimeManager = require 'rl-time-manager'
 
 log = require './log'
+eventBus = require './event-bus'
+message = require './message'
+random = require './random'
 
-{arrayRemove} = require './util'
+(require './messages')(eventBus)
 
-class Game extends EventEmitter2
+aliasFns = (Clazz, obj, fns) ->
+	for fn in fns then do (fn) ->
+		Clazz::[fn] = (params...) ->
+			obj[fn] params...
+
+class Game
 	constructor: ->
-		super
-			wildcard: yes
-			newListener: no
-
 		@state = 'main-menu'
-
-		@onAny (a...) ->
-			log.silly "Event: '#{@event}'; ", a
 
 		(require './key-handling')(this)
 
@@ -27,12 +26,9 @@ class Game extends EventEmitter2
 		@mapIdCounter = 0
 		@maps = {}
 
-	waitOnEvent: (event) ->
-		new Promise (resolve, reject) =>
-			@once event, (params...) ->
-				resolve params
-
-		.cancellable()
+	aliasFns @, eventBus, ['waitOnEvent', 'on', 'off', 'emit']
+	message: message
+	random: random
 
 	generateMapId: ->
 		"map-#{@mapIdCounter++}"
@@ -47,13 +43,15 @@ class Game extends EventEmitter2
 		@effects = @io.effects
 		@prompts = @io.prompts
 
-		(require './messages')(@)
-
-		@on 'key.c', (ch, key) =>
+		eventBus
+		.on 'key.c', (ch, key) =>
 			@quit() if key.ctrl
 
-		.on 'log.add', (str) ->
+		.on 'log.add', (str) =>
 			log "<GAME> #{str}"
+
+			@logs.push str
+			@logs.shift() while @logs.length > 20
 
 		.on 'state.enter.game', =>
 			@initGame()
@@ -63,9 +61,6 @@ class Game extends EventEmitter2
 
 		Player = require './player'
 		{GenerationManager} = require './generation/manager'
-		Random = require './random'
-
-		@random = new Random(new MersenneTwister)
 		@timeManager = new TimeManager(Promise.resolve.bind Promise)
 		@generationManager = new GenerationManager
 
@@ -75,7 +70,7 @@ class Game extends EventEmitter2
 
 		@goTo 'main-1', 'entrance'
 
-		@on 'game.creature.dead', (creature, cause) =>
+		eventBus.on 'game.creature.dead', (creature, cause) =>
 			if creature.isPlayer()
 				@goState 'death'
 
@@ -136,22 +131,16 @@ class Game extends EventEmitter2
 		@io.saveData.load @, filename
 
 	goState: (state) ->
-		@emit "state.exit.#{@state}", 'exit', @state
+		eventBus.emit "state.exit.#{@state}", 'exit', @state
 		@state = state
-		@emit "state.enter.#{@state}", 'enter', @state
-
-	message: (str) ->
-		@logs.push str
-		@logs.shift() while @logs.length > 20
-
-		@emit 'log.add', str
+		eventBus.emit "state.enter.#{@state}", 'enter', @state
 
 	main: ->
 		async.whilst (-> true),
 			(next) =>
 				switch @state
 					when 'main-menu'
-						@once 'key.s', =>
+						eventBus.once 'key.s', =>
 							@goState 'game'
 							next()
 

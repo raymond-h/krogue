@@ -1,5 +1,8 @@
-module.exports = class Random
+MersenneTwister = require 'mersennetwister'
+
+class Random
 	constructor: (@mersenneTwister) ->
+		@mersenneTwister ?= new MersenneTwister
 
 	bool: ->
 		(@mersenneTwister.int31() % 2) is 0
@@ -55,3 +58,6 @@ module.exports = class Random
 
 		c = Math.sqrt(-2 * Math.log(s) / s)
 		[x*c, y*c].map (v) -> stdev * v + mean
+
+module.exports = exports = new Random
+exports.Random = Random
