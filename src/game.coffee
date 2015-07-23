@@ -11,11 +11,6 @@ random = require './random'
 require './messages'
 require './key-handling'
 
-aliasFns = (Clazz, obj, fns) ->
-	for fn in fns then do (fn) ->
-		Clazz::[fn] = (params...) ->
-			obj[fn] params...
-
 class Game
 	constructor: ->
 		@state = 'main-menu'
