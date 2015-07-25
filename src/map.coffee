@@ -24,10 +24,10 @@ class exports.Map
 		@timeManager.add entities...
 		@
 
-	removeEntity: (e) ->
-		e.map = null
-		_.pull @entities, e
-		@timeManager.remove e
+	removeEntity: (entities...) ->
+		e.map = null for e in entities
+		_.pull @entities, entities...
+		@timeManager.remove entities...
 		@
 
 	entitiesAt: (x, y, f) ->
