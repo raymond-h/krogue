@@ -1,9 +1,25 @@
 random = require '../random'
 personality = require '../definitions/personalities'
 species = require '../definitions/creature-species'
+items = require '../definitions/items'
 {Creature} = require '../entities'
 
 itemGen = require './items'
+
+exports.generateStartingPlayer = (x, y) ->
+	c = new Creature {x, y, species: species.human}
+
+	gun = itemGen.generateStartingGun()
+
+	c.equip gun, yes
+
+	c.inventory = for i in [1..5]
+		new items.PokeBall random.sample ['normal', 'great', 'ultra', 'master']
+
+	c.inventory.push new items.BulletPack (new items.Bullet 'medium'), 20
+	c.inventory.push new items.BulletPack (new items.Bullet 'medium'), 5
+
+	c
 
 exports.generateStrangeGoo = (x, y) ->
 	c = new Creature {x, y}

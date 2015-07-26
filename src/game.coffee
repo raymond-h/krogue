@@ -54,7 +54,8 @@ class Game
 		{GenerationManager} = require './generation/manager'
 		@generationManager = new GenerationManager
 
-		creature = @createPlayerCreature()
+		{generateStartingPlayer} = require './generation/creatures'
+		creature = generateStartingPlayer()
 		@player = new Player creature
 
 		@goTo 'main-1', 'entrance'
@@ -62,26 +63,6 @@ class Game
 		eventBus.on 'game.creature.dead', (creature, cause) =>
 			if creature.isPlayer()
 				@goState 'death'
-
-	createPlayerCreature: ->
-		{Creature} = require './entities'
-		{human} = require './definitions/creature-species'
-
-		creature = new Creature {x: 0, y: 0, species: human}
-
-		gun = (require './generation/items').generateStartingGun()
-
-		creature.equip gun, yes
-
-		items = require './definitions/items'
-		creature.inventory = for i in [1..5]
-			new items.PokeBall random.sample ['normal', 'great', 'ultra', 'master']
-
-		creature.inventory.push new items.BulletPack (new items.Bullet 'medium'), 20
-		creature.inventory.push new items.BulletPack (new items.Bullet 'medium'), 5
-		(creature.inventory.push(new items.Bullet 'medium')) for i in [1..3]
-
-		creature
 
 	quit: ->
 		@io.deinitialize @ if @io.initialized
