@@ -36,7 +36,7 @@ module.exports = class TtyRenderer
 
 		logWidth = 80 - TtyRenderer.strMore.length
 
-		@lineMan = new LineMan @logWidth
+		@lineMan = new LineMan logWidth
 
 		eventBus
 		.on 'turn.player.start', => @invalidate()

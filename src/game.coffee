@@ -38,8 +38,6 @@ class Game
 			@quit() if key.ctrl
 
 		.on 'log.add', (str) =>
-			log "<GAME> #{str}"
-
 			@logs.push str
 			@logs.shift() while @logs.length > 20
 
