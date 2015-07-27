@@ -17,7 +17,7 @@ module.exports = class Tty
 		program.reset()
 		program.alternateBuffer()
 
-		program.on 'keypress', (ch, key) =>
+		program.on 'keypress', (ch, key) ->
 			eventBus.emit "key.#{key.name}", ch, key
 
 		@renderer = new Renderer @, @game

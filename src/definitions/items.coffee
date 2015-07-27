@@ -253,7 +253,8 @@ class exports.Gun extends Item
 						dealDamage = ->
 							target.damage dmg, creature
 
-						eventBus.emit 'game.creature.fire.hit.creature', creature, @, offset, target
+						eventBus.emit 'game.creature.fire.hit.creature',
+							creature, @, offset, target
 
 						r = currentAmmo.onHit? map, found, target, dealDamage
 						if r isnt no then dealDamage()
