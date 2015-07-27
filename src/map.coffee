@@ -101,18 +101,3 @@ class exports.Map
 			for row, y in tileData
 				for tti, x in row
 					tileTable[tti]
-
-	loadFromJSON: ({@id, @w, @h, data, @positions, entities}) ->
-		if data.tileTable? and data.tileData?
-			@data = Map.decompressData data
-
-		else @data = data
-
-		@addEntity entities...
-
-	toJSON: ->
-		{
-			@id, @w, @h, @positions
-			data: Map.compressData @data
-			entities: @entities.filter (e) -> not e.isPlayer()
-		}

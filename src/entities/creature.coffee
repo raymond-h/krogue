@@ -415,12 +415,3 @@ module.exports = class Creature extends Entity
 			return @tickRate()
 
 		choices[0].tick this
-
-	loadFromJSON: (json, defLoad) ->
-		defLoad()
-
-		@health = new RangedValue json.health
-		@buffs = json.buffs
-			.map (json) -> buffs.fromJSON json
-
-		@

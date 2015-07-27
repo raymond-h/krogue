@@ -1,6 +1,3 @@
-exports.fromJSON = (json) ->
-	new exports[json.type](json)
-
 class exports.SizeAltered
 	name: ->
 		if @factor < 1 then 'shrunken x' + (1/@factor)

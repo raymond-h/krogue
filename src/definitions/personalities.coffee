@@ -18,9 +18,6 @@ Personality = class exports.Personality
 
 	tick: -> 0
 
-	toJSON: ->
-		_.omit @, 'creature'
-
 class exports.FleeFromPlayer extends Personality
 	constructor: (c, @safeDist) ->
 		super

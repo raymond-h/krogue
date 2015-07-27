@@ -47,17 +47,6 @@ module.exports = class Player
 			when 'direction'
 				if (@creature.move params[0]) then 12 else 0
 
-			when 'save'
-				game.save 'test-save.json'
-
-			when 'load'
-				prompts.yesNo 'Are you sure you want to load?'
-
-				.then (doLoad) ->
-					if doLoad
-						p game.load 'test-save.json'
-						.then -> message "Loaded."
-
 			when 'possess'
 				nextEntity = (map) ->
 					entities = map.entities

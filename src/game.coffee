@@ -90,12 +90,6 @@ class Game
 		if x? and y?
 			@player.creature.setPos x, y
 
-	save: (filename) ->
-		@io.saveData.save @, filename
-
-	load: (filename) ->
-		@io.saveData.load @, filename
-
 	goState: (state) ->
 		eventBus.emit "state.exit.#{@state}", 'exit', @state
 		@state = state
@@ -116,31 +110,6 @@ class Game
 			(err) =>
 				log.error err.stack if err?
 				@quit()
-
-	loadFromJSON: (json) ->
-		# @generationManager[k] = v for k,v of json.generationManager
-		#
-		# @logs = json.logs
-		#
-		# @timeManager.remove @player.creature
-		#
-		# @player.creature = json.player.creature
-		#
-		# @timeManager.add @player.creature
-		#
-		# @maps = json.maps
-		#
-		# @transitionToMap @maps[json.currentMap]
-
-	saveToJSON: ->
-		# {
-		# 	player:
-		# 		creature: @player.creature
-		# 	@logs
-		# 	@generationManager
-		# 	currentMap: @currentMap.id
-		# 	@maps
-		# }
 
 module.exports = new Game
 

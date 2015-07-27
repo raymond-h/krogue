@@ -23,7 +23,6 @@ module.exports = class Tty
 		@renderer = new Renderer @, @game
 		@effects = new Effects @
 		@prompts = new Prompts @game
-		@saveData = require './save-data'
 
 	deinitialize: ->
 		program.clear()

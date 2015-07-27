@@ -40,10 +40,6 @@ class exports.Entity
 
 	tick: ->
 
-	toJSON: ->
-		_.pick @, (v, k, o) ->
-			(_.has o, k) and not (k in ['map'])
-
 class exports.MapItem extends exports.Entity
 	type: 'item'
 	blocking: no
