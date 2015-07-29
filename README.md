@@ -17,4 +17,9 @@ npm run build
 node .
 ```
 
-Alternatively, if `coffee-script` is globally installed, there is no need to build the project to JavaScript; you can just run `coffee .` after installing dependencies.
+Alternatively, if `coffee-script` is globally installed:
+
+```sh
+npm install
+coffee .
+```
